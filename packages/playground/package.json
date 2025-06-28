@@ -1,0 +1,13 @@
+{
+  "name": "@autoteleport/playground",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@autoteleport/core": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7"
+  }
+}
