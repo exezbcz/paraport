@@ -1,105 +1,147 @@
-import BalanceService from "../../services/BalanceService";
-import SubstrateApi from "../../services/SubstrateApi";
-import { Chain, SDKConfig } from "../../types";
-import { BridgeAdapter, BridgeProtocol, Quote, TransferParams, TransferStatus } from "../../types/bridges";
-import { getChainsOfAsset } from "../../utils";
 import * as paraspell from '@paraspell/sdk-pjs'
 import { maxBy } from 'lodash'
+import { ActionManager } from '../../managers/ActionManager'
+import BalanceService from '../../services/BalanceService'
+import FeeService from '../../services/FeeService'
+import SubstrateApi from '../../services/SubstrateApi'
+import type { Chain, SDKConfig } from '../../types'
+import type {
+	BridgeAdapter,
+	BridgeProtocol,
+	Quote,
+	TransferParams,
+	TransferStatus,
+} from '../../types/bridges'
+import { getChainsOfAsset } from '../../utils'
 
 type TeleportParams = {
-  amount: string
-  from: Chain
-  to: Chain
-  address: string
-  asset: string
+	amount: string
+	from: Chain
+	to: Chain
+	address: string
+	asset: string
 }
 
 export default class XCMBridge implements BridgeAdapter {
-  protocol: BridgeProtocol = 'XCM';
-  private readonly config: SDKConfig;
-  private balanceService: BalanceService;
-  private readonly api: SubstrateApi;
+	protocol: BridgeProtocol = 'XCM'
+	private readonly config: SDKConfig
+	private balanceService: BalanceService
+	private readonly api: SubstrateApi
+	private readonly feeService: FeeService
+	private readonly actionManager: ActionManager
 
-  constructor(config: SDKConfig) {
-    this.config = config;
-    this.api = new SubstrateApi()
-    this.balanceService = new BalanceService(this.api);
-  }
+	constructor(config: SDKConfig) {
+		this.config = config
+		this.api = new SubstrateApi()
+		this.balanceService = new BalanceService(this.api)
+		this.feeService = new FeeService(this.api)
+		this.actionManager = new ActionManager(this.api)
+	}
 
-  private async teleport ({ amount, from, to, address, asset }: TeleportParams) {
-    const api = await this.api.getInstance(from)
+	private async teleport({ amount, from, to, address, asset }: TeleportParams) {
+		const api = await this.api.getInstance(from)
 
-    return paraspell
-      .Builder(api)
-      .from(from)
-      .to(to)
-      .currency({ symbol: asset, amount: amount })
-      .address(address)
-      .build()
-  }
+		return paraspell
+			.Builder(api)
+			.from(from)
+			.to(to)
+			.currency({ symbol: asset, amount: amount })
+			.address(address)
+			.build()
+	}
 
+	private async getTeleportFees({
+		amount,
+		from,
+		to,
+		address,
+		asset,
+	}: TeleportParams): Promise<string> {
+		const tx = await this.teleport({
+			amount: amount,
+			from,
+			to,
+			address,
+			asset,
+		})
 
-  private async getTransactionFees({ amount, from, to, address, asset }: TeleportParams): Promise<string> {
-    const tx = await this.teleport({
-      amount: amount,
-      from,
-      to,
-      address,
-      asset
-    })
+		return this.feeService.calculateFee(tx, address)
+	}
 
-    const paymentInfo = await tx.paymentInfo(address);
+	async getQuote({
+		address,
+		asset,
+		sourceChainId,
+		amount,
+		actions,
+	}: TransferParams): Promise<Quote | null> {
+		// 1. get chains where the token is avaialbe
+		const chains = getChainsOfAsset(asset)
 
-    return paymentInfo.partialFee.toString()
-  }
+		// 2. get address balances on all chains where the token is avaialbe
+		const balances = await this.balanceService.getBalances({
+			address,
+			chains,
+			asset,
+		})
 
-  async getQuote({ address, asset, sourceChainId, amount }: TransferParams): Promise<Quote | null> {
+		// 3. from possible target chains find the one with the highest transferable balance
+		const targetChainBalances = balances.filter(
+			(balance) => balance.chain !== sourceChainId,
+		)
 
-      // 1. get chains where the token is avaialbe
-      const chains = getChainsOfAsset(asset)
+		const highestBalanceChain = maxBy(targetChainBalances, (balance) =>
+			Number(balance.transferable),
+		)
 
-      // 2. get address balances on all chains where the token is avaialbe
-      const balances = await this.balanceService.getBalances({ address, chains, asset })
+		if (!highestBalanceChain) {
+			return null
+		}
 
-      // 3. from possible target chains find the one with the highest transferable balance
-      const targetChainBalances = balances.filter(balance => balance.chain !== sourceChainId)
+		// 4. calculate tx fees asoociated action and telport
+		const [telportFees, actionsFees] = await Promise.all([
+			this.getTeleportFees({
+				amount,
+				from: sourceChainId,
+				to: highestBalanceChain.chain,
+				address,
+				asset,
+			}),
+			this.actionManager.estimate({
+				actions: actions,
+				chain: sourceChainId,
+				address,
+			}),
+		])
 
-      const highestBalanceChain = maxBy(targetChainBalances, balance => Number(balance.transferable))
+		const totalFees = Number(telportFees) + Number(actionsFees)
+		const totalAmount = Number(amount) + totalFees
 
-      if (!highestBalanceChain) {
-          return null
-        }
+		if (Number(highestBalanceChain.transferable) > totalAmount) {
+			return null
+		}
 
-      // 4. calculate tx fees asoociated action and telport
-      const telportFees = await this.getTransactionFees({
-        amount,
-        from: sourceChainId,
-        to: highestBalanceChain.chain,
-        address,
-        asset
-      })
+		return {
+			route: {
+				source: sourceChainId,
+				target: highestBalanceChain.chain,
+				protocol: this.protocol,
+			},
+			fees: {
+				network: telportFees,
+				actions: actionsFees,
+				total: totalFees.toString(),
+			},
+			amount: amount,
+			total: totalAmount.toString(),
+		}
+	}
 
-      if (Number(highestBalanceChain.transferable) > Number(telportFees) + Number(amount)) {
-        return null
-      }
+	transfer(params: TransferParams): Promise<string> {
+		throw new Error('Method not implemented.')
+	}
 
-      const fee = telportFees
-
-      return {
-        source: sourceChainId,
-        target: highestBalanceChain.chain,
-        asset,
-        bridge: this.protocol,
-        fee,
-        amount,
-      }
-  }
-
-  transfer(params: TransferParams): Promise<string> {
-      throw new Error("Method not implemented.");
-  }
-
-  getStatus(teleportId: string): Promise<TransferStatus> {
-      throw new Error("Method not implemented.");
-  }
+	getStatus(teleportId: string): Promise<TransferStatus> {
+		throw new Error('Method not implemented.')
+	}
 }

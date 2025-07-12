@@ -1,30 +1,37 @@
-import { Asset, Chain } from ".";
+import type { Action, Asset, Chain } from '.'
 
 export type BridgeProtocol = 'XCM'
 
 export type TransferParams = {
-  address: string;
-  sourceChainId: Chain;
-  amount: string;
-  asset: Asset;
-};
+	address: string
+	sourceChainId: Chain
+	amount: string
+	asset: Asset
+	actions: Action[]
+}
 
 export interface BridgeAdapter {
-  protocol: BridgeProtocol;
-  getQuote(params: TransferParams): Promise<Quote | null>;
-  transfer(params: TransferParams): Promise<string>;
-  getStatus(txHash: string): Promise<TransferStatus>;
+	protocol: BridgeProtocol
+	getQuote(params: TransferParams): Promise<Quote | null>
+	transfer(params: TransferParams): Promise<string>
+	getStatus(txHash: string): Promise<TransferStatus>
 }
 
 export type TransferStatus = {
-  status: 'pending' | 'completed' | 'failed';
-};
+	status: 'pending' | 'completed' | 'failed'
+}
 
 export type Quote = {
-  source: Chain;
-  target: Chain;
-  asset: Asset;
-  bridge: BridgeProtocol;
-  fee: string;
-  amount: string;
-};
+	route: {
+		source: Chain
+		target: Chain
+		protocol: BridgeProtocol
+	}
+	fees: {
+		network: string
+		actions?: string
+		total: string
+	}
+	amount: string
+	total: string
+}

@@ -1,23 +1,25 @@
 {
-  "name": "@autoteleport/core",
-  "version": "0.0.1",
-  "type": "module",
-  "scripts": {
-    "build": "vite build",
-    "dev": "vite build --watch --mode development"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.17.15",
-    "process": "^0.11.10",
-    "typescript": "^5.7.3",
-    "vite": "^6.0.7",
-    "vite-plugin-dts": "^4.5.0"
-  },
-  "dependencies": {
-    "@kodadot1/static": "^0.0.7",
-    "@paraspell/sdk-pjs": "^8.0.0",
-    "@kodadot1/sub-api": "0.4.0-rc.2",
-    "@polkadot/util-crypto": "^13.3.1",
-    "lodash": "^4.17.21"
-  }
+	"name": "@autoteleport/core",
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch --mode development",
+		"lint": "biome check --write ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/lodash": "^4.17.15",
+		"process": "^0.11.10",
+		"typescript": "^5.7.3",
+		"vite": "^6.0.7",
+		"vite-plugin-dts": "^4.5.0"
+	},
+	"dependencies": {
+		"@kodadot1/static": "^0.0.7",
+		"@kodadot1/sub-api": "0.4.0-rc.2",
+		"@paraspell/sdk-pjs": "^8.0.0",
+		"@polkadot/util-crypto": "^13.3.1",
+		"lodash": "^4.17.21"
+	}
 }

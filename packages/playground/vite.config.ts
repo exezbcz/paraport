@@ -1,6 +1,7 @@
+import { defineConfig } from 'vite'
 import path from 'path'
 
-export default {
+export default defineConfig({
   resolve: {
     alias: {
       '@autoteleport/core': path.resolve(__dirname, '../core/src')
@@ -14,4 +15,4 @@ export default {
       followSymlinks: false
     }
   }
-}
+})

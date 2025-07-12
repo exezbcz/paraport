@@ -1,3 +1,3 @@
-import AutoTeleportSDK from './sdk/AutoTeleportSDK';
+import AutoTeleportSDK from './sdk/AutoTeleportSDK'
 
-export { AutoTeleportSDK };
+export { AutoTeleportSDK }

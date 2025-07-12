@@ -1,6 +1,6 @@
-import { Chain, ChainPrefix } from "../types";
-import { edOf } from "./chains";
+import { type Chain, ChainPrefix } from '../types'
+import { edOf } from './chains'
 
-export const transferableBalanceOf = (amount: string, chain: Chain): number  => {
-  return Number(amount) - edOf(chain)
+export const transferableBalanceOf = (amount: string, chain: Chain): number => {
+	return Number(amount) - edOf(chain)
 }
