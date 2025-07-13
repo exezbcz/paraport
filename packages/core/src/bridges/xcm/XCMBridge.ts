@@ -1,5 +1,6 @@
 import * as paraspell from '@paraspell/sdk-pjs'
 import { maxBy } from 'lodash'
+import { Initializable } from '../../base/Initializable'
 import { ActionManager } from '../../managers/ActionManager'
 import BalanceService from '../../services/BalanceService'
 import FeeService from '../../services/FeeService'
@@ -22,7 +23,7 @@ type TeleportParams = {
 	asset: string
 }
 
-export default class XCMBridge implements BridgeAdapter {
+export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
 	private readonly config: SDKConfig
 	private balanceService: BalanceService
@@ -31,6 +32,7 @@ export default class XCMBridge implements BridgeAdapter {
 	private readonly actionManager: ActionManager
 
 	constructor(config: SDKConfig) {
+		super()
 		this.config = config
 		this.api = new SubstrateApi()
 		this.balanceService = new BalanceService(this.api)
@@ -71,7 +73,7 @@ export default class XCMBridge implements BridgeAdapter {
 	async getQuote({
 		address,
 		asset,
-		sourceChainId,
+		sourceChain,
 		amount,
 		actions,
 	}: TransferParams): Promise<Quote | null> {
@@ -87,7 +89,7 @@ export default class XCMBridge implements BridgeAdapter {
 
 		// 3. from possible target chains find the one with the highest transferable balance
 		const targetChainBalances = balances.filter(
-			(balance) => balance.chain !== sourceChainId,
+			(balance) => balance.chain !== sourceChain,
 		)
 
 		const highestBalanceChain = maxBy(targetChainBalances, (balance) =>
@@ -102,14 +104,14 @@ export default class XCMBridge implements BridgeAdapter {
 		const [telportFees, actionsFees] = await Promise.all([
 			this.getTeleportFees({
 				amount,
-				from: sourceChainId,
+				from: sourceChain,
 				to: highestBalanceChain.chain,
 				address,
 				asset,
 			}),
 			this.actionManager.estimate({
 				actions: actions,
-				chain: sourceChainId,
+				chain: sourceChain,
 				address,
 			}),
 		])
@@ -123,7 +125,7 @@ export default class XCMBridge implements BridgeAdapter {
 
 		return {
 			route: {
-				source: sourceChainId,
+				source: sourceChain,
 				target: highestBalanceChain.chain,
 				protocol: this.protocol,
 			},
@@ -143,5 +145,9 @@ export default class XCMBridge implements BridgeAdapter {
 
 	getStatus(teleportId: string): Promise<TransferStatus> {
 		throw new Error('Method not implemented.')
+	}
+
+	async initialize(): Promise<void> {
+		await Promise.all(this.config.chains.map(this.api.getInstance))
 	}
 }

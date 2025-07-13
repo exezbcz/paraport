@@ -4,7 +4,7 @@ export type BridgeProtocol = 'XCM'
 
 export type TransferParams = {
 	address: string
-	sourceChainId: Chain
+	sourceChain: Chain
 	amount: string
 	asset: Asset
 	actions: Action[]
@@ -15,6 +15,7 @@ export interface BridgeAdapter {
 	getQuote(params: TransferParams): Promise<Quote | null>
 	transfer(params: TransferParams): Promise<string>
 	getStatus(txHash: string): Promise<TransferStatus>
+	initialize(): Promise<void>
 }
 
 export type TransferStatus = {

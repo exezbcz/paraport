@@ -1,19 +1,19 @@
+import { Initializable } from '../base/Initializable'
 import BridgeRegistry from '../bridges/BridgeRegistry'
 import XCMBridge from '../bridges/xcm/XCMBridge'
 import ConfigValidationError from '../errors/ConfigError'
 import type { SDKConfig } from '../types'
 import type { Quote, TransferParams } from '../types/bridges'
 
-export default class AutoTeleportSDK {
+export default class AutoTeleportSDK extends Initializable {
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
-	private initialized = false
 
 	constructor(config: SDKConfig) {
+		super()
 		const combinedConfig = this.getDefaultConfig(config)
 		this.validateConfig(combinedConfig)
 		this.config = combinedConfig
-		this.initialize()
 	}
 
 	private getDefaultConfig(config: SDKConfig): SDKConfig {
@@ -23,8 +23,8 @@ export default class AutoTeleportSDK {
 		}
 	}
 
-	private initialize() {
-		if (this.initialized) {
+	async initialize() {
+		if (this.isInitialized()) {
 			throw new Error('SDK already initialized')
 		}
 
@@ -33,7 +33,13 @@ export default class AutoTeleportSDK {
 				this.bridgeRegistry.register(new XCMBridge(this.config))
 			}
 
-			this.initialized = true
+			await Promise.all(
+				this.bridgeRegistry.getAll().map((bridge) => bridge.initialize()),
+			)
+
+			this.markInitialized()
+
+			console.log('SDK initialized successfully')
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				throw new Error(`Failed to initialize SDK: ${error.message}`)
@@ -70,11 +76,5 @@ export default class AutoTeleportSDK {
 
 	private validateTransferParams(params: TransferParams) {
 		// implement validation
-	}
-
-	private ensureInitialized(): void {
-		if (!this.initialized) {
-			throw new Error('SDK not initialized. Call initialize() first.')
-		}
 	}
 }
