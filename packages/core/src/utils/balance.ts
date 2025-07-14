@@ -1,4 +1,4 @@
-import { type Chain, ChainPrefix } from '../types'
+import type { Chain } from '../types'
 import { edOf } from './chains'
 
 export const transferableBalanceOf = (amount: string, chain: Chain): number => {

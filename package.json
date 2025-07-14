@@ -2,6 +2,7 @@
   "name": "autoteleport-sdk-monorepo",
   "scripts": {
     "build": "pnpm --filter @autoteleport/core build",
-    "dev": "pnpm run -r --parallel dev"
+    "dev": "pnpm run -r --parallel dev",
+    "lint": "pnpm --filter @autoteleport/core lint"
   }
 }

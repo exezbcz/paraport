@@ -5,7 +5,8 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@autoteleport/core": "workspace:*"
+    "@autoteleport/core": "workspace:*",
+    "@autoteleport/ui": "workspace:*"
   },
   "devDependencies": {
     "vite": "^6.0.7"
