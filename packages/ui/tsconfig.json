@@ -1,16 +1,16 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "preserve",
-    "strict": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "paths": {
-      "@autoteleport/core": ["../core/src/index.ts"]
-    }
-  },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"strict": true,
+		"skipLibCheck": true,
+		"noEmit": true,
+		"paths": {
+			"@autoteleport/core": ["../core/src/index.ts"]
+		},
+		"types": ["vite/client"]
+	},
+	"include": ["src/**/*.ts", "src/**/*.vue"],
+	"references": [{ "path": "./tsconfig.node.json" }]
 }

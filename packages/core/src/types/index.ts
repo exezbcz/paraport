@@ -24,5 +24,5 @@ export enum Chain {
 export type Action = {
 	section: string
 	method: string
-	args: any[]
+	args: unknown[]
 }

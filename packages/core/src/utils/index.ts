@@ -24,7 +24,7 @@ export const getChainsOfAsset = (asset: Asset): Chain[] => {
 }
 
 export const chainPrefixOf = (chain: Chain): ChainPrefix => {
-	return CHAIN_TO_CHAIN_PREFIX_MAP[chain]!
+	return CHAIN_TO_CHAIN_PREFIX_MAP[chain] as ChainPrefix
 }
 
 export { formatAddress, edOf, teleportEdOf, transferableBalanceOf }
