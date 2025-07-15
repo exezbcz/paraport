@@ -1,5 +1,15 @@
 <template>
-    <div class="button-wrapper bg-red-100">
+    <div class="button-wrapper">
+
+        <div class="top-container">
+            <div >
+                <!-- Img container -->
+            </div>
+
+            <Switch
+                v-model="enabled"
+            />
+        </div>
 
         <Button
             expanded
@@ -10,41 +20,31 @@
 </template>
 
 <script setup lang="ts">
-import { Asset, type AutoTeleportSDK, Chain } from '@autoteleport/core'
-import { computed, inject, onBeforeMount, ref } from 'vue'
-import Button from './ui/Button.vue'
+import type { AutoTeleportSDK, TransferParams } from '@autoteleport/core'
+import { computed, defineProps, onBeforeMount, ref } from 'vue'
+import Button from './ui/Button/Button.vue'
+import Switch from './ui/Switch/Switch.vue'
 
-const sdk = inject('sdk') as AutoTeleportSDK
+const props = defineProps<{
+	sdk: AutoTeleportSDK
+	autoteleport: TransferParams
+}>()
 
 const laoding = ref(true)
+const enabled = ref(false)
 
 const label = computed(() => {
 	return laoding.value ? 'Loading...' : 'Teleport'
 })
 
 onBeforeMount(async () => {
-	console.log('AutoTeleportSDK', sdk)
+	console.log('AutoTeleportSDK', props.sdk)
 
-	if (!sdk.isInitialized()) {
-		await sdk.initialize()
+	if (!props.sdk.isInitialized()) {
+		await props.sdk.initialize()
 	}
 
-	const quotes = await sdk.getQuotes({
-		address: 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY',
-		amount: '1000000000000',
-		sourceChain: Chain.POLKADOT,
-		asset: Asset.DOT,
-		actions: [
-			{
-				section: 'balances',
-				method: 'transferAllowDeath',
-				args: [
-					'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY',
-					'1000000000000',
-				],
-			},
-		],
-	})
+	const quotes = await props.sdk.getQuotes(props.autoteleport)
 
 	laoding.value = false
 
@@ -59,5 +59,14 @@ onBeforeMount(async () => {
     justify-content: center;
     height: 100%;
     width: 100%;
+    flex-direction: column;
+    gap: 12px;
+
+    .top-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
 </style>

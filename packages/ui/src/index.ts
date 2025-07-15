@@ -8,7 +8,7 @@ export interface MountOptions {
 	autoteleport: TransferParams
 }
 
-export function mount({ target, sdk }: MountOptions): void {
+export function mount({ target, sdk, autoteleport }: MountOptions): void {
 	const targetElement =
 		typeof target === 'string' ? document.querySelector(target) : target
 
@@ -16,7 +16,10 @@ export function mount({ target, sdk }: MountOptions): void {
 		throw new Error(`Target element not found: ${target}`)
 	}
 
-	const app = createApp(Button)
+	const app = createApp(Button, {
+		sdk,
+		autoteleport,
+	})
 
-	app.provide('sdk', sdk).mount(targetElement)
+	app.mount(targetElement)
 }
