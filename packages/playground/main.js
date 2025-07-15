@@ -8,7 +8,10 @@ const main = async () => {
   mount({
     target: '#root',
     sdk: new AutoTeleportSDK({
-      chains: ['Polkadot', 'AssetHubPolkadot'],
+      chains: [
+        Chain.POLKADOT,
+        Chain.ASSETHUBPOLKADOT
+      ],
     }),
     autoteleport: {
   		address: 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY',
