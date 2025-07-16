@@ -1,14 +1,15 @@
-import type { AutoTeleportSDK, TransferParams } from '@autoteleport/core'
-import { createApp } from 'vue'
+import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
+import mitt from 'mitt'
+import { createApp, h, provide } from 'vue'
 import Button from './components/Button.vue'
 
 export interface MountOptions {
 	sdk: AutoTeleportSDK
 	target: string | HTMLElement
-	autoteleport: TransferParams
+	autoteleport: TeleportParams
 }
 
-export function mount({ target, sdk, autoteleport }: MountOptions): void {
+export function mount({ target, sdk, autoteleport }: MountOptions) {
 	const targetElement =
 		typeof target === 'string' ? document.querySelector(target) : target
 
@@ -16,10 +17,19 @@ export function mount({ target, sdk, autoteleport }: MountOptions): void {
 		throw new Error(`Target element not found: ${target}`)
 	}
 
-	const app = createApp(Button, {
-		sdk,
-		autoteleport,
+	const eventBus = mitt()
+
+	const app = createApp({
+		setup() {
+			provide('eventBus', eventBus)
+		},
+		render: () => h(Button, { sdk, autoteleport }),
 	})
 
 	app.mount(targetElement)
+
+	return {
+		unsubscribe: () => app.unmount(),
+		subscribe: eventBus.on,
+	}
 }

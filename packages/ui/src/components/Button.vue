@@ -1,6 +1,5 @@
 <template>
     <div class="button-wrapper">
-
         <div class="top-container">
             <div >
                 <!-- Img container -->
@@ -20,14 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import type { AutoTeleportSDK, TransferParams } from '@autoteleport/core'
+import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import { computed, defineProps, onBeforeMount, ref } from 'vue'
 import Button from './ui/Button/Button.vue'
 import Switch from './ui/Switch/Switch.vue'
 
 const props = defineProps<{
 	sdk: AutoTeleportSDK
-	autoteleport: TransferParams
+	autoteleport: TeleportParams
 }>()
 
 const laoding = ref(true)
