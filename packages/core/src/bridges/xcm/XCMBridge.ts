@@ -10,12 +10,12 @@ import type {
 	BridgeAdapter,
 	BridgeProtocol,
 	Quote,
-	TransferParams,
-	TransferStatus,
+	TeleportParams,
+	TransactionStatus,
 } from '../../types/bridges'
 import { getChainsOfAsset } from '../../utils'
 
-type TeleportParams = {
+type XCMTeleportParams = {
 	amount: string
 	from: Chain
 	to: Chain
@@ -40,7 +40,13 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		this.actionManager = new ActionManager(this.api)
 	}
 
-	private async teleport({ amount, from, to, address, asset }: TeleportParams) {
+	private async teleport({
+		amount,
+		from,
+		to,
+		address,
+		asset,
+	}: XCMTeleportParams) {
 		const api = await this.api.getInstance(from)
 
 		return paraspell
@@ -58,7 +64,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		to,
 		address,
 		asset,
-	}: TeleportParams): Promise<string> {
+	}: XCMTeleportParams): Promise<string> {
 		const tx = await this.teleport({
 			amount: amount,
 			from,
@@ -76,7 +82,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		sourceChain,
 		amount,
 		actions,
-	}: TransferParams): Promise<Quote | null> {
+	}: TeleportParams): Promise<Quote | null> {
 		// 1. get chains where the token is avaialbe
 		const chains = getChainsOfAsset(asset)
 
@@ -139,11 +145,11 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		}
 	}
 
-	transfer(params: TransferParams): Promise<string> {
+	transfer(params: TeleportParams): Promise<string> {
 		throw new Error('Method not implemented.')
 	}
 
-	getStatus(teleportId: string): Promise<TransferStatus> {
+	getStatus(teleportId: string): Promise<TransactionStatus> {
 		throw new Error('Method not implemented.')
 	}
 

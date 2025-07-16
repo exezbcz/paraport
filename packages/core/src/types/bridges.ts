@@ -1,8 +1,9 @@
 import type { Action, Asset, Chain } from '.'
+import type { BaseDetails } from '../base/BaseManager'
 
 export type BridgeProtocol = 'XCM'
 
-export type TransferParams = {
+export type TeleportParams = {
 	address: string
 	sourceChain: Chain
 	amount: string
@@ -12,14 +13,10 @@ export type TransferParams = {
 
 export interface BridgeAdapter {
 	protocol: BridgeProtocol
-	getQuote(params: TransferParams): Promise<Quote | null>
-	transfer(params: TransferParams): Promise<string>
-	getStatus(txHash: string): Promise<TransferStatus>
+	getQuote(params: TeleportParams): Promise<Quote | null>
+	transfer(params: TeleportParams): Promise<string>
+	getStatus(txHash: string): Promise<TransactionStatus>
 	initialize(): Promise<void>
-}
-
-export type TransferStatus = {
-	status: 'pending' | 'completed' | 'failed'
 }
 
 export type Quote = {
@@ -35,4 +32,23 @@ export type Quote = {
 	}
 	amount: string
 	total: string
+}
+
+export enum TransactionStatus {
+	PENDING = 'pending',
+	PROCESSING = 'processing',
+	COMPLETED = 'completed',
+	FAILED = 'failed',
+}
+
+export interface TransactionDetails
+	extends BaseDetails<TransactionStatus, TransactionEvent> {
+	params: TeleportParams
+	quote: Quote
+}
+
+export type TransactionEvent = {
+	type: string
+	timestamp: number
+	data: unknown
 }

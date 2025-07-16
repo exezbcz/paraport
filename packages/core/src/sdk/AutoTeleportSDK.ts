@@ -1,26 +1,22 @@
 import { Initializable } from '../base/Initializable'
 import BridgeRegistry from '../bridges/BridgeRegistry'
 import XCMBridge from '../bridges/xcm/XCMBridge'
-import ConfigValidationError from '../errors/ConfigError'
+import { SDKConfigManager } from '../config/SDKConfigManager'
+import { TeleportManager } from '../managers/TeleportManager'
 import type { SDKConfig } from '../types'
-import type { Quote, TransferParams } from '../types/bridges'
+import type { Quote, TeleportParams } from '../types/bridges'
+import { GenericEmitter } from '../utils/GenericEmitter'
 
 export default class AutoTeleportSDK extends Initializable {
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
+	private teleportManager = new TeleportManager(new GenericEmitter<any, any>())
 
 	constructor(config: SDKConfig) {
 		super()
-		const combinedConfig = this.getDefaultConfig(config)
-		this.validateConfig(combinedConfig)
+		const combinedConfig = SDKConfigManager.getDefaultConfig(config)
+		SDKConfigManager.validateConfig(combinedConfig)
 		this.config = combinedConfig
-	}
-
-	private getDefaultConfig(config: SDKConfig): SDKConfig {
-		return {
-			...config,
-			bridgeProtocols: ['XCM'],
-		}
 	}
 
 	async initialize() {
@@ -48,15 +44,7 @@ export default class AutoTeleportSDK extends Initializable {
 		}
 	}
 
-	public async validateConfig(config: SDKConfig): Promise<void> {
-		if (!config.bridgeProtocols?.length) {
-			throw new ConfigValidationError(
-				'At least one bridge protocol must be specified',
-			)
-		}
-	}
-
-	public async getQuotes(params: TransferParams): Promise<Quote[]> {
+	public async getQuotes(params: TeleportParams): Promise<Quote[]> {
 		this.ensureInitialized()
 		this.validateTransferParams(params)
 
@@ -74,7 +62,39 @@ export default class AutoTeleportSDK extends Initializable {
 		return results.filter((quote): quote is Quote => quote !== null)
 	}
 
-	private validateTransferParams(params: TransferParams) {
+	public async teleport(params: TeleportParams): Promise<string> {
+		this.ensureInitialized()
+
+		const quotes = await this.getQuotes(params)
+
+		if (quotes.length === 0) {
+			throw new Error('No quotes available for the given parameters.')
+		}
+
+		const bestQuote = this.teleportManager.selectBestQuote(quotes)
+
+		if (!bestQuote) {
+			throw new Error('-Could not select the best quote.')
+		}
+
+		const bridge = this.bridgeRegistry.get(bestQuote.route.protocol)
+
+		if (!bridge) {
+			throw new Error(
+				`No bridge found for protocol: ${bestQuote.route.protocol}`,
+			)
+		}
+
+		const teleportId = await this.teleportManager.initiateTeleport(
+			Math.random().toString(36).substring(2, 15),
+			params,
+			bestQuote,
+		)
+
+		return teleportId.id
+	}
+
+	private validateTransferParams(params: TeleportParams) {
 		// implement validation
 	}
 }
