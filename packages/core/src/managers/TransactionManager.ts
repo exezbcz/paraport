@@ -1,4 +1,5 @@
 import { BaseManager } from '../base/BaseManager'
+import type { Action, Chain } from '../types'
 import {
 	type Quote,
 	type TransactionDetails,
@@ -33,17 +34,24 @@ export class TransactionManager extends BaseManager<
 		super(eventEmitter)
 	}
 
-	trackTransaction(id: string, params: any, quote: Quote): TransactionDetails {
+	trackTransaction({
+		action,
+		chain,
+		telportId,
+	}: { action: Action; chain: Chain; telportId: string }): TransactionDetails {
+		const id = crypto.randomUUID() as string
+
 		const transaction: TransactionDetails = {
 			id,
+			telportId,
 			status: TransactionStatus.PENDING,
-			params,
-			quote,
+			chain: chain,
+			details: action,
 			events: [],
 			timestamp: Date.now(),
 		}
 
-		this.setItem(id, transaction)
+		this.setItem(id, transaction, false)
 
 		return transaction
 	}

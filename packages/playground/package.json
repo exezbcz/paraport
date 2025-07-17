@@ -6,7 +6,8 @@
   },
   "dependencies": {
     "@autoteleport/core": "workspace:*",
-    "@autoteleport/ui": "workspace:*"
+    "@autoteleport/ui": "workspace:*",
+    "@polkadot/extension-dapp": "^0.58.3"
   },
   "devDependencies": {
     "vite": "^6.0.7"

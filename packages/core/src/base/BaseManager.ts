@@ -64,9 +64,12 @@ export class BaseManager<
 		throw new Error('Method not implemented.')
 	}
 
-	protected setItem(id: string, item: DetailsType): void {
+	protected setItem(id: string, item: DetailsType, emitUpdate = true): void {
 		this.items.set(id, item)
-		this.emitUpdate(item)
+
+		if (emitUpdate) {
+			this.emitUpdate(item)
+		}
 	}
 
 	subscribe(

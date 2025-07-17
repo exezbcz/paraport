@@ -14,6 +14,7 @@
             expanded
             :disabled="laoding"
             :label="label"
+            @click="teleport"
         />
     </div>
 </template>
@@ -35,6 +36,10 @@ const enabled = ref(false)
 const label = computed(() => {
 	return laoding.value ? 'Loading...' : 'Teleport'
 })
+
+const teleport = async () => {
+   await props.sdk.teleport(props.autoteleport)
+}
 
 onBeforeMount(async () => {
 	console.log('AutoTeleportSDK', props.sdk)

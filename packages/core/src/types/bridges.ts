@@ -11,10 +11,18 @@ export type TeleportParams = {
 	actions: Action[]
 }
 
+export type BrigeTransferParams = {
+	amount: string
+	from: Chain
+	to: Chain
+	address: string
+	asset: string
+}
+
 export interface BridgeAdapter {
 	protocol: BridgeProtocol
 	getQuote(params: TeleportParams): Promise<Quote | null>
-	transfer(params: TeleportParams): Promise<string>
+	transfer(params: BrigeTransferParams): Promise<string>
 	getStatus(txHash: string): Promise<TransactionStatus>
 	initialize(): Promise<void>
 }
@@ -43,8 +51,9 @@ export enum TransactionStatus {
 
 export interface TransactionDetails
 	extends BaseDetails<TransactionStatus, TransactionEvent> {
-	params: TeleportParams
-	quote: Quote
+	chain: Chain
+	details: Action
+	telportId: string
 }
 
 export type TransactionEvent = {

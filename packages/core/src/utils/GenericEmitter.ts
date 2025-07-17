@@ -1,4 +1,4 @@
-import { EventEmitter } from 'node:events'
+import { EventEmitter } from 'eventemitter3'
 
 export type GenericEvent<T, E extends string> = {
 	type: E

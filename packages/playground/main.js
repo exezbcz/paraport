@@ -1,7 +1,11 @@
 import { AutoTeleportSDK, Asset, Chain } from '@autoteleport/core'
+import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
 
 import '@autoteleport/ui/style'
 import { mount } from '@autoteleport/ui'
+
+const DAPP_NAME = 'Kodadot'
+const USER_ADDRESS = 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY'
 
 const main = async () => {
 
@@ -9,15 +13,22 @@ const main = async () => {
     target: '#root',
     sdk: new AutoTeleportSDK({
       chains: [
-        Chain.POLKADOT,
-        Chain.ASSETHUBPOLKADOT
+        Chain.KUSAMA,
+        Chain.ASSETHUBKUSAMA
       ],
+      getSigner: async () => {
+        await web3Enable(DAPP_NAME)
+
+        const injector = await web3FromAddress(USER_ADDRESS)
+
+        return injector.signer
+      }
     }),
     autoteleport: {
-  		address: 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY',
-  		amount: '1000000000000',
-  		sourceChain: Chain.POLKADOT,
-  		asset: Asset.DOT,
+  		address: USER_ADDRESS,
+  		amount: '1000000',
+  		sourceChain: Chain.KUSAMA,
+  		asset: Asset.KSM,
   		actions: [
   			{
   				section: 'balances',

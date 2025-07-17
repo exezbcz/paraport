@@ -1,4 +1,5 @@
 import { BaseManager } from '../base/BaseManager'
+import type BridgeRegistry from '../bridges/BridgeRegistry'
 import type {
 	Quote,
 	TeleportParams,
@@ -32,24 +33,28 @@ export class TeleportManager extends BaseManager<
 	TeleportEventTypeString
 > {
 	private readonly transactionManager: TransactionManager
+	private readonly bridgeRegistry: BridgeRegistry
 
 	constructor(
 		teleportEventEmitter: GenericEmitter<
 			TeleportDetails,
 			TeleportEventTypeString
 		>,
+		bridgeRegistry: BridgeRegistry,
 	) {
 		super(teleportEventEmitter)
 		this.transactionManager = new TransactionManager(
 			new GenericEmitter<TransactionDetails, TransactionEventTypeString>(),
 		)
+		this.bridgeRegistry = bridgeRegistry
 	}
 
 	async initiateTeleport(
-		id: string,
 		params: TeleportParams,
 		quote: Quote,
 	): Promise<TeleportDetails> {
+		const id = crypto.randomUUID() as string
+
 		const teleport: TeleportDetails = {
 			id,
 			status: TeleportStatus.PENDING,
@@ -59,15 +64,50 @@ export class TeleportManager extends BaseManager<
 			timestamp: Date.now(),
 		}
 
-		this.setItem(id, teleport)
+		this.setItem(id, teleport, false)
 
-		this.transactionManager.trackTransaction(
-			id,
-			{ type: 'teleport', details: params },
-			quote,
-		)
+		// track brige transaction
+
+		params.actions.forEach((action) => {
+			this.transactionManager.trackTransaction({
+				action,
+				telportId: id,
+				chain: params.sourceChain,
+			})
+		})
+
+		try {
+			const txHash = await this.transferFunds(params, quote)
+
+			// teleport.transactionHash = txHash
+
+			// this.updateStatus(id, TeleportStatus.PROCESSING)
+		} catch (error: any) {
+			console.error('Error during transfer:', error)
+			// this.updateStatus(id, TeleportStatus.FAILED, error.message)
+		}
 
 		return teleport
+	}
+
+	private async transferFunds(
+		params: TeleportParams,
+		quote: Quote,
+	): Promise<string> {
+		const bridge = this.bridgeRegistry.get(quote.route.protocol)
+
+		if (!bridge) {
+			throw new Error(`No bridge found for protocol: ${quote.route.protocol}`)
+		}
+
+		// TODO: use only quote params
+		return await bridge.transfer({
+			amount: params.amount,
+			from: quote.route.source,
+			to: quote.route.target,
+			address: params.address,
+			asset: params.asset,
+		})
 	}
 
 	// Override updateStatus to also update the corresponding transaction

@@ -12,6 +12,7 @@ export type SDKConfig = {
 	bridgeProtocols?: BridgeProtocol[]
 	rpcUrls?: Record<number | string, string>
 	chains: Chain[]
+	getSigner: () => Promise<unknown>
 }
 
 export enum Chain {

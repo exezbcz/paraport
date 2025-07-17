@@ -9,6 +9,7 @@ import type { Chain, SDKConfig } from '../../types'
 import type {
 	BridgeAdapter,
 	BridgeProtocol,
+	BrigeTransferParams,
 	Quote,
 	TeleportParams,
 	TransactionStatus,
@@ -145,8 +146,26 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		}
 	}
 
-	transfer(params: TeleportParams): Promise<string> {
-		throw new Error('Method not implemented.')
+	async transfer({
+		amount,
+		from,
+		to,
+		address,
+		asset,
+	}: BrigeTransferParams): Promise<string> {
+		const tx = await this.teleport({
+			amount,
+			from,
+			to,
+			address,
+			asset,
+		})
+
+		const signer = (await this.config.getSigner()) as any
+
+		const txId = await tx.signAndSend(address, { signer })
+
+		return txId.toString()
 	}
 
 	getStatus(teleportId: string): Promise<TransactionStatus> {

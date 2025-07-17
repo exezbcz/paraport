@@ -10,7 +10,7 @@ import { GenericEmitter } from '../utils/GenericEmitter'
 export default class AutoTeleportSDK extends Initializable {
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
-	private teleportManager = new TeleportManager(new GenericEmitter<any, any>())
+	private teleportManager: TeleportManager | undefined
 
 	constructor(config: SDKConfig) {
 		super()
@@ -31,6 +31,11 @@ export default class AutoTeleportSDK extends Initializable {
 
 			await Promise.all(
 				this.bridgeRegistry.getAll().map((bridge) => bridge.initialize()),
+			)
+
+			this.teleportManager = new TeleportManager(
+				new GenericEmitter<any, any>(),
+				this.bridgeRegistry,
 			)
 
 			this.markInitialized()
@@ -71,6 +76,10 @@ export default class AutoTeleportSDK extends Initializable {
 			throw new Error('No quotes available for the given parameters.')
 		}
 
+		if (!this.teleportManager) {
+			throw new Error('No teleport manager found.')
+		}
+
 		const bestQuote = this.teleportManager.selectBestQuote(quotes)
 
 		if (!bestQuote) {
@@ -86,7 +95,6 @@ export default class AutoTeleportSDK extends Initializable {
 		}
 
 		const teleportId = await this.teleportManager.initiateTeleport(
-			Math.random().toString(36).substring(2, 15),
 			params,
 			bestQuote,
 		)
