@@ -125,7 +125,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		const totalFees = Number(telportFees) + Number(actionsFees)
 		const totalAmount = Number(amount) + totalFees
 
-		if (Number(highestBalanceChain.transferable) > totalAmount) {
+		if (Number(highestBalanceChain.transferable) < totalAmount) {
 			return null
 		}
 
