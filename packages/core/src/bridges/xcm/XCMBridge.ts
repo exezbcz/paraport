@@ -6,15 +6,17 @@ import BalanceService from '../../services/BalanceService'
 import FeeService from '../../services/FeeService'
 import SubstrateApi from '../../services/SubstrateApi'
 import type { Chain, SDKConfig } from '../../types'
-import type {
-	BridgeAdapter,
-	BridgeProtocol,
-	BrigeTransferParams,
-	Quote,
-	TeleportParams,
+import {
+	type BridgeAdapter,
+	type BridgeProtocol,
+	type BrigeTransferCallback,
+	type BrigeTransferParams,
+	type Quote,
+	type TeleportParams,
 	TransactionStatus,
 } from '../../types/bridges'
 import { getChainsOfAsset } from '../../utils'
+import { txCb } from '../../utils/tx'
 
 type XCMTeleportParams = {
 	amount: string
@@ -146,13 +148,10 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		}
 	}
 
-	async transfer({
-		amount,
-		from,
-		to,
-		address,
-		asset,
-	}: BrigeTransferParams): Promise<string> {
+	async transfer(
+		{ amount, from, to, address, asset }: BrigeTransferParams,
+		callback: BrigeTransferCallback,
+	) {
 		const tx = await this.teleport({
 			amount,
 			from,
@@ -163,9 +162,44 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 
 		const signer = (await this.config.getSigner()) as any
 
-		const txId = await tx.signAndSend(address, { signer })
+		const errorHandler = (error: Error) => {
+			callback({
+				status: TransactionStatus.Cancelled,
+			})
+		}
 
-		return txId.toString()
+		const subscription = await tx
+			.signAndSend(
+				address,
+				{ signer },
+				txCb({
+					onSuccess: ({ txHash }) => {
+						callback({
+							status: TransactionStatus.Finalized,
+							txHash: txHash.toString(),
+						})
+					},
+					onError: (err) => {
+						callback({
+							status: TransactionStatus.Block,
+							error: err.toString(),
+						})
+					},
+					onResult: ({ result, status }) => {
+						if (
+							status !== TransactionStatus.Finalized ||
+							!result.dispatchError
+						) {
+							callback({
+								status: status as any,
+							})
+						}
+					},
+				}),
+			)
+			.catch(errorHandler)
+
+		return subscription
 	}
 
 	getStatus(teleportId: string): Promise<TransactionStatus> {

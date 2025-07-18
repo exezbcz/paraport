@@ -1,10 +1,10 @@
-import { BaseManager } from '../base/BaseManager'
+import { type BaseDetailsEvent, BaseManager } from '../base/BaseManager'
 import type { Action, Chain } from '../types'
 import {
-	type Quote,
+	type BrigeTransferParams,
 	type TransactionDetails,
-	type TransactionEvent,
 	TransactionStatus,
+	type TransactionType,
 } from '../types/bridges'
 import type { GenericEmitter } from '../utils/GenericEmitter'
 
@@ -22,7 +22,7 @@ export type TransactionEventTypeString = `${TransactionEventType}`
 export class TransactionManager extends BaseManager<
 	TransactionDetails,
 	TransactionStatus,
-	TransactionEvent,
+	BaseDetailsEvent,
 	TransactionEventTypeString
 > {
 	constructor(
@@ -34,21 +34,28 @@ export class TransactionManager extends BaseManager<
 		super(eventEmitter)
 	}
 
-	trackTransaction({
-		action,
+	createTransaction({
 		chain,
-		telportId,
-	}: { action: Action; chain: Chain; telportId: string }): TransactionDetails {
-		const id = crypto.randomUUID() as string
-
+		teleportId,
+		type,
+		details,
+		id,
+	}: {
+		id: string
+		chain: Chain
+		teleportId: string
+		type: TransactionType
+		details: BrigeTransferParams | Action
+	}): TransactionDetails {
 		const transaction: TransactionDetails = {
 			id,
-			telportId,
-			status: TransactionStatus.PENDING,
+			teleportId,
+			status: TransactionStatus.Unknown,
 			chain: chain,
-			details: action,
+			details: details,
 			events: [],
 			timestamp: Date.now(),
+			type,
 		}
 
 		this.setItem(id, transaction, false)

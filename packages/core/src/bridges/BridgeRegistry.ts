@@ -9,9 +9,11 @@ export default class BridgeRegistry {
 
 	get(protocol: BridgeProtocol): BridgeAdapter {
 		const bridge = this.bridges.get(protocol)
+
 		if (!bridge) {
-			throw new Error(`Bridge ${protocol} not supported`)
+			throw new Error(`No bridge found for protocol: ${protocol}`)
 		}
+
 		return bridge
 	}
 

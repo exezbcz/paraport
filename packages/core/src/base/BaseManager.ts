@@ -8,10 +8,16 @@ export interface BaseDetails<StatusType, EventType> {
 	error?: string
 }
 
+export interface BaseDetailsEvent<T = unknown> {
+	type: string
+	timestamp: number
+	data: T
+}
+
 export class BaseManager<
 	DetailsType extends BaseDetails<StatusType, EventType>,
 	StatusType,
-	EventType,
+	EventType extends BaseDetailsEvent,
 	EventTypeString extends string,
 > {
 	protected items: Map<string, DetailsType> = new Map()
@@ -46,10 +52,20 @@ export class BaseManager<
 		const item = this.items.get(id)
 		if (!item) return
 
-		const updatedItem = {
+		const newEvent: BaseDetailsEvent = {
+			type: 'status-update',
+			timestamp: Date.now(),
+			data: {
+				status: status,
+				error: error,
+			},
+		}
+
+		const updatedItem: DetailsType = {
 			...item,
 			status,
 			...(error && { error }),
+			events: [...item.events, newEvent],
 		}
 
 		this.items.set(id, updatedItem)
@@ -83,6 +99,7 @@ export class BaseManager<
 		}
 
 		this.eventEmitter.subscribe(eventType, subscription)
+
 		return () => this.eventEmitter.unsubscribe(eventType, subscription)
 	}
 }

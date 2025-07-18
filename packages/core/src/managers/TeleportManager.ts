@@ -1,17 +1,32 @@
-import { BaseManager } from '../base/BaseManager'
+import { type BaseDetails, BaseManager } from '../base/BaseManager'
 import type BridgeRegistry from '../bridges/BridgeRegistry'
+import type { Asset } from '../types'
 import type {
 	Quote,
+	Route,
 	TeleportParams,
 	TransactionDetails,
 } from '../types/bridges'
 import { GenericEmitter } from '../utils/GenericEmitter'
 import {
+	TransactionEventType,
 	type TransactionEventTypeString,
 	TransactionManager,
 } from './TransactionManager'
 
-type TeleportDetails = any
+type TeleportEvent = any
+
+interface TeleportDetails extends BaseDetails<TeleportStatus, TeleportEvent> {
+	id: string
+	details: {
+		address: string
+		amount: string
+		asset: Asset
+		route: Route
+	}
+	events: TeleportEvent[]
+	timestamp: number
+}
 
 enum TeleportStatus {
 	PENDING = 'pending',
@@ -47,67 +62,112 @@ export class TeleportManager extends BaseManager<
 			new GenericEmitter<TransactionDetails, TransactionEventTypeString>(),
 		)
 		this.bridgeRegistry = bridgeRegistry
+
+		this.registerListeners()
+	}
+
+	private registerListeners() {
+		this.transactionManager.subscribe(
+			TransactionEventType.TRANSACTION_UPDATED,
+			(item) => {
+				console.log('TransactionManager', item)
+			},
+		)
 	}
 
 	async initiateTeleport(
 		params: TeleportParams,
 		quote: Quote,
 	): Promise<TeleportDetails> {
-		const id = crypto.randomUUID() as string
+		const teleportId = crypto.randomUUID() as string
 
 		const teleport: TeleportDetails = {
-			id,
+			id: teleportId,
 			status: TeleportStatus.PENDING,
-			params,
-			quote,
+			details: {
+				address: params.address,
+				amount: params.amount,
+				asset: params.asset,
+				route: quote.route,
+			},
 			events: [],
 			timestamp: Date.now(),
 		}
 
-		this.setItem(id, teleport, false)
+		this.setItem(teleportId, teleport, false)
 
-		// track brige transaction
-
-		params.actions.forEach((action) => {
-			this.transactionManager.trackTransaction({
-				action,
-				telportId: id,
-				chain: params.sourceChain,
-			})
-		})
+		this.createTelportTransactions(params, quote, teleportId)
 
 		try {
-			const txHash = await this.transferFunds(params, quote)
-
-			// teleport.transactionHash = txHash
-
-			// this.updateStatus(id, TeleportStatus.PROCESSING)
+			await this.transferFunds(teleport)
 		} catch (error: any) {
 			console.error('Error during transfer:', error)
-			// this.updateStatus(id, TeleportStatus.FAILED, error.message)
 		}
 
 		return teleport
 	}
 
-	private async transferFunds(
+	private createTelportTransactions(
 		params: TeleportParams,
 		quote: Quote,
-	): Promise<string> {
-		const bridge = this.bridgeRegistry.get(quote.route.protocol)
+		teleportId: string,
+	) {
+		const source = quote.route.source
 
-		if (!bridge) {
-			throw new Error(`No bridge found for protocol: ${quote.route.protocol}`)
-		}
-
-		// TODO: use only quote params
-		return await bridge.transfer({
-			amount: params.amount,
-			from: quote.route.source,
-			to: quote.route.target,
-			address: params.address,
-			asset: params.asset,
+		this.transactionManager.createTransaction({
+			id: this.getTeleportTransactionId(teleportId),
+			type: 'Teleport',
+			details: {
+				amount: params.amount,
+				from: quote.route.source,
+				to: quote.route.target,
+				address: params.address,
+				asset: params.asset,
+			},
+			teleportId,
+			chain: source,
 		})
+
+		params.actions.forEach((action, index) => {
+			this.transactionManager.createTransaction({
+				type: 'Action',
+				id: this.getActionTransactionId(teleportId, index),
+				details: action,
+				teleportId,
+				chain: source,
+			})
+		})
+	}
+
+	private getTeleportTransactionId(teleportId: string) {
+		return `${teleportId}-transaction` as const
+	}
+
+	private getActionTransactionId(teleportId: string, index: number) {
+		return `${teleportId}-transaction-${index.toString()}` as const
+	}
+
+	private async transferFunds(
+		teleportDetails: TeleportDetails,
+	): Promise<() => void> {
+		const transactionId = this.getTeleportTransactionId(teleportDetails.id)
+
+		const bridge = this.bridgeRegistry.get(
+			teleportDetails.details.route.protocol,
+		)
+
+		return await bridge.transfer(
+			{
+				amount: teleportDetails.details.amount,
+				from: teleportDetails.details.route.source,
+				to: teleportDetails.details.route.target,
+				address: teleportDetails.details.address,
+				asset: teleportDetails.details.asset,
+			},
+			({ status }) => {
+				this.transactionManager.updateStatus(transactionId, status)
+			},
+		)
 	}
 
 	// Override updateStatus to also update the corresponding transaction

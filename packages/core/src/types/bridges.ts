@@ -1,5 +1,5 @@
 import type { Action, Asset, Chain } from '.'
-import type { BaseDetails } from '../base/BaseManager'
+import type { BaseDetails, BaseDetailsEvent } from '../base/BaseManager'
 
 export type BridgeProtocol = 'XCM'
 
@@ -19,20 +19,43 @@ export type BrigeTransferParams = {
 	asset: string
 }
 
+export type BrigeTransferCallback = (
+	props:
+		| {
+				status: TransactionStatus.Finalized
+				txHash: string
+		  }
+		| {
+				status: TransactionStatus.Block
+				error: string
+		  }
+		| {
+				status: Exclude<
+					TransactionStatus,
+					TransactionStatus.Finalized | TransactionStatus.Block
+				>
+		  },
+) => void
+
 export interface BridgeAdapter {
 	protocol: BridgeProtocol
 	getQuote(params: TeleportParams): Promise<Quote | null>
-	transfer(params: BrigeTransferParams): Promise<string>
+	transfer(
+		params: BrigeTransferParams,
+		callback: BrigeTransferCallback,
+	): Promise<() => void>
 	getStatus(txHash: string): Promise<TransactionStatus>
 	initialize(): Promise<void>
 }
 
+export type Route = {
+	source: Chain
+	target: Chain
+	protocol: BridgeProtocol
+}
+
 export type Quote = {
-	route: {
-		source: Chain
-		target: Chain
-		protocol: BridgeProtocol
-	}
+	route: Route
 	fees: {
 		network: string
 		actions?: string
@@ -42,22 +65,27 @@ export type Quote = {
 	total: string
 }
 
+// TODO move to seperate file transaction related types
+
 export enum TransactionStatus {
-	PENDING = 'pending',
-	PROCESSING = 'processing',
-	COMPLETED = 'completed',
-	FAILED = 'failed',
+	Broadcast = 'broadcast',
+	Casting = 'casting',
+	Sign = 'sign',
+	Block = 'block',
+	Finalized = 'finalized',
+	Unknown = '',
+	Cancelled = 'cancelled',
 }
+
+export type TransactionType = 'Teleport' | 'Action'
 
 export interface TransactionDetails
-	extends BaseDetails<TransactionStatus, TransactionEvent> {
+	extends BaseDetails<
+		TransactionStatus,
+		BaseDetailsEvent<{ status: TransactionStatus; error?: string }>
+	> {
 	chain: Chain
-	details: Action
-	telportId: string
-}
-
-export type TransactionEvent = {
-	type: string
-	timestamp: number
-	data: unknown
+	details: BrigeTransferParams | Action
+	teleportId: string
+	type: TransactionType
 }
