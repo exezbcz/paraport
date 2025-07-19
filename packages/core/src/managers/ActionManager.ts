@@ -1,11 +1,19 @@
 import FeeService from '../services/FeeService'
 import type SubstrateApi from '../services/SubstrateApi'
-import type { Action, Chain } from '../types'
+import type { Action, Chain, SDKConfig } from '../types'
+import type {
+	TransactionCallback,
+	TransactionUnsubscribe,
+} from '../types/bridges'
+import { signAndSend } from '../utils/tx'
 
 export class ActionManager {
 	private readonly feeService: FeeService
 
-	constructor(private api: SubstrateApi) {
+	constructor(
+		private api: SubstrateApi,
+		private config: SDKConfig,
+	) {
 		this.feeService = new FeeService(this.api)
 	}
 
@@ -24,11 +32,21 @@ export class ActionManager {
 	}
 
 	async execute(
-		actions: Action[],
-		address: string,
-		chain: Chain,
-	): Promise<string[]> {
-		throw new Error('Not implemented')
+		{
+			action,
+			address,
+			chain,
+		}: { action: Action; address: string; chain: Chain },
+		callback: TransactionCallback,
+	): Promise<TransactionUnsubscribe> {
+		const tx = await this.createTx(action, chain)
+
+		return signAndSend({
+			tx,
+			callback,
+			address,
+			signer: (await this.config.getSigner()) as any,
+		})
 	}
 
 	private async createTx(action: Action, chain: Chain) {

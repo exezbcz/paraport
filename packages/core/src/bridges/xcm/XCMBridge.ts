@@ -6,17 +6,17 @@ import BalanceService from '../../services/BalanceService'
 import FeeService from '../../services/FeeService'
 import SubstrateApi from '../../services/SubstrateApi'
 import type { Chain, SDKConfig } from '../../types'
-import {
-	type BridgeAdapter,
-	type BridgeProtocol,
-	type BrigeTransferCallback,
-	type BrigeTransferParams,
-	type Quote,
-	type TeleportParams,
+import type {
+	BridgeAdapter,
+	BridgeProtocol,
+	BrigeTransferParams,
+	Quote,
+	TeleportParams,
+	TransactionCallback,
 	TransactionStatus,
 } from '../../types/bridges'
 import { getChainsOfAsset } from '../../utils'
-import { txCb } from '../../utils/tx'
+import { signAndSend, txCb } from '../../utils/tx'
 
 type XCMTeleportParams = {
 	amount: string
@@ -40,7 +40,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		this.api = new SubstrateApi()
 		this.balanceService = new BalanceService(this.api)
 		this.feeService = new FeeService(this.api)
-		this.actionManager = new ActionManager(this.api)
+		this.actionManager = new ActionManager(this.api, this.config)
 	}
 
 	private async teleport({
@@ -150,7 +150,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 
 	async transfer(
 		{ amount, from, to, address, asset }: BrigeTransferParams,
-		callback: BrigeTransferCallback,
+		callback: TransactionCallback,
 	) {
 		const tx = await this.teleport({
 			amount,
@@ -160,46 +160,12 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			asset,
 		})
 
-		const signer = (await this.config.getSigner()) as any
-
-		const errorHandler = (error: Error) => {
-			callback({
-				status: TransactionStatus.Cancelled,
-			})
-		}
-
-		const subscription = await tx
-			.signAndSend(
-				address,
-				{ signer },
-				txCb({
-					onSuccess: ({ txHash }) => {
-						callback({
-							status: TransactionStatus.Finalized,
-							txHash: txHash.toString(),
-						})
-					},
-					onError: (err) => {
-						callback({
-							status: TransactionStatus.Block,
-							error: err.toString(),
-						})
-					},
-					onResult: ({ result, status }) => {
-						if (
-							status !== TransactionStatus.Finalized ||
-							!result.dispatchError
-						) {
-							callback({
-								status: status as any,
-							})
-						}
-					},
-				}),
-			)
-			.catch(errorHandler)
-
-		return subscription
+		return signAndSend({
+			tx,
+			callback,
+			address,
+			signer: (await this.config.getSigner()) as any,
+		})
 	}
 
 	getStatus(teleportId: string): Promise<TransactionStatus> {

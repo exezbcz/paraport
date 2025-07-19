@@ -39,6 +39,7 @@ export class TransactionManager extends BaseManager<
 		teleportId,
 		type,
 		details,
+		order,
 		id,
 	}: {
 		id: string
@@ -46,6 +47,7 @@ export class TransactionManager extends BaseManager<
 		teleportId: string
 		type: TransactionType
 		details: BrigeTransferParams | Action
+		order: number
 	}): TransactionDetails {
 		const transaction: TransactionDetails = {
 			id,
@@ -56,6 +58,7 @@ export class TransactionManager extends BaseManager<
 			events: [],
 			timestamp: Date.now(),
 			type,
+			order,
 		}
 
 		this.setItem(id, transaction, false)

@@ -34,8 +34,9 @@ export default class AutoTeleportSDK extends Initializable {
 			)
 
 			this.teleportManager = new TeleportManager(
-				new GenericEmitter<any, any>(),
+				new GenericEmitter<any, any>(), // TODO assign types
 				this.bridgeRegistry,
+				this.config,
 			)
 
 			this.markInitialized()
@@ -83,15 +84,7 @@ export default class AutoTeleportSDK extends Initializable {
 		const bestQuote = this.teleportManager.selectBestQuote(quotes)
 
 		if (!bestQuote) {
-			throw new Error('-Could not select the best quote.')
-		}
-
-		const bridge = this.bridgeRegistry.get(bestQuote.route.protocol)
-
-		if (!bridge) {
-			throw new Error(
-				`No bridge found for protocol: ${bestQuote.route.protocol}`,
-			)
+			throw new Error('Could not select the best quote.')
 		}
 
 		const teleportId = await this.teleportManager.initiateTeleport(

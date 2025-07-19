@@ -16,11 +16,11 @@ export type BrigeTransferParams = {
 	from: Chain
 	to: Chain
 	address: string
-	asset: string
+	asset: Asset
 }
 
-export type BrigeTransferCallback = (
-	props:
+export type TransactionCallback = (
+	params:
 		| {
 				status: TransactionStatus.Finalized
 				txHash: string
@@ -30,6 +30,10 @@ export type BrigeTransferCallback = (
 				error: string
 		  }
 		| {
+				status: TransactionStatus.Block
+				txHash: string
+		  }
+		| {
 				status: Exclude<
 					TransactionStatus,
 					TransactionStatus.Finalized | TransactionStatus.Block
@@ -37,13 +41,15 @@ export type BrigeTransferCallback = (
 		  },
 ) => void
 
+export type TransactionUnsubscribe = void | (() => void)
+
 export interface BridgeAdapter {
 	protocol: BridgeProtocol
 	getQuote(params: TeleportParams): Promise<Quote | null>
 	transfer(
 		params: BrigeTransferParams,
-		callback: BrigeTransferCallback,
-	): Promise<() => void>
+		callback: TransactionCallback,
+	): Promise<TransactionUnsubscribe>
 	getStatus(txHash: string): Promise<TransactionStatus>
 	initialize(): Promise<void>
 }
@@ -88,4 +94,5 @@ export interface TransactionDetails
 	details: BrigeTransferParams | Action
 	teleportId: string
 	type: TransactionType
+	order: number
 }

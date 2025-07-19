@@ -31,6 +31,10 @@ export class BaseManager<
 		return this.items.get(id)
 	}
 
+	getItemsWhere(predicate: (item: DetailsType) => boolean): DetailsType[] {
+		return Array.from(this.items.values()).filter(predicate)
+	}
+
 	getAllItems(): DetailsType[] {
 		return Array.from(this.items.values())
 	}
