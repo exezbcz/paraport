@@ -12,6 +12,7 @@ import {
 	type TransactionCallback,
 	type TransactionDetails,
 	TransactionStatus,
+	TransactionType,
 	type TransactionUnsubscribe,
 } from '../types/bridges'
 import { GenericEmitter } from '../utils/GenericEmitter'
@@ -48,6 +49,7 @@ export enum TeleportStatus {
 
 export enum TeleportEventType {
 	TELEPORT_UPDATED = 'teleport:updated',
+	TELEPORT_COMPLETED = 'teleport:completed',
 }
 
 export type TeleportEventTypeString = `${TeleportEventType}`
@@ -91,7 +93,6 @@ export class TeleportManager extends BaseManager<
 				console.log(
 					`[${TransactionEventType.TRANSACTION_UPDATED}]`,
 					transaction.status,
-					transaction,
 				)
 
 				const teleport = this.getTeleportById(transaction.teleportId)
@@ -100,27 +101,37 @@ export class TeleportManager extends BaseManager<
 					return this.updateStatus(teleport.id, TeleportStatus.Failed)
 				}
 
-				if (transaction.type === 'Teleport') {
-					if (teleport.status === TeleportStatus.Pending) {
-						this.updateStatus(teleport.id, TeleportStatus.Transferring)
-					} else if (transaction.status === TransactionStatus.Finalized) {
-						this.updateStatus(teleport.id, TeleportStatus.Waiting)
-					}
+				const transactionTypeHandler: Record<
+					TransactionType,
+					(transactino: TransactionDetails) => void
+				> = {
+					[TransactionType.Teleport]: (transaction) => {
+						if (teleport.status === TeleportStatus.Pending) {
+							this.updateStatus(teleport.id, TeleportStatus.Transferring)
+						} else if (transaction.status === TransactionStatus.Finalized) {
+							this.updateStatus(teleport.id, TeleportStatus.Waiting)
+						}
+					},
+					[TransactionType.Action]: (transaction) => {
+						if (transaction.status === TransactionStatus.Finalized) {
+							this.executeTeleportActions(teleport)
+						}
+					},
 				}
-				// else {
-				// 	if (teleport.status === TeleportStatus.Waiting) {
-				// 		this.updateStatus(teleport.id, TeleportStatus.Executing)
-				// 	}
-				// }
+
+				transactionTypeHandler[transaction.type](transaction)
 			},
 		)
 
 		this.subscribe(TeleportEventType.TELEPORT_UPDATED, async (teleport) => {
-			console.log(
-				`[${TeleportEventType.TELEPORT_UPDATED}]`,
-				teleport.status,
-				teleport,
-			)
+			console.log(`[${TeleportEventType.TELEPORT_UPDATED}]`, teleport.status)
+
+			if (teleport.status === TeleportStatus.Completed) {
+				return this.eventEmitter.emit({
+					type: TeleportEventType.TELEPORT_COMPLETED,
+					payload: teleport,
+				})
+			}
 
 			if (teleport.status === TeleportStatus.Waiting) {
 				await this.waitForFunds(teleport)
@@ -170,10 +181,10 @@ export class TeleportManager extends BaseManager<
 		const transaction = await this.findNextPendingTransaction(teleport)
 
 		if (!transaction) {
-			return
+			return this.updateStatus(teleport.id, TeleportStatus.Completed)
 		}
 
-		if (transaction.type === 'Action') {
+		if (transaction.type === TransactionType.Action) {
 			this.actionManager.execute(
 				{
 					action: transaction.details as Action,
@@ -234,7 +245,7 @@ export class TeleportManager extends BaseManager<
 
 		this.transactionManager.createTransaction({
 			id: this.getTeleportTransactionId(teleportId),
-			type: 'Teleport',
+			type: TransactionType.Teleport,
 			order: 0,
 			details: {
 				amount: params.amount,
@@ -250,7 +261,7 @@ export class TeleportManager extends BaseManager<
 		params.actions.forEach((action, index) => {
 			this.transactionManager.createTransaction({
 				id: this.getActionTransactionId(teleportId, index),
-				type: 'Action',
+				type: TransactionType.Action,
 				order: index + 1,
 				details: action,
 				teleportId,

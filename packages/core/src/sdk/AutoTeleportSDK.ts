@@ -2,7 +2,12 @@ import { Initializable } from '../base/Initializable'
 import BridgeRegistry from '../bridges/BridgeRegistry'
 import XCMBridge from '../bridges/xcm/XCMBridge'
 import { SDKConfigManager } from '../config/SDKConfigManager'
-import { TeleportManager } from '../managers/TeleportManager'
+import {
+	type TeleportDetails,
+	type TeleportEventType,
+	type TeleportEventTypeString,
+	TeleportManager,
+} from '../managers/TeleportManager'
 import type { SDKConfig } from '../types'
 import type { Quote, TeleportParams } from '../types/bridges'
 import { GenericEmitter } from '../utils/GenericEmitter'
@@ -34,7 +39,7 @@ export default class AutoTeleportSDK extends Initializable {
 			)
 
 			this.teleportManager = new TeleportManager(
-				new GenericEmitter<any, any>(), // TODO assign types
+				new GenericEmitter<TeleportDetails, TeleportEventTypeString>(),
 				this.bridgeRegistry,
 				this.config,
 			)
@@ -50,9 +55,16 @@ export default class AutoTeleportSDK extends Initializable {
 		}
 	}
 
+	on(
+		event: TeleportEventType,
+		callback: (item: TeleportDetails) => void,
+	): void {
+		this.teleportManager?.subscribe(event, callback)
+	}
+
 	public async getQuotes(params: TeleportParams): Promise<Quote[]> {
 		this.ensureInitialized()
-		this.validateTransferParams(params)
+		this.validateTeleportParams(params)
 
 		const bridges = this.bridgeRegistry.getAll()
 
@@ -95,7 +107,7 @@ export default class AutoTeleportSDK extends Initializable {
 		return teleportId.id
 	}
 
-	private validateTransferParams(params: TeleportParams) {
+	private validateTeleportParams(params: TeleportParams) {
 		// implement validation
 	}
 }

@@ -83,7 +83,10 @@ export enum TransactionStatus {
 	Cancelled = 'cancelled',
 }
 
-export type TransactionType = 'Teleport' | 'Action'
+export enum TransactionType {
+	Teleport = 'Teleport',
+	Action = 'Action',
+}
 
 export interface TransactionDetails
 	extends BaseDetails<

@@ -38,7 +38,7 @@ const label = computed(() => {
 })
 
 const teleport = async () => {
-   await props.sdk.teleport(props.autoteleport)
+	await props.sdk.teleport(props.autoteleport)
 }
 
 onBeforeMount(async () => {
@@ -47,6 +47,10 @@ onBeforeMount(async () => {
 	if (!props.sdk.isInitialized()) {
 		await props.sdk.initialize()
 	}
+
+	props.sdk.on('teleport:completed', (teleport) => {
+		console.log(`[UI] Teleport completed`, teleport)
+	})
 
 	const quotes = await props.sdk.getQuotes(props.autoteleport)
 
