@@ -20,6 +20,7 @@ export class BaseManager<
 	EventType extends BaseDetailsEvent,
 	EventTypeString extends string,
 	EventPayload = DetailsType,
+	OnUpdateParams extends Record<string, unknown> = { error?: string },
 > {
 	protected items: Map<string, DetailsType> = new Map()
 	protected eventEmitter: GenericEmitter<EventPayload, EventTypeString>
@@ -49,11 +50,10 @@ export class BaseManager<
 			events: [...item.events, event],
 		}
 
-		this.items.set(id, updatedItem)
-		this.emitUpdate(updatedItem)
+		this.setItem(id, updatedItem)
 	}
 
-	updateStatus(id: string, status: StatusType, error?: string): void {
+	updateStatus(id: string, status: StatusType, params?: OnUpdateParams): void {
 		const item = this.items.get(id)
 		if (!item) return
 
@@ -62,22 +62,21 @@ export class BaseManager<
 			timestamp: Date.now(),
 			data: {
 				status: status,
-				error: error,
+				error: params?.error,
 			},
 		}
 
 		const updatedItem: DetailsType = {
 			...item,
 			status,
-			...(error && { error }),
+			...params,
 			events: [...item.events, newEvent],
 		}
 
-		this.items.set(id, updatedItem)
-		this.emitUpdate(updatedItem)
+		this.setItem(id, updatedItem)
 	}
 
-	protected emitUpdate(item: DetailsType): void {
+	protected emitUpdate(item: EventPayload): void {
 		this.eventEmitter.emit({ type: this.getUpdateEventType(), payload: item })
 	}
 
@@ -85,11 +84,15 @@ export class BaseManager<
 		throw new Error('Method not implemented.')
 	}
 
+	protected getEmitUpdateEventPayload(item: unknown): EventPayload {
+		return item as EventPayload
+	}
+
 	protected setItem(id: string, item: DetailsType, emitUpdate = true): void {
 		this.items.set(id, item)
 
 		if (emitUpdate) {
-			this.emitUpdate(item)
+			this.emitUpdate(this.getEmitUpdateEventPayload(item))
 		}
 	}
 

@@ -3,7 +3,6 @@ import BridgeRegistry from '../bridges/BridgeRegistry'
 import XCMBridge from '../bridges/xcm/XCMBridge'
 import { SDKConfigManager } from '../config/SDKConfigManager'
 import {
-	type TeleportDetails,
 	type TeleportEventPayload,
 	type TeleportEventType,
 	type TeleportEventTypeString,

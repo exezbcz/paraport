@@ -23,7 +23,9 @@ export class TransactionManager extends BaseManager<
 	TransactionDetails,
 	TransactionStatus,
 	BaseDetailsEvent,
-	TransactionEventTypeString
+	TransactionEventTypeString,
+	TransactionDetails, // event payload
+	{ txHash?: string; error?: string }
 > {
 	constructor(
 		eventEmitter: GenericEmitter<
@@ -68,5 +70,16 @@ export class TransactionManager extends BaseManager<
 
 	protected getUpdateEventType(): TransactionEventTypeString {
 		return TransactionEventType.TRANSACTION_UPDATED
+	}
+
+	getTelportTransactions(
+		teleportId: string,
+		{ type }: { type?: TransactionType } = {},
+	) {
+		return this.getItemsWhere(
+			(transaction) =>
+				transaction.teleportId === teleportId &&
+				(!type || transaction.type === type),
+		)
 	}
 }

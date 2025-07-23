@@ -36,6 +36,7 @@ export interface TeleportDetails
 	}
 	events: TeleportEvent[]
 	timestamp: number
+	txHash?: string
 }
 
 export type TeleportEventPayload = TeleportDetails & {
@@ -103,8 +104,6 @@ export class TeleportManager extends BaseManager<
 
 				const teleport = this.getTeleportById(transaction.teleportId)
 
-				this.emitTeleportUpdated(teleport)
-
 				if (transaction.status === TransactionStatus.Cancelled) {
 					return this.updateStatus(teleport.id, TeleportStatus.Failed)
 				}
@@ -118,11 +117,15 @@ export class TeleportManager extends BaseManager<
 							this.updateStatus(teleport.id, TeleportStatus.Transferring)
 						} else if (transaction.status === TransactionStatus.Finalized) {
 							this.updateStatus(teleport.id, TeleportStatus.Waiting)
+						} else {
+							this.emitTeleportUpdated(teleport)
 						}
 					},
 					[TransactionType.Action]: (transaction) => {
 						if (transaction.status === TransactionStatus.Finalized) {
 							this.executeTeleportActions(teleport)
+						} else {
+							this.emitTeleportUpdated(teleport)
 						}
 					},
 				}
@@ -143,23 +146,32 @@ export class TeleportManager extends BaseManager<
 
 			if (teleport.status === TeleportStatus.Waiting) {
 				await this.waitForFunds(teleport)
-			} else if (teleport.status === TeleportStatus.Executing) {
+			} else if (
+				teleport.status === TeleportStatus.Executing &&
+				this.areIsTeleportActionsFirstRun(teleport)
+			) {
 				await this.executeTeleportActions(teleport)
 			}
 		})
 	}
 
+	private areIsTeleportActionsFirstRun(teleport: TeleportDetails) {
+		return this.transactionManager
+			.getTelportTransactions(teleport.id, {
+				type: TransactionType.Action,
+			})
+			.every((transaction) => transaction.status === TransactionStatus.Unknown)
+	}
+
 	private teleportMapper(teleport: TeleportDetails): TeleportEventPayload {
 		return {
 			...teleport,
-			transactions: this.transactionManager.getItemsWhere(
-				(transaction) => transaction.teleportId === teleport.id,
-			),
+			transactions: this.transactionManager.getTelportTransactions(teleport.id),
 		}
 	}
 
 	private emitTeleportUpdated(teleport: TeleportDetails) {
-		this.emitUpdate(teleport)
+		this.emitUpdate(this.teleportMapper(teleport))
 	}
 
 	private getTeleportById(teleportId: string) {
@@ -220,8 +232,11 @@ export class TeleportManager extends BaseManager<
 	private transactionCallbackHandler(
 		transactionId: string,
 	): TransactionCallback {
-		return ({ status }) => {
-			this.transactionManager.updateStatus(transactionId, status)
+		return ({ status, txHash, error }) => {
+			this.transactionManager.updateStatus(transactionId, status, {
+				txHash,
+				error,
+			})
 		}
 	}
 
@@ -329,11 +344,10 @@ export class TeleportManager extends BaseManager<
 		return TeleportEventType.TELEPORT_UPDATED
 	}
 
-	protected emitUpdate(item: TeleportDetails): void {
-		this.eventEmitter.emit({
-			type: this.getUpdateEventType(),
-			payload: this.teleportMapper(item),
-		})
+	protected getEmitUpdateEventPayload(
+		item: TeleportDetails,
+	): TeleportEventPayload {
+		return this.teleportMapper(item)
 	}
 
 	selectBestQuote(quotes: Quote[]): Quote | undefined {

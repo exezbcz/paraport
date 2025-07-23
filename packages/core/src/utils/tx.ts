@@ -88,6 +88,7 @@ export const signAndSend = async ({
 					if (status !== TransactionStatus.Finalized && !result.dispatchError) {
 						callback({
 							status: status as any,
+							txHash: result.txHash.toString(),
 						})
 					}
 				},
