@@ -2,10 +2,10 @@ import * as paraspell from '@paraspell/sdk-pjs'
 import { maxBy } from 'lodash'
 import { Initializable } from '../../base/Initializable'
 import { ActionManager } from '../../managers/ActionManager'
-import BalanceService from '../../services/BalanceService'
+import type BalanceService from '../../services/BalanceService'
 import FeeService from '../../services/FeeService'
-import SubstrateApi from '../../services/SubstrateApi'
-import type { Chain, SDKConfig } from '../../types'
+import type SubstrateApi from '../../services/SubstrateApi'
+import type { Asset, Chain, SDKConfig } from '../../types'
 import type {
 	BridgeAdapter,
 	BridgeProtocol,
@@ -16,14 +16,14 @@ import type {
 	TransactionStatus,
 } from '../../types/bridges'
 import { getChainsOfAsset } from '../../utils'
-import { signAndSend, txCb } from '../../utils/tx'
+import { signAndSend } from '../../utils/tx'
 
 type XCMTeleportParams = {
 	amount: string
-	from: Chain
-	to: Chain
+	source: Chain
+	target: Chain
 	address: string
-	asset: string
+	asset: Asset
 }
 
 export default class XCMBridge extends Initializable implements BridgeAdapter {
@@ -34,28 +34,32 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 	private readonly feeService: FeeService
 	private readonly actionManager: ActionManager
 
-	constructor(config: SDKConfig) {
+	constructor(
+		config: SDKConfig,
+		balanceService: BalanceService,
+		api: SubstrateApi,
+	) {
 		super()
 		this.config = config
-		this.api = new SubstrateApi()
-		this.balanceService = new BalanceService(this.api)
+		this.api = api
+		this.balanceService = balanceService
 		this.feeService = new FeeService(this.api)
 		this.actionManager = new ActionManager(this.api, this.config)
 	}
 
 	private async teleport({
 		amount,
-		from,
-		to,
+		source,
+		target,
 		address,
 		asset,
 	}: XCMTeleportParams) {
-		const api = await this.api.getInstance(from)
+		const api = await this.api.getInstance(source)
 
 		return paraspell
 			.Builder(api)
-			.from(from)
-			.to(to)
+			.from(source)
+			.to(target)
 			.currency({ symbol: asset, amount: amount })
 			.address(address)
 			.build()
@@ -63,15 +67,15 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 
 	private async getTeleportFees({
 		amount,
-		from,
-		to,
+		source,
+		target,
 		address,
 		asset,
 	}: XCMTeleportParams): Promise<string> {
 		const tx = await this.teleport({
 			amount: amount,
-			from,
-			to,
+			source,
+			target,
 			address,
 			asset,
 		})
@@ -82,7 +86,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 	async getQuote({
 		address,
 		asset,
-		sourceChain,
+		chain: targetChain,
 		amount,
 		actions,
 	}: TeleportParams): Promise<Quote | null> {
@@ -98,7 +102,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 
 		// 3. from possible target chains find the one with the highest transferable balance
 		const targetChainBalances = balances.filter(
-			(balance) => balance.chain !== sourceChain,
+			(balance) => balance.chain !== targetChain,
 		)
 
 		const highestBalanceChain = maxBy(targetChainBalances, (balance) =>
@@ -109,18 +113,20 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			return null
 		}
 
+		const sourceChain = highestBalanceChain.chain
+
 		// 4. calculate tx fees asoociated action and telport
 		const [telportFees, actionsFees] = await Promise.all([
 			this.getTeleportFees({
 				amount,
-				from: sourceChain,
-				to: highestBalanceChain.chain,
+				source: sourceChain,
+				target: targetChain,
 				address,
 				asset,
 			}),
 			this.actionManager.estimate({
 				actions: actions,
-				chain: sourceChain,
+				chain: targetChain,
 				address,
 			}),
 		])
@@ -135,7 +141,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		return {
 			route: {
 				source: sourceChain,
-				target: highestBalanceChain.chain,
+				target: targetChain,
 				protocol: this.protocol,
 			},
 			fees: {
@@ -154,8 +160,8 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 	) {
 		const tx = await this.teleport({
 			amount,
-			from,
-			to,
+			source: from,
+			target: to,
 			address,
 			asset,
 		})

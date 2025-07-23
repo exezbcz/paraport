@@ -12,6 +12,11 @@ type Balance = {
 	transferable: string
 }
 
+type GetBalanceParams = {
+	address: string
+	asset: string
+	chains: Chain[]
+}
 export default class BalanceService {
 	private api: SubstrateApi
 
@@ -23,7 +28,7 @@ export default class BalanceService {
 		address,
 		asset,
 		chains,
-	}: { address: string; asset: string; chains: Chain[] }): Promise<Balance[]> {
+	}: GetBalanceParams): Promise<Balance[]> {
 		try {
 			const balancePromises = chains.map(async (chainId) => {
 				const api = await this.api.getInstance(chainId)
@@ -47,6 +52,33 @@ export default class BalanceService {
 		} catch (error: any) {
 			throw new Error(`Failed to fetch balances: ${error.message}`)
 		}
+	}
+
+	async subscribeBalances(
+		{ address, chains }: GetBalanceParams,
+		callback: () => void = () => {},
+	) {
+		const balancePromises = chains.map(async (chainId) => {
+			const api = await this.api.getInstance(chainId)
+
+			let {
+				data: { free: previousFree },
+			} = await api.query.system.account(address)
+
+			return api.query.system.account(
+				address,
+				({ data: { free: currentFree } }) => {
+					const change = currentFree.sub(previousFree)
+
+					if (!change.isZero()) {
+						callback()
+						previousFree = currentFree
+					}
+				},
+			)
+		})
+
+		return await Promise.all(balancePromises)
 	}
 
 	async waitForFunds({

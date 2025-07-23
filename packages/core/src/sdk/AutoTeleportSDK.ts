@@ -4,10 +4,13 @@ import XCMBridge from '../bridges/xcm/XCMBridge'
 import { SDKConfigManager } from '../config/SDKConfigManager'
 import {
 	type TeleportDetails,
+	type TeleportEventPayload,
 	type TeleportEventType,
 	type TeleportEventTypeString,
 	TeleportManager,
 } from '../managers/TeleportManager'
+import BalanceService from '../services/BalanceService'
+import SubstrateApi from '../services/SubstrateApi'
 import type { SDKConfig } from '../types'
 import type { Quote, TeleportParams } from '../types/bridges'
 import { GenericEmitter } from '../utils/GenericEmitter'
@@ -16,12 +19,17 @@ export default class AutoTeleportSDK extends Initializable {
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
 	private teleportManager: TeleportManager | undefined
+	private readonly balanceService: BalanceService
+	private readonly subApi: SubstrateApi
 
 	constructor(config: SDKConfig) {
 		super()
 		const combinedConfig = SDKConfigManager.getDefaultConfig(config)
 		SDKConfigManager.validateConfig(combinedConfig)
 		this.config = combinedConfig
+
+		this.subApi = new SubstrateApi()
+		this.balanceService = new BalanceService(this.subApi)
 	}
 
 	async initialize() {
@@ -31,7 +39,9 @@ export default class AutoTeleportSDK extends Initializable {
 
 		try {
 			if (this.config.bridgeProtocols?.includes('XCM')) {
-				this.bridgeRegistry.register(new XCMBridge(this.config))
+				this.bridgeRegistry.register(
+					new XCMBridge(this.config, this.balanceService, this.subApi),
+				)
 			}
 
 			await Promise.all(
@@ -39,9 +49,10 @@ export default class AutoTeleportSDK extends Initializable {
 			)
 
 			this.teleportManager = new TeleportManager(
-				new GenericEmitter<TeleportDetails, TeleportEventTypeString>(),
+				new GenericEmitter<TeleportEventPayload, TeleportEventTypeString>(),
 				this.bridgeRegistry,
 				this.config,
+				this.subApi,
 			)
 
 			this.markInitialized()
@@ -56,23 +67,20 @@ export default class AutoTeleportSDK extends Initializable {
 	}
 
 	on(
-		event: TeleportEventType,
-		callback: (item: TeleportDetails) => void,
+		event: TeleportEventType | `${TeleportEventType}`,
+		callback: (item: TeleportEventPayload) => void,
 	): void {
 		this.teleportManager?.subscribe(event, callback)
 	}
 
-	public async getQuotes(params: TeleportParams): Promise<Quote[]> {
+	private async getQuotes(params: TeleportParams): Promise<Quote[]> {
 		this.ensureInitialized()
 		this.validateTeleportParams(params)
 
 		const bridges = this.bridgeRegistry.getAll()
 
 		const quotePromises = bridges.map((bridge) =>
-			bridge.getQuote(params).catch((error) => {
-				console.error(`${bridge.protocol} quote failed:`, error)
-				return null
-			}),
+			bridge.getQuote(params).catch(() => null),
 		)
 
 		const results = await Promise.all(quotePromises)
@@ -80,34 +88,68 @@ export default class AutoTeleportSDK extends Initializable {
 		return results.filter((quote): quote is Quote => quote !== null)
 	}
 
-	public async teleport(params: TeleportParams): Promise<string> {
-		this.ensureInitialized()
+	private subscribeBalanceChanges(
+		params: TeleportParams,
+		callback: () => void,
+	) {
+		return this.balanceService.subscribeBalances(
+			{
+				address: params.address,
+				asset: params.asset,
+				chains: this.config?.chains || [],
+			},
+			callback,
+		)
+	}
 
+	async autoteleport(params: TeleportParams): Promise<{
+		quotes: Quote[]
+		needed: boolean
+		unsubscribe: () => void
+	}> {
 		const quotes = await this.getQuotes(params)
 
-		if (quotes.length === 0) {
-			throw new Error('No quotes available for the given parameters.')
+		// subscribe balance changes to update quotes
+		const balanceChanges = this.subscribeBalanceChanges(params, () => {
+			console.log('balance change')
+		})
+
+		return {
+			quotes,
+			needed: quotes.length > 0,
+			unsubscribe: () => {},
 		}
+	}
+
+	public async teleport(params: TeleportParams, quote: Quote): Promise<string> {
+		this.ensureInitialized()
 
 		if (!this.teleportManager) {
 			throw new Error('No teleport manager found.')
 		}
 
-		const bestQuote = this.teleportManager.selectBestQuote(quotes)
-
-		if (!bestQuote) {
-			throw new Error('Could not select the best quote.')
-		}
-
 		const teleportId = await this.teleportManager.initiateTeleport(
 			params,
-			bestQuote,
+			quote,
 		)
 
 		return teleportId.id
 	}
 
 	private validateTeleportParams(params: TeleportParams) {
-		// implement validation
+		const validActions = params.actions.every((action) => {
+			return Object.hasOwn(action, 'section') && Object.hasOwn(action, 'method')
+		})
+
+		const valid =
+			validActions &&
+			Boolean(params.address) &&
+			Boolean(params.asset) &&
+			Boolean(params.amount) &&
+			Boolean(params.chain)
+
+		if (!valid) {
+			throw new Error('Invalid actions')
+		}
 	}
 }

@@ -2,7 +2,7 @@ import type { BaseDetails } from '../base/BaseManager'
 import { BaseManager } from '../base/BaseManager'
 import type BridgeRegistry from '../bridges/BridgeRegistry'
 import BalanceService from '../services/BalanceService'
-import SubstrateApi from '../services/SubstrateApi'
+import type SubstrateApi from '../services/SubstrateApi'
 import type { Asset } from '../types'
 import type { Action, SDKConfig } from '../types'
 import type { Route } from '../types/bridges'
@@ -38,6 +38,10 @@ export interface TeleportDetails
 	timestamp: number
 }
 
+export type TeleportEventPayload = TeleportDetails & {
+	transactions: TransactionDetails[]
+}
+
 export enum TeleportStatus {
 	Pending = 'pending',
 	Transferring = 'transferring',
@@ -58,7 +62,8 @@ export class TeleportManager extends BaseManager<
 	TeleportDetails,
 	TeleportStatus,
 	any,
-	TeleportEventTypeString
+	TeleportEventTypeString,
+	TeleportEventPayload
 > {
 	private readonly transactionManager: TransactionManager
 	private readonly bridgeRegistry: BridgeRegistry
@@ -68,18 +73,19 @@ export class TeleportManager extends BaseManager<
 
 	constructor(
 		teleportEventEmitter: GenericEmitter<
-			TeleportDetails,
+			TeleportEventPayload,
 			TeleportEventTypeString
 		>,
 		bridgeRegistry: BridgeRegistry,
 		config: SDKConfig,
+		subApi: SubstrateApi,
 	) {
 		super(teleportEventEmitter)
 		this.transactionManager = new TransactionManager(
 			new GenericEmitter<TransactionDetails, TransactionEventTypeString>(),
 		)
 		this.bridgeRegistry = bridgeRegistry
-		this.subApi = new SubstrateApi()
+		this.subApi = subApi
 		this.balanceService = new BalanceService(this.subApi)
 		this.actionManager = new ActionManager(this.subApi, config)
 
@@ -96,6 +102,8 @@ export class TeleportManager extends BaseManager<
 				)
 
 				const teleport = this.getTeleportById(transaction.teleportId)
+
+				this.emitTeleportUpdated(teleport)
 
 				if (transaction.status === TransactionStatus.Cancelled) {
 					return this.updateStatus(teleport.id, TeleportStatus.Failed)
@@ -139,6 +147,19 @@ export class TeleportManager extends BaseManager<
 				await this.executeTeleportActions(teleport)
 			}
 		})
+	}
+
+	private teleportMapper(teleport: TeleportDetails): TeleportEventPayload {
+		return {
+			...teleport,
+			transactions: this.transactionManager.getItemsWhere(
+				(transaction) => transaction.teleportId === teleport.id,
+			),
+		}
+	}
+
+	private emitTeleportUpdated(teleport: TeleportDetails) {
+		this.emitUpdate(teleport)
 	}
 
 	private getTeleportById(teleportId: string) {
@@ -306,6 +327,13 @@ export class TeleportManager extends BaseManager<
 
 	protected getUpdateEventType(): TeleportEventTypeString {
 		return TeleportEventType.TELEPORT_UPDATED
+	}
+
+	protected emitUpdate(item: TeleportDetails): void {
+		this.eventEmitter.emit({
+			type: this.getUpdateEventType(),
+			payload: this.teleportMapper(item),
+		})
 	}
 
 	selectBestQuote(quotes: Quote[]): Quote | undefined {

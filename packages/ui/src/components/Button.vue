@@ -1,6 +1,6 @@
 <template>
     <div class="button-wrapper">
-        <div class="top-container">
+        <div class="top-container" v-if="!loading">
             <div >
                 <!-- Img container -->
             </div>
@@ -12,7 +12,7 @@
 
         <Button
             expanded
-            :disabled="laoding"
+            :disabled="disabled"
             :label="label"
             @click="teleport"
         />
@@ -21,7 +21,8 @@
 
 <script setup lang="ts">
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
-import { computed, defineProps, onBeforeMount, ref } from 'vue'
+import { computed, defineProps } from 'vue'
+import useAutoTeleport from '../composables/useAutoTeleport'
 import Button from './ui/Button/Button.vue'
 import Switch from './ui/Switch/Switch.vue'
 
@@ -30,33 +31,19 @@ const props = defineProps<{
 	autoteleport: TeleportParams
 }>()
 
-const laoding = ref(true)
-const enabled = ref(false)
+const { enabled, needed, teleport, loading } = useAutoTeleport(
+	props.sdk,
+	props.autoteleport,
+)
+
+const disabled = computed(() => !enabled.value || loading.value)
 
 const label = computed(() => {
-	return laoding.value ? 'Loading...' : 'Teleport'
-})
-
-const teleport = async () => {
-	await props.sdk.teleport(props.autoteleport)
-}
-
-onBeforeMount(async () => {
-	console.log('AutoTeleportSDK', props.sdk)
-
-	if (!props.sdk.isInitialized()) {
-		await props.sdk.initialize()
+	if (needed.value && !enabled.value) {
+		return 'Not enough funds on source chain'
 	}
 
-	props.sdk.on('teleport:completed', (teleport) => {
-		console.log(`[UI] Teleport completed`, teleport)
-	})
-
-	const quotes = await props.sdk.getQuotes(props.autoteleport)
-
-	laoding.value = false
-
-	console.log('Quotes', quotes)
+	return loading.value ? 'Loading...' : 'Teleport'
 })
 </script>
 

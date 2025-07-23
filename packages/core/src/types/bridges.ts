@@ -5,7 +5,7 @@ export type BridgeProtocol = 'XCM'
 
 export type TeleportParams = {
 	address: string
-	sourceChain: Chain
+	chain: Chain
 	amount: string
 	asset: Asset
 	actions: Action[]

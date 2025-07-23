@@ -19,11 +19,12 @@ export class BaseManager<
 	StatusType,
 	EventType extends BaseDetailsEvent,
 	EventTypeString extends string,
+	EventPayload = DetailsType,
 > {
 	protected items: Map<string, DetailsType> = new Map()
-	protected eventEmitter: GenericEmitter<DetailsType, EventTypeString>
+	protected eventEmitter: GenericEmitter<EventPayload, EventTypeString>
 
-	constructor(eventEmitter: GenericEmitter<DetailsType, EventTypeString>) {
+	constructor(eventEmitter: GenericEmitter<EventPayload, EventTypeString>) {
 		this.eventEmitter = eventEmitter
 	}
 
@@ -94,10 +95,10 @@ export class BaseManager<
 
 	subscribe(
 		eventType: EventTypeString,
-		callback: (item: DetailsType) => void,
+		callback: (item: EventPayload) => void,
 	): () => void {
 		const subscription = (
-			event: GenericEvent<DetailsType, EventTypeString>,
+			event: GenericEvent<EventPayload, EventTypeString>,
 		) => {
 			callback(event.payload)
 		}
