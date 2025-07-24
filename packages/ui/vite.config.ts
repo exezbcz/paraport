@@ -5,13 +5,6 @@ import dts from 'vite-plugin-dts'
 
 export default defineConfig({
 	plugins: [vue(), dts({ rollupTypes: true })],
-	css: {
-		preprocessorOptions: {
-			scss: {
-				additionalData: `@use "@oruga-ui/theme-oruga/dist/oruga.css";`,
-			},
-		},
-	},
 	build: {
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),

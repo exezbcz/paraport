@@ -1,10 +1,11 @@
 <template>
   <o-button
-    class="is-auto"
+    class="sdk-button"
     v-bind="$props"
     :expanded="expanded"
     :label="label"
     :disabled="disabled"
+    :loading="loading"
   >
     <template
       v-if="$slots.default"
@@ -22,6 +23,7 @@ defineProps<{
 	disabled?: boolean
 	expanded?: boolean
 	label?: string
+	loading?: boolean
 }>()
 </script>
 

@@ -1,7 +1,8 @@
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import mitt from 'mitt'
 import { createApp, h, provide } from 'vue'
-import Button from './components/Button.vue'
+import App from './App.vue'
+import './styles/index.scss'
 
 export interface MountOptions {
 	sdk: AutoTeleportSDK
@@ -23,7 +24,7 @@ export function mount({ target, sdk, autoteleport }: MountOptions) {
 		setup() {
 			provide('eventBus', eventBus)
 		},
-		render: () => h(Button, { sdk, autoteleport }),
+		render: () => h(App, { sdk, autoteleport }),
 	})
 
 	app.mount(targetElement)

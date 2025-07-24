@@ -1,0 +1,27 @@
+.sdk-modal {
+  .o-modal__content {
+    @apply bg-red-800 w-auto border #{!important};
+
+    &.no-shadow {
+      @apply shadow-none;
+    }
+
+    &.enable-mobile {
+      @media screen and (max-width: 425px) {
+        @apply absolute -bottom-[1px] -right-[1px] -left-[1px] flex flex-col;
+      }
+    }
+  }
+
+  .o-modal__content--full-screen {
+    @apply w-full h-screen;
+  }
+
+  .card {
+    @apply rounded-none;
+  }
+
+  &.append-to-body {
+    @apply z-[999];
+  }
+}
