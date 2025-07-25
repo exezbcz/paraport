@@ -1,10 +1,15 @@
-import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
+import type {
+	AutoTeleportSDK,
+	TeleportEventPayload,
+	TeleportParams,
+} from '@autoteleport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
 
 export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 	const session = ref<Awaited<ReturnType<AutoTeleportSDK['autoteleport']>>>()
 	const loading = ref(true)
 	const enabled = ref(false)
+	const autoTeleport = ref<TeleportEventPayload>()
 
 	const selectedQuote = computed(() => session.value?.quotes[0])
 	const needed = computed(() => Boolean(session.value?.needed))
@@ -15,18 +20,29 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 		}
 	}
 
+	const attachListeners = () => {
+		sdk.on('teleport:started', (teleport) => {
+			console.log('[UI] Teleport Started', teleport)
+			autoTeleport.value = teleport
+		})
+
+		sdk.on('teleport:updated', (teleport) => {
+			console.log('[UI] Teleport Updated', teleport)
+			autoTeleport.value = teleport
+		})
+
+		sdk.on('teleport:completed', (teleport) => {
+			console.log('[UI] Teleport completed', teleport)
+			autoTeleport.value = teleport
+		})
+	}
+
 	onBeforeMount(async () => {
 		if (!sdk.isInitialized()) {
 			await sdk.initialize()
 		}
 
-		sdk.on('teleport:updated', (teleport) => {
-			console.log(`[UI] Teleport Updated`, teleport)
-		})
-
-		sdk.on('teleport:completed', (teleport) => {
-			console.log(`[UI] Teleport completed`, teleport)
-		})
+		attachListeners()
 
 		session.value = await sdk.autoteleport(params)
 
@@ -47,5 +63,6 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 		session,
 		needed,
 		teleport,
+		autoTeleport,
 	}
 }

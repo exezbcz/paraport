@@ -23,6 +23,7 @@
 	},
 	"dependencies": {
 		"@autoteleport/core": "workspace:*",
+		"@mdi/font": "^7.4.47",
 		"@oruga-ui/oruga-next": "^0.9.0",
 		"@oruga-ui/theme-oruga": "^0.5.1",
 		"@vue/runtime-dom": "^3.5.13",

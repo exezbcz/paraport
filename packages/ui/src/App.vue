@@ -18,16 +18,18 @@
         />
     </div>
 
-    <Modal v-model="open" />
+    <Modal v-model="open"
+        :teleport="autoTeleport"
+    />
 </template>
 
 <script setup lang="ts">
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
-import useAutoTeleport from './composables/useAutoTeleport'
 import Modal from './components/Modal.vue'
 import Button from './components/ui/Button/Button.vue'
 import Switch from './components/ui/Switch/Switch.vue'
+import useAutoTeleport from './composables/useAutoTeleport'
 
 const props = defineProps<{
 	sdk: AutoTeleportSDK
@@ -36,10 +38,13 @@ const props = defineProps<{
 
 const open = ref(false)
 
-const { enabled, needed, teleport, loading: autotelportLoading, autoTeleport } = useAutoTeleport(
-	props.sdk,
-	props.autoteleport,
-)
+const {
+	enabled,
+	needed,
+	teleport,
+	loading: autotelportLoading,
+	autoTeleport,
+} = useAutoTeleport(props.sdk, props.autoteleport)
 
 const disabled = computed(() => !enabled.value || autotelportLoading.value)
 
@@ -47,7 +52,7 @@ const loading = computed(() => autotelportLoading.value)
 
 const label = computed(() => {
 	if (needed.value && !enabled.value) {
-		return 'Not enough funds on source chain'
+		return `Not enough funds on ${props.autoteleport.chain}`
 	}
 
 	return loading.value ? 'Loading...' : 'Teleport'

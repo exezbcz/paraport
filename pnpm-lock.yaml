@@ -78,6 +78,9 @@ importers:
       '@autoteleport/core':
         specifier: workspace:*
         version: link:../core
+      '@mdi/font':
+        specifier: ^7.4.47
+        version: 7.4.47
       '@oruga-ui/oruga-next':
         specifier: ^0.9.0
         version: 0.9.3(vue@3.5.13(typescript@5.7.3))
@@ -393,6 +396,9 @@ packages:
     peerDependencies:
       '@polkadot/api': '>= 11.2'
       '@polkadot/types-codec': '>= 11.2'
+
+  '@mdi/font@7.4.47':
+    resolution: {integrity: sha512-43MtGpd585SNzHZPcYowu/84Vz2a2g31TvPMTm9uTiCSWzaheQySUcSyUH/46fPnuPQWof2yd0pGBtzee/IQWw==}
 
   '@microsoft/api-extractor-model@7.30.2':
     resolution: {integrity: sha512-3/t2F+WhkJgBzSNwlkTIL0tBgUoBqDqL66pT+nh2mPbM0NIDGVGtpqbGWPgHIzn/mn7kGS/Ep8D8po58e8UUIw==}
@@ -2363,6 +2369,8 @@ snapshots:
       '@kodadot1/static': 0.0.6
       '@polkadot/api': 11.2.1
       '@polkadot/types-codec': 15.5.2
+
+  '@mdi/font@7.4.47': {}
 
   '@microsoft/api-extractor-model@7.30.2(@types/node@22.10.7)':
     dependencies:
