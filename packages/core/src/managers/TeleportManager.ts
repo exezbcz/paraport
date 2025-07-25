@@ -1,63 +1,28 @@
-import type { BaseDetails } from '../base/BaseManager'
 import { BaseManager } from '../base/BaseManager'
 import type BridgeRegistry from '../bridges/BridgeRegistry'
 import BalanceService from '../services/BalanceService'
 import type SubstrateApi from '../services/SubstrateApi'
-import type { Asset } from '../types'
-import type { Action, SDKConfig } from '../types'
-import type { Route } from '../types/bridges'
+import type { Action, Quote, SDKConfig } from '../types'
 import {
-	type Quote,
+	type TeleportDetails,
+	type TeleportEventPayload,
+	TeleportEventType,
+	type TeleportEventTypeString,
 	type TeleportParams,
+	TeleportStatus,
+} from '../types/teleport'
+import {
 	type TransactionCallback,
 	type TransactionDetails,
+	TransactionEventType,
+	type TransactionEventTypeString,
 	TransactionStatus,
 	TransactionType,
 	type TransactionUnsubscribe,
-} from '../types/bridges'
+} from '../types/transactions'
 import { GenericEmitter } from '../utils/GenericEmitter'
 import { ActionManager } from './ActionManager'
-import {
-	TransactionEventType,
-	type TransactionEventTypeString,
-	TransactionManager,
-} from './TransactionManager'
-
-type TeleportEvent = any
-
-export interface TeleportDetails
-	extends BaseDetails<TeleportStatus, TeleportEvent> {
-	id: string
-	details: {
-		address: string
-		amount: string
-		asset: Asset
-		route: Route
-	}
-	events: TeleportEvent[]
-	timestamp: number
-	txHash?: string
-}
-
-export type TeleportEventPayload = TeleportDetails & {
-	transactions: TransactionDetails[]
-}
-
-export enum TeleportStatus {
-	Pending = 'pending',
-	Transferring = 'transferring',
-	Waiting = 'waiting',
-	Executing = 'executing',
-	Completed = 'completed',
-	Failed = 'failed',
-}
-
-export enum TeleportEventType {
-	TELEPORT_UPDATED = 'teleport:updated',
-	TELEPORT_COMPLETED = 'teleport:completed',
-}
-
-export type TeleportEventTypeString = `${TeleportEventType}`
+import { TransactionManager } from './TransactionManager'
 
 export class TeleportManager extends BaseManager<
 	TeleportDetails,
@@ -94,6 +59,38 @@ export class TeleportManager extends BaseManager<
 	}
 
 	private registerListeners() {
+		/**
+		 * Subscribe to teleport events.
+		 **/
+		this.subscribe(TeleportEventType.TELEPORT_STARTED, (payload) => {
+			const teleport = this.getItem(payload.id)
+
+			teleport && this.transferFunds(teleport)
+		})
+
+		this.subscribe(TeleportEventType.TELEPORT_UPDATED, async (teleport) => {
+			console.log(`[${TeleportEventType.TELEPORT_UPDATED}]`, teleport.status)
+
+			if (teleport.status === TeleportStatus.Completed) {
+				return this.eventEmitter.emit({
+					type: TeleportEventType.TELEPORT_COMPLETED,
+					payload: teleport,
+				})
+			}
+
+			if (teleport.status === TeleportStatus.Waiting) {
+				await this.waitForFunds(teleport)
+			} else if (
+				teleport.status === TeleportStatus.Executing &&
+				this.areIsTeleportActionsFirstRun(teleport)
+			) {
+				await this.executeTeleportActions(teleport)
+			}
+		})
+
+		/**
+		 * Subscribe to transaction events.
+		 **/
 		this.transactionManager.subscribe(
 			TransactionEventType.TRANSACTION_UPDATED,
 			async (transaction) => {
@@ -133,26 +130,6 @@ export class TeleportManager extends BaseManager<
 				transactionTypeHandler[transaction.type](transaction)
 			},
 		)
-
-		this.subscribe(TeleportEventType.TELEPORT_UPDATED, async (teleport) => {
-			console.log(`[${TeleportEventType.TELEPORT_UPDATED}]`, teleport.status)
-
-			if (teleport.status === TeleportStatus.Completed) {
-				return this.eventEmitter.emit({
-					type: TeleportEventType.TELEPORT_COMPLETED,
-					payload: teleport,
-				})
-			}
-
-			if (teleport.status === TeleportStatus.Waiting) {
-				await this.waitForFunds(teleport)
-			} else if (
-				teleport.status === TeleportStatus.Executing &&
-				this.areIsTeleportActionsFirstRun(teleport)
-			) {
-				await this.executeTeleportActions(teleport)
-			}
-		})
 	}
 
 	private areIsTeleportActionsFirstRun(teleport: TeleportDetails) {
@@ -263,13 +240,16 @@ export class TeleportManager extends BaseManager<
 
 		this.createTelportTransactions(params, quote, teleportId)
 
-		try {
-			await this.transferFunds(teleport)
-		} catch (error: any) {
-			console.error('Error during transfer:', error)
-		}
+		this.startTeleport(teleport)
 
 		return teleport
+	}
+
+	async startTeleport(teleport: TeleportDetails) {
+		this.eventEmitter.emit({
+			type: TeleportEventType.TELEPORT_STARTED,
+			payload: this.teleportMapper(teleport),
+		})
 	}
 
 	private createTelportTransactions(

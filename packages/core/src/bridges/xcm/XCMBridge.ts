@@ -5,16 +5,17 @@ import { ActionManager } from '../../managers/ActionManager'
 import type BalanceService from '../../services/BalanceService'
 import FeeService from '../../services/FeeService'
 import type SubstrateApi from '../../services/SubstrateApi'
-import type { Asset, Chain, SDKConfig } from '../../types'
+import type { Asset, Chain, Quote, SDKConfig } from '../../types'
 import type {
 	BridgeAdapter,
 	BridgeProtocol,
 	BrigeTransferParams,
-	Quote,
-	TeleportParams,
+} from '../../types/bridges'
+import type { TeleportParams } from '../../types/teleport'
+import type {
 	TransactionCallback,
 	TransactionStatus,
-} from '../../types/bridges'
+} from '../../types/transactions'
 import { getChainsOfAsset } from '../../utils'
 import { signAndSend } from '../../utils/tx'
 

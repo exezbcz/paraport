@@ -4,7 +4,7 @@ import type { Action, Chain, SDKConfig } from '../types'
 import type {
 	TransactionCallback,
 	TransactionUnsubscribe,
-} from '../types/bridges'
+} from '../types/transactions'
 import { signAndSend } from '../utils/tx'
 
 export class ActionManager {

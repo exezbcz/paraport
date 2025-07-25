@@ -1,6 +1,6 @@
 import AutoTeleportSDK from './sdk/AutoTeleportSDK'
 
-import { Asset, Chain } from './types'
-import type { Quote, TeleportParams } from './types/bridges'
+import { Asset, Chain, type Quote } from './types'
+import type { TeleportParams } from './types/teleport'
 
 export { AutoTeleportSDK, Chain, Asset, type TeleportParams, type Quote }

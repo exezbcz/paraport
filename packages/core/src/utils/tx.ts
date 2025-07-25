@@ -9,7 +9,7 @@ import {
 	type TransactionCallback,
 	TransactionStatus,
 	type TransactionUnsubscribe,
-} from '../types/bridges'
+} from '../types/transactions'
 
 type TxCbParams = {
 	onSuccess: (prams: { blockHash: Hash; txHash: Hash }) => void

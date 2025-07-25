@@ -2,16 +2,16 @@ import { Initializable } from '../base/Initializable'
 import BridgeRegistry from '../bridges/BridgeRegistry'
 import XCMBridge from '../bridges/xcm/XCMBridge'
 import { SDKConfigManager } from '../config/SDKConfigManager'
-import {
-	type TeleportEventPayload,
-	type TeleportEventType,
-	type TeleportEventTypeString,
-	TeleportManager,
-} from '../managers/TeleportManager'
+import { TeleportManager } from '../managers/TeleportManager'
 import BalanceService from '../services/BalanceService'
 import SubstrateApi from '../services/SubstrateApi'
-import type { SDKConfig } from '../types'
-import type { Quote, TeleportParams } from '../types/bridges'
+import type { Quote, SDKConfig } from '../types'
+import type {
+	TeleportEventPayload,
+	TeleportEventType,
+	TeleportEventTypeString,
+	TeleportParams,
+} from '../types/teleport'
 import { GenericEmitter } from '../utils/GenericEmitter'
 
 export default class AutoTeleportSDK extends Initializable {

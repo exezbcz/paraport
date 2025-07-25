@@ -27,3 +27,20 @@ export type Action = {
 	method: string
 	args: unknown[]
 }
+
+export type Route = {
+	source: Chain
+	target: Chain
+	protocol: BridgeProtocol
+}
+
+export type Quote = {
+	route: Route
+	fees: {
+		network: string
+		actions?: string
+		total: string
+	}
+	amount: string
+	total: string
+}

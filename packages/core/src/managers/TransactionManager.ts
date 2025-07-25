@@ -1,23 +1,14 @@
 import { type BaseDetailsEvent, BaseManager } from '../base/BaseManager'
 import type { Action, Chain } from '../types'
+import type { BrigeTransferParams } from '../types/bridges'
 import {
-	type BrigeTransferParams,
 	type TransactionDetails,
+	TransactionEventType,
+	type TransactionEventTypeString,
 	TransactionStatus,
 	type TransactionType,
-} from '../types/bridges'
+} from '../types/transactions'
 import type { GenericEmitter } from '../utils/GenericEmitter'
-
-export enum TransactionEventType {
-	TRANSACTION_STARTED = 'transaction:started',
-	TRANSACTION_UPDATED = 'transaction:updated',
-	TRANSACTION_PROCESSING = 'transaction:processing',
-	TRANSACTION_COMPLETED = 'transaction:completed',
-	TRANSACTION_FAILED = 'transaction:failed',
-}
-
-// type TransactionUpdatePayload = TransactionDetails;
-export type TransactionEventTypeString = `${TransactionEventType}`
 
 export class TransactionManager extends BaseManager<
 	TransactionDetails,
