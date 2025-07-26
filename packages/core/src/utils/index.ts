@@ -4,7 +4,7 @@ import { transferableBalanceOf } from './balance'
 import { edOf, teleportEdOf } from './chains'
 
 import type { ChainProperties } from '@kodadot1/static'
-import type { Asset, Chain, ChainPrefix } from '../types'
+import type { Asset, Chain, ChainPrefix } from '../types/common'
 import { ASSET_CHAINS_MAP, CHAIN_TO_CHAIN_PREFIX_MAP } from './constants'
 
 export const chainPropListOf = (chain: Chain): ChainProperties => {

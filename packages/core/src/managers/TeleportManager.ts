@@ -2,7 +2,7 @@ import { BaseManager } from '../base/BaseManager'
 import type BridgeRegistry from '../bridges/BridgeRegistry'
 import BalanceService from '../services/BalanceService'
 import type SubstrateApi from '../services/SubstrateApi'
-import type { Action, Quote, SDKConfig } from '../types'
+import type { Action, Quote, SDKConfig } from '../types/common'
 import {
 	type TeleportDetails,
 	type TeleportEventPayload,

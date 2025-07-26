@@ -1,6 +1,6 @@
 import { type BaseDetailsEvent, BaseManager } from '../base/BaseManager'
-import type { Action, Chain } from '../types'
 import type { BrigeTransferParams } from '../types/bridges'
+import type { Action, Chain } from '../types/common'
 import {
 	type TransactionDetails,
 	TransactionEventType,

@@ -1,4 +1,4 @@
-import type { Asset, Chain, Quote } from '.'
+import type { Asset, Chain, Quote } from './common'
 import type { TeleportParams } from './teleport'
 import type {
 	TransactionCallback,

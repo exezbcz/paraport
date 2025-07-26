@@ -1,6 +1,6 @@
-import type { Action, Chain } from '.'
 import type { BaseDetails, BaseDetailsEvent } from '../base/BaseManager'
 import type { BrigeTransferParams } from './bridges'
+import type { Action, Chain } from './common'
 
 export enum TransactionEventType {
 	TRANSACTION_STARTED = 'transaction:started',

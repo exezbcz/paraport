@@ -5,7 +5,7 @@ import { SDKConfigManager } from '../config/SDKConfigManager'
 import { TeleportManager } from '../managers/TeleportManager'
 import BalanceService from '../services/BalanceService'
 import SubstrateApi from '../services/SubstrateApi'
-import type { Quote, SDKConfig } from '../types'
+import type { Quote, SDKConfig } from '../types/common'
 import type {
 	TeleportEventPayload,
 	TeleportEventType,

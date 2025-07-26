@@ -1,6 +1,6 @@
 import { balanceOf } from '@kodadot1/sub-api'
 import pRetry from 'p-retry'
-import type { Chain } from '../types'
+import type { Chain } from '../types/common'
 import { chainPropListOf, formatAddress, transferableBalanceOf } from '../utils'
 import type SubstrateApi from './SubstrateApi'
 

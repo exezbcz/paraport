@@ -1,6 +1,6 @@
 import FeeService from '../services/FeeService'
 import type SubstrateApi from '../services/SubstrateApi'
-import type { Action, Chain, SDKConfig } from '../types'
+import type { Action, Chain, SDKConfig } from '../types/common'
 import type {
 	TransactionCallback,
 	TransactionUnsubscribe,

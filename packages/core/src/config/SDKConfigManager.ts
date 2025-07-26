@@ -1,5 +1,5 @@
 import ConfigValidationError from '../errors/ConfigError'
-import type { SDKConfig } from '../types'
+import type { SDKConfig } from '../types/common'
 
 export class SDKConfigManager {
 	public static validateConfig(config: SDKConfig) {

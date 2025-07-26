@@ -1,5 +1,5 @@
 import { ApiFactory } from '@kodadot1/sub-api'
-import type { Chain } from '../types'
+import type { Chain } from '../types/common'
 import { chainPrefixOf } from '../utils'
 
 interface IApiFactory<T> {

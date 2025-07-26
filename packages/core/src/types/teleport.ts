@@ -1,5 +1,5 @@
-import type { Action, Asset, Chain, Route } from '.'
 import type { BaseDetails } from '../base/BaseManager'
+import type { Action, Asset, Chain, Route } from './common'
 import type { TransactionDetails } from './transactions'
 
 type TeleportEvent = any
