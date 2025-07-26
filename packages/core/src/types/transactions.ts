@@ -45,20 +45,25 @@ export type TransactionCallback = (
 		| {
 				status: TransactionStatus.Finalized
 				txHash: string
-		  }
-		| {
-				status: TransactionStatus.Block
-				error: string
+				error?: string
 		  }
 		| {
 				status: TransactionStatus.Block
 				txHash: string
+				error?: string
+		  }
+		| {
+				status: TransactionStatus.Block
+				txHash: string
+				error?: string
 		  }
 		| {
 				status: Exclude<
 					TransactionStatus,
 					TransactionStatus.Finalized | TransactionStatus.Block
 				>
+				error?: string
+				txHash?: string
 		  },
 ) => void
 

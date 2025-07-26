@@ -12,8 +12,8 @@ import {
 } from '../types/transactions'
 
 type TxCbParams = {
-	onSuccess: (prams: { blockHash: Hash; txHash: Hash }) => void
-	onError: (err: DispatchError) => void
+	onSuccess: (params: { blockHash: Hash; txHash: Hash }) => void
+	onError: (params: { error: DispatchError; txHash: Hash }) => void
 	onResult?: (params: {
 		result: ISubmittableResult
 		status: TransactionStatus
@@ -78,10 +78,11 @@ export const signAndSend = async ({
 						txHash: txHash.toString(),
 					})
 				},
-				onError: (err) => {
+				onError: ({ error, txHash }) => {
 					callback({
 						status: TransactionStatus.Block,
-						error: err.toString(),
+						error: error.toString(),
+						txHash: txHash.toString(),
 					})
 				},
 				onResult: ({ result, status }) => {
