@@ -121,6 +121,7 @@ export class TeleportManager extends BaseManager<
 					},
 					[TransactionType.Action]: (transaction) => {
 						if (transaction.status === TransactionStatus.Finalized) {
+							this.emitTeleportUpdated(teleport)
 							this.executeTeleportActions(teleport)
 						} else {
 							this.emitTeleportUpdated(teleport)
