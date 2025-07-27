@@ -29,7 +29,8 @@ export class TeleportManager extends BaseManager<
 	TeleportStatus,
 	any,
 	TeleportEventTypeString,
-	TeleportEventPayload
+	TeleportEventPayload,
+	{ checked?: boolean }
 > {
 	private readonly transactionManager: TransactionManager
 	private readonly bridgeRegistry: BridgeRegistry
@@ -82,7 +83,7 @@ export class TeleportManager extends BaseManager<
 				await this.waitForFunds(teleport)
 			} else if (
 				teleport.status === TeleportStatus.Executing &&
-				this.areIsTeleportActionsFirstRun(teleport)
+				this.isTeleportActionsFirstRun(teleport)
 			) {
 				await this.executeTeleportActions(teleport)
 			}
@@ -132,7 +133,7 @@ export class TeleportManager extends BaseManager<
 		)
 	}
 
-	private areIsTeleportActionsFirstRun(teleport: TeleportDetails) {
+	private isTeleportActionsFirstRun(teleport: TeleportDetails) {
 		return this.transactionManager
 			.getTelportTransactions(teleport.id, {
 				type: TransactionType.Action,
@@ -169,7 +170,9 @@ export class TeleportManager extends BaseManager<
 			amount: teleport.details.amount,
 		})
 
-		this.updateStatus(teleport.id, TeleportStatus.Executing)
+		this.updateStatus(teleport.id, TeleportStatus.Executing, {
+			checked: true,
+		})
 	}
 
 	private async findNextPendingTransaction(
@@ -234,6 +237,7 @@ export class TeleportManager extends BaseManager<
 			},
 			events: [],
 			timestamp: Date.now(),
+			checked: false,
 		}
 
 		this.setItem(teleportId, teleport, false)

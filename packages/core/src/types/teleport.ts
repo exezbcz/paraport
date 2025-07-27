@@ -23,7 +23,7 @@ export interface TeleportDetails
 	}
 	events: TeleportEvent[]
 	timestamp: number
-	txHash?: string
+	checked: boolean
 }
 
 export enum TeleportStatus {
