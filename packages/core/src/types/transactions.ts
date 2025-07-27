@@ -38,6 +38,7 @@ export interface TransactionDetails
 	teleportId: string
 	type: TransactionType
 	order: number
+	txHash?: string
 }
 
 export type TransactionCallback = (

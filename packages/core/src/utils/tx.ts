@@ -27,6 +27,7 @@ export const txCb =
 
 		if (result.dispatchError) {
 			onError(result.dispatchError)
+			onError({ error: result.dispatchError, txHash: result.txHash })
 		}
 
 		if (result.status.isFinalized) {
