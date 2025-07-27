@@ -1,20 +1,23 @@
 <template>
     <Modal v-model="isOpen"
-    title="Sign Transactions"
+        content-class="min-w-[400px]"
+        :title="$t('autoteleport.title')"
     >
-        <Transactions :items="teleport?.transactions || []"/>
+        <Steps :items="steps"/>
     </Modal>
 </template>
 
 <script setup lang="ts">
 import type { TeleportEventPayload } from '@autoteleport/core'
-import Transactions from './Transactions.vue'
-
+import { computed } from 'vue'
+import useTeleportSteps from '../composables/useTeleportSteps'
+import Steps from './Steps.vue'
 import Modal from './ui/Modal/Modal.vue'
-
-const isOpen = defineModel<boolean>()
 
 const props = defineProps<{
 	teleport?: TeleportEventPayload
 }>()
+
+const isOpen = defineModel<boolean>()
+const steps = useTeleportSteps(computed(() => props.teleport))
 </script>

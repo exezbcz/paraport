@@ -28,7 +28,8 @@
 		"@oruga-ui/theme-oruga": "^0.5.1",
 		"@vue/runtime-dom": "^3.5.13",
 		"mitt": "^3.0.1",
-		"vue": "^3.5.13"
+		"vue": "^3.5.13",
+		"vue-i18n": "^10.0.5"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",

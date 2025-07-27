@@ -1,6 +1,6 @@
 .sdk-modal {
   .o-modal__content {
-    @apply bg-red-800 w-auto border #{!important};
+    @apply w-auto border #{!important};
 
     &.no-shadow {
       @apply shadow-none;

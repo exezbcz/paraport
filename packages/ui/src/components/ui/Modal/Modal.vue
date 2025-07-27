@@ -1,7 +1,9 @@
 <template>
     <o-modal
-        :active="value"
         class="sdk-modal"
+        :active="value"
+        :closable="false"
+        :contentClass="contentClass"
     >
 
     <div class="px-8 py-6 border-b border-gray-200 flex justify-between items-center">
@@ -29,6 +31,7 @@ const value = defineModel<boolean>()
 
 defineProps<{
 	title?: string
+	contentClass?: string
 }>()
 </script>
 <style src="./Modal.scss" lang="scss" scoped></style>
