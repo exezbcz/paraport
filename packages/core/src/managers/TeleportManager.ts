@@ -21,6 +21,7 @@ import {
 	type TransactionUnsubscribe,
 } from '../types/transactions'
 import { GenericEmitter } from '../utils/GenericEmitter'
+import { getExtrinsicDetails } from '../utils/extrinsics'
 import { ActionManager } from './ActionManager'
 import { TransactionManager } from './TransactionManager'
 
@@ -282,6 +283,7 @@ export class TeleportManager extends BaseManager<
 		params.actions.forEach((action, index) => {
 			this.transactionManager.createTransaction({
 				id: this.getActionTransactionId(teleportId, index),
+				name: getExtrinsicDetails(action)?.docs,
 				type: TransactionType.Action,
 				order: index + 1,
 				details: action,

@@ -7,7 +7,7 @@
         />
 
         <div class="flex flex-col gap-1">
-            <p class="font-bold"> {{ step.title }} </p>
+            <p class="font-bold capitalize"> {{ step.title }} </p>
 
             <div class="flex items-center gap-2">
                 <p class="text-gray-500 capitalize"> {{ step.statusLabel }} </p>

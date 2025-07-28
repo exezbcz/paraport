@@ -99,7 +99,7 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 				statusLabel: balanceCheckDetails.value.message,
 			},
 			...actionTransactions.map((transaction) => ({
-				title: transaction.type, // todo get dynamic title from translations
+				title: transaction.name,
 				status: getStepStatus(transaction),
 				txHash: transaction.txHash,
 			})),

@@ -34,6 +34,7 @@ export class TransactionManager extends BaseManager<
 		details,
 		order,
 		id,
+		name,
 	}: {
 		id: string
 		chain: Chain
@@ -41,6 +42,7 @@ export class TransactionManager extends BaseManager<
 		type: TransactionType
 		details: BrigeTransferParams | Action
 		order: number
+		name?: string
 	}): TransactionDetails {
 		const transaction: TransactionDetails = {
 			id,
@@ -52,6 +54,7 @@ export class TransactionManager extends BaseManager<
 			timestamp: Date.now(),
 			type,
 			order,
+			name,
 		}
 
 		this.setItem(id, transaction, false)

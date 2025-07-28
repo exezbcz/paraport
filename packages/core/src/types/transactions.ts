@@ -33,6 +33,7 @@ export interface TransactionDetails
 		TransactionStatus,
 		BaseDetailsEvent<{ status: TransactionStatus; error?: string }>
 	> {
+	name?: string
 	chain: Chain
 	details: BrigeTransferParams | Action
 	teleportId: string
