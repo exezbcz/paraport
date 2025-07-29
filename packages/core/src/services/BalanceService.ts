@@ -1,4 +1,5 @@
 import { balanceOf } from '@kodadot1/sub-api'
+import type { AccountInfo } from '@polkadot/types/interfaces'
 import pRetry from 'p-retry'
 import type { Asset, Chain } from '../types/common'
 import { chainPropListOf, formatAddress, transferableBalanceOf } from '../utils'
@@ -85,11 +86,11 @@ export default class BalanceService {
 
 			let {
 				data: { free: previousFree },
-			} = await api.query.system.account(address)
+			} = (await api.query.system.account(address)) as AccountInfo
 
 			return api.query.system.account(
 				address,
-				({ data: { free: currentFree } }) => {
+				({ data: { free: currentFree } }: AccountInfo) => {
 					const change = currentFree.sub(previousFree)
 
 					if (!change.isZero()) {
