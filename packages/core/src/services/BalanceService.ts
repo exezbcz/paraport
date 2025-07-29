@@ -110,7 +110,7 @@ export default class BalanceService {
 		amount,
 	}: {
 		address: string
-		asset: string
+		asset: Asset
 		chains: Chain[]
 		amount: string
 	}): Promise<Balance> {
