@@ -1,22 +1,25 @@
 import { balanceOf } from '@kodadot1/sub-api'
 import pRetry from 'p-retry'
-import type { Chain } from '../types/common'
+import type { Asset, Chain } from '../types/common'
 import { chainPropListOf, formatAddress, transferableBalanceOf } from '../utils'
 import type SubstrateApi from './SubstrateApi'
 
 type Balance = {
 	chain: Chain
 	address: string
-	asset: string
+	asset: Asset
 	amount: string
 	transferable: string
 }
 
-type GetBalanceParams = {
+type GetBalancesParams = {
 	address: string
-	asset: string
+	asset: Asset
 	chains: Chain[]
 }
+
+type GetBalanceParams = { chain: Chain; address: string; asset: Asset }
+
 export default class BalanceService {
 	private api: SubstrateApi
 
@@ -24,26 +27,45 @@ export default class BalanceService {
 		this.api = api
 	}
 
+	async hasEnoughBalance({
+		chain,
+		address,
+		asset,
+		amount,
+	}: GetBalanceParams & { amount: string }) {
+		const balance = await this.getBalance({ chain, address, asset })
+
+		return Number(balance.transferable) >= Number(amount)
+	}
+
+	private async getBalance({
+		chain,
+		address,
+		asset,
+	}: GetBalanceParams): Promise<Balance> {
+		const api = await this.api.getInstance(chain)
+
+		// TODO: support non native assets
+		const balance = await balanceOf(api, address)
+		const amount = balance.toString()
+
+		return {
+			chain,
+			asset,
+			address: formatAddress(address, chainPropListOf(chain).ss58Format),
+			amount,
+			transferable: transferableBalanceOf(amount, chain).toString(),
+		} as Balance
+	}
+
 	async getBalances({
 		address,
 		asset,
 		chains,
-	}: GetBalanceParams): Promise<Balance[]> {
+	}: GetBalancesParams): Promise<Balance[]> {
 		try {
-			const balancePromises = chains.map(async (chainId) => {
-				const api = await this.api.getInstance(chainId)
-
-				// TODO: support non native assets
-				const balance = await balanceOf(api, address)
-				const amount = balance.toString()
-
-				return {
-					chain: chainId,
-					asset,
-					address: formatAddress(address, chainPropListOf(chainId).ss58Format),
-					amount,
-					transferable: transferableBalanceOf(amount, chainId).toString(),
-				} as Balance
+			const balancePromises = chains.map(async (chain) => {
+				return this.getBalance({ chain, address, asset })
 			})
 
 			const balances = await Promise.all(balancePromises)
@@ -55,7 +77,7 @@ export default class BalanceService {
 	}
 
 	async subscribeBalances(
-		{ address, chains }: GetBalanceParams,
+		{ address, chains }: GetBalancesParams,
 		callback: () => void = () => {},
 	) {
 		const balancePromises = chains.map(async (chainId) => {

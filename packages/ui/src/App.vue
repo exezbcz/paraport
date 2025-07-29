@@ -20,6 +20,7 @@
 
     <Modal v-model="open"
         :teleport="autoTeleport"
+        @retry="retry"
     />
 </template>
 
@@ -44,6 +45,7 @@ const {
 	teleport,
 	loading: autotelportLoading,
 	autoTeleport,
+	retry,
 } = useAutoTeleport(props.sdk, props.autoteleport)
 
 const disabled = computed(() => !enabled.value || autotelportLoading.value)

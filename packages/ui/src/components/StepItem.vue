@@ -19,6 +19,12 @@
                     <a href="#" >View Tx</a>
                     <Icon icon="arrow-top-right" size="small" />
                 </div>
+
+                <Button
+                    v-else-if="step.status === TeleportStepStatus.Failed"
+                    :label="'Retry'"
+                    @click="$emit('retry')"
+                />
             </div>
         </div>
     </div>
@@ -27,8 +33,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { type TeleportStepDetails, TeleportStepStatus } from '../types'
+import Button from './ui/Button/Button.vue'
 import Icon from './ui/Icon/Icon.vue'
 
+defineEmits(['retry'])
 const props = defineProps<{
 	step: TeleportStepDetails
 }>()

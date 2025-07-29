@@ -6,6 +6,7 @@ import { TeleportManager } from '../managers/TeleportManager'
 import BalanceService from '../services/BalanceService'
 import SubstrateApi from '../services/SubstrateApi'
 import type { Quote, SDKConfig } from '../types/common'
+import type { AutoteleportResponse } from '../types/sdk'
 import type {
 	TeleportEventPayload,
 	TeleportEventType,
@@ -101,26 +102,36 @@ export default class AutoTeleportSDK extends Initializable {
 		)
 	}
 
-	async autoteleport(params: TeleportParams): Promise<{
-		quotes: Quote[]
-		needed: boolean
-		unsubscribe: () => void
-	}> {
+	private async calculateTeleport(
+		params: TeleportParams,
+	): Promise<AutoteleportResponse> {
 		const quotes = await this.getQuotes(params)
-
-		// subscribe balance changes to update quotes
-		const balanceChanges = this.subscribeBalanceChanges(params, () => {
-			console.log('balance change')
-		})
 
 		return {
 			quotes,
-			needed: quotes.length > 0,
+			needed: !(await this.balanceService.hasEnoughBalance(params)),
+		}
+	}
+
+	async autoteleport(
+		params: TeleportParams,
+	): Promise<AutoteleportResponse & { unsubscribe: () => void }> {
+		const response = await this.calculateTeleport(params)
+
+		this.subscribeBalanceChanges(params, async () => {
+			console.log('balance change', await this.calculateTeleport(params))
+		})
+
+		return {
+			...response,
 			unsubscribe: () => {},
 		}
 	}
 
-	public async teleport(params: TeleportParams, quote: Quote): Promise<string> {
+	public async teleport(
+		params: TeleportParams,
+		quote: Quote,
+	): Promise<{ id: string; retry: () => void }> {
 		this.ensureInitialized()
 
 		if (!this.teleportManager) {
@@ -132,7 +143,12 @@ export default class AutoTeleportSDK extends Initializable {
 			quote,
 		)
 
-		return teleportId.id
+		return {
+			id: teleportId.id,
+			retry: () => {
+				this.teleportManager!.retryTeleport(teleportId.id)
+			},
+		}
 	}
 
 	private validateTeleportParams(params: TeleportParams) {

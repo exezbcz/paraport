@@ -177,9 +177,9 @@ export class TeleportManager extends BaseManager<
 		})
 	}
 
-	private async findNextPendingTransaction(
+	private findNextPendingTransaction(
 		teleport: TeleportDetails,
-	): Promise<TransactionDetails | undefined> {
+	): TransactionDetails | undefined {
 		const transaction = this.transactionManager
 			.getItemsWhere((transaction) => transaction.teleportId === teleport.id)
 			.sort((a, b) => a.order - b.order)
@@ -192,23 +192,14 @@ export class TeleportManager extends BaseManager<
 		return transaction
 	}
 
-	private async executeTeleportActions(teleport: TeleportDetails) {
-		const transaction = await this.findNextPendingTransaction(teleport)
+	private executeTeleportActions(teleport: TeleportDetails) {
+		const transaction = this.findNextPendingTransaction(teleport)
 
 		if (!transaction) {
 			return this.updateStatus(teleport.id, TeleportStatus.Completed)
 		}
 
-		if (transaction.type === TransactionType.Action) {
-			this.actionManager.execute(
-				{
-					action: transaction.details as Action,
-					chain: transaction.chain,
-					address: teleport.details.address,
-				},
-				this.transactionCallbackHandler(transaction.id),
-			)
-		}
+		this.executeTeleportTransaction(transaction)
 	}
 
 	private transactionCallbackHandler(
@@ -249,6 +240,64 @@ export class TeleportManager extends BaseManager<
 		this.startTeleport(teleport)
 
 		return teleport
+	}
+
+	private executeTeleportTransaction(transaction: TransactionDetails) {
+		const teleport = this.getItem(transaction.teleportId)!
+
+		if (transaction.status !== TransactionStatus.Unknown) {
+			this.transactionManager.updateStatus(
+				transaction.id,
+				TransactionStatus.Unknown,
+			)
+		}
+
+		const actionExecutor: Record<
+			TransactionType,
+			({
+				transaction,
+				teleport,
+			}: {
+				transaction: TransactionDetails
+				teleport: TeleportDetails
+			}) => void
+		> = {
+			[TransactionType.Teleport]: ({ teleport }) => {
+				this.transferFunds(teleport)
+			},
+			[TransactionType.Action]: ({ transaction, teleport }) => {
+				this.actionManager.execute(
+					{
+						action: transaction.details as Action,
+						chain: transaction.chain,
+						address: teleport.details.address,
+					},
+					this.transactionCallbackHandler(transaction.id),
+				)
+			},
+		}
+
+		actionExecutor[transaction.type]({ transaction, teleport })
+	}
+
+	retryTeleport(teleportId: string) {
+		const teleport = this.getItem(teleportId)
+
+		if (!teleport) {
+			throw new Error(`Teleport not found`)
+		}
+
+		if (teleport.status !== TeleportStatus.Failed) {
+			throw new Error(`Teleport is not failed`)
+		}
+
+		const transaction = this.findNextPendingTransaction(teleport)
+
+		if (!transaction) {
+			return
+		}
+
+		this.executeTeleportTransaction(transaction)
 	}
 
 	async startTeleport(teleport: TeleportDetails) {
@@ -302,21 +351,19 @@ export class TeleportManager extends BaseManager<
 	}
 
 	private async transferFunds(
-		teleportDetails: TeleportDetails,
+		teleport: TeleportDetails,
 	): Promise<TransactionUnsubscribe> {
-		const transactionId = this.getTeleportTransactionId(teleportDetails.id)
+		const transactionId = this.getTeleportTransactionId(teleport.id)
 
-		const bridge = this.bridgeRegistry.get(
-			teleportDetails.details.route.protocol,
-		)
+		const bridge = this.bridgeRegistry.get(teleport.details.route.protocol)
 
 		return await bridge.transfer(
 			{
-				amount: teleportDetails.details.amount,
-				from: teleportDetails.details.route.source,
-				to: teleportDetails.details.route.target,
-				address: teleportDetails.details.address,
-				asset: teleportDetails.details.asset,
+				amount: teleport.details.amount,
+				from: teleport.details.route.source,
+				to: teleport.details.route.target,
+				address: teleport.details.address,
+				asset: teleport.details.asset,
 			},
 			this.transactionCallbackHandler(transactionId),
 		)

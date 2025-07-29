@@ -3,37 +3,38 @@ import type {
 	TeleportEventPayload,
 	TeleportParams,
 } from '@autoteleport/core'
+import { TeleportEventType } from '@autoteleport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
+
+const TELEPORT_EVENTS = [
+	TeleportEventType.TELEPORT_COMPLETED,
+	TeleportEventType.TELEPORT_STARTED,
+	TeleportEventType.TELEPORT_UPDATED,
+]
 
 export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 	const session = ref<Awaited<ReturnType<AutoTeleportSDK['autoteleport']>>>()
 	const loading = ref(true)
 	const enabled = ref(false)
 	const autoTeleport = ref<TeleportEventPayload>()
+	const retry = ref<() => void>()
 
 	const selectedQuote = computed(() => session.value?.quotes[0])
 	const needed = computed(() => Boolean(session.value?.needed))
 
 	const teleport = async () => {
 		if (selectedQuote.value) {
-			await sdk.teleport(params, selectedQuote.value)
+			const response = await sdk.teleport(params, selectedQuote.value)
+			retry.value = response.retry
 		}
 	}
 
 	const attachListeners = () => {
-		sdk.on('teleport:started', (teleport) => {
-			console.log('[UI] Teleport Started', teleport)
-			autoTeleport.value = teleport
-		})
-
-		sdk.on('teleport:updated', (teleport) => {
-			console.log('[UI] Teleport Updated', teleport)
-			autoTeleport.value = teleport
-		})
-
-		sdk.on('teleport:completed', (teleport) => {
-			console.log('[UI] Teleport completed', teleport)
-			autoTeleport.value = teleport
+		TELEPORT_EVENTS.forEach((event) => {
+			sdk.on(event, (teleport) => {
+				console.log(`[UI] ${event}`, teleport)
+				autoTeleport.value = teleport
+			})
 		})
 	}
 
@@ -64,5 +65,6 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 		needed,
 		teleport,
 		autoTeleport,
+		retry,
 	}
 }
