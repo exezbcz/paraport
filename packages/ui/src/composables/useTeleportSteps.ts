@@ -40,7 +40,7 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 
 		if (
 			transaction.error ||
-			transaction.status == TransactionStatus.Cancelled
+			transaction.status === TransactionStatus.Cancelled
 		) {
 			return TeleportStepStatus.Failed
 		}
@@ -56,7 +56,11 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 		status: TeleportStepStatus
 		message?: string
 	}>(() => {
-		const status = teleport.value?.status!
+		if (!teleport.value) {
+			return { status: TeleportStepStatus.Waiting }
+		}
+
+		const status = teleport.value.status
 
 		if (teleport.value?.checked) {
 			return { status: TeleportStepStatus.Completed }
@@ -81,7 +85,11 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 
 		const teleportTransaction = items.find(
 			(item) => item.type === TransactionType.Teleport,
-		)!
+		)
+
+		if (!teleportTransaction) {
+			return []
+		}
 
 		const actionTransactions = items.filter(
 			(item) => item.type === TransactionType.Action,
@@ -99,7 +107,7 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 				statusLabel: balanceCheckDetails.value.message,
 			},
 			...actionTransactions.map((transaction) => ({
-				title: transaction.name,
+				title: transaction.name || '',
 				status: getStepStatus(transaction),
 				txHash: transaction.txHash,
 			})),
@@ -116,6 +124,7 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 				...step,
 				isActive: isFirstActive || isPreviousCompleted,
 				id: crypto.randomUUID(),
+				title: step.title,
 			}
 
 			return {

@@ -31,7 +31,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 	}
 
 	const attachListeners = () => {
-		TELEPORT_EVENTS.forEach((event) => {
+		for (const event of TELEPORT_EVENTS) {
 			sdk.on(event, (teleport) => {
 				console.log(`[UI] ${event}`, teleport)
 				autoTeleport.value = teleport
@@ -40,7 +40,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 					eventBus.emit('teleport:completed')
 				}
 			})
-		})
+		}
 	}
 
 	onBeforeMount(async () => {
