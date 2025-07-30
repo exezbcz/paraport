@@ -5,6 +5,7 @@ import type {
 } from '@autoteleport/core'
 import { TeleportEventType } from '@autoteleport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
+import eventBus from '../utils/event-bus'
 
 const TELEPORT_EVENTS = [
 	TeleportEventType.TELEPORT_COMPLETED,
@@ -34,6 +35,10 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 			sdk.on(event, (teleport) => {
 				console.log(`[UI] ${event}`, teleport)
 				autoTeleport.value = teleport
+
+				if (event === TeleportEventType.TELEPORT_COMPLETED) {
+					eventBus.emit('teleport:completed')
+				}
 			})
 		})
 	}
@@ -48,6 +53,8 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 		session.value = await sdk.autoteleport(params)
 
 		loading.value = false
+
+		console.log('Session', session.value)
 
 		console.log('Quotes', session.value?.quotes)
 	})

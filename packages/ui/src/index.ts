@@ -1,14 +1,16 @@
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
-import mitt from 'mitt'
-import { createApp, h, provide } from 'vue'
+import { createApp, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import App from './App.vue'
 import './styles/index.scss'
+import eventBus from './utils/event-bus'
 
 export interface MountOptions {
 	sdk: AutoTeleportSDK
 	target: string | HTMLElement
 	autoteleport: TeleportParams
+	onSubmit?: (autotelport: boolean) => void
+	onCompleted?: () => void
 }
 
 const enTranslations = {
@@ -35,15 +37,32 @@ const enTranslations = {
 	},
 }
 
-export function mount({ target, sdk, autoteleport }: MountOptions) {
+const attachEventListeners = ({
+	onSubmit,
+	onCompleted,
+}: Pick<MountOptions, 'onCompleted' | 'onSubmit'>) => {
+	if (onSubmit) {
+		eventBus.on('teleport:submit', (e) => onSubmit(e))
+	}
+
+	if (onCompleted) {
+		eventBus.on('teleport:completed', () => onCompleted())
+	}
+}
+
+export function mount({
+	target,
+	sdk,
+	autoteleport,
+	onSubmit,
+	onCompleted,
+}: MountOptions) {
 	const targetElement =
 		typeof target === 'string' ? document.querySelector(target) : target
 
 	if (!targetElement) {
 		throw new Error(`Target element not found: ${target}`)
 	}
-
-	const eventBus = mitt()
 
 	const i18n = createI18n({
 		locale: 'en',
@@ -55,7 +74,7 @@ export function mount({ target, sdk, autoteleport }: MountOptions) {
 
 	const app = createApp({
 		setup() {
-			provide('eventBus', eventBus)
+			attachEventListeners({ onCompleted, onSubmit })
 		},
 		render: () => h(App, { sdk, autoteleport }),
 	})

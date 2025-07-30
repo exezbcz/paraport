@@ -24,6 +24,12 @@ const main = async () => {
         return injector.signer
       }
     }),
+    onSubmit: (autoteleport) => {
+        console.log('is auto-teleporting', autoteleport)
+    },
+    onCompleted: () => {
+        console.log('auto-teleport completed')
+    },
     autoteleport: {
   		address: USER_ADDRESS,
   		amount: '1000000',

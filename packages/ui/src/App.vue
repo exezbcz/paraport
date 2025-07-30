@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center justify-center gap-4">
-        <div class="flex w-full justify-between items-center" v-if="!loading">
+        <div class="flex w-full justify-between items-center" v-if="needed">
             <div >
             </div>
 
@@ -10,17 +10,18 @@
         </div>
 
         <Button
-            expanded
             :disabled="disabled"
             :label="label"
             :loading="loading"
-            @click="teleport"
+            @click="submit"
+            expanded
         />
     </div>
 
-    <Modal v-model="open"
-        :teleport="autoTeleport"
-        @retry="retry"
+    <Modal
+      v-model="open"
+      :teleport="autoTeleport"
+      @retry="retry"
     />
 </template>
 
@@ -31,6 +32,7 @@ import Modal from './components/Modal.vue'
 import Button from './components/ui/Button/Button.vue'
 import Switch from './components/ui/Switch/Switch.vue'
 import useAutoTeleport from './composables/useAutoTeleport'
+import eventBus from './utils/event-bus'
 
 const props = defineProps<{
 	sdk: AutoTeleportSDK
@@ -59,6 +61,14 @@ const label = computed(() => {
 
 	return loading.value ? 'Loading...' : 'Teleport'
 })
+
+const submit = async () => {
+	eventBus.emit('teleport:submit', needed.value)
+
+	if (needed.value) {
+		await teleport()
+	}
+}
 
 watchEffect(() => {
 	if (autoTeleport.value) {
