@@ -1,4 +1,8 @@
-export abstract class Initializable {
+export type IInitializable = {
+	initialize(): Promise<void>
+}
+
+export abstract class Initializable implements IInitializable {
 	private initialized = false
 
 	protected async ensureInitialized(): Promise<void> {

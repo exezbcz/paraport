@@ -4,10 +4,10 @@ import type { TransactionDetails } from './transactions'
 
 type TeleportEvent = any
 
-export type TeleportParams = {
+export type TeleportParams<Amount = bigint> = {
 	address: string
 	chain: Chain
-	amount: string
+	amount: Amount
 	asset: Asset
 	actions: Action[]
 }
@@ -17,7 +17,7 @@ export interface TeleportDetails
 	id: string
 	details: {
 		address: string
-		amount: string
+		amount: bigint
 		asset: Asset
 		route: Route
 	}

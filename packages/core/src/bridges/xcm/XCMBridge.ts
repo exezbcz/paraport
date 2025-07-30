@@ -12,15 +12,12 @@ import type {
 } from '../../types/bridges'
 import type { Asset, Chain, Quote, SDKConfig } from '../../types/common'
 import type { TeleportParams } from '../../types/teleport'
-import type {
-	TransactionCallback,
-	TransactionStatus,
-} from '../../types/transactions'
+import type { TransactionCallback } from '../../types/transactions'
 import { getChainsOfAsset } from '../../utils'
 import { signAndSend } from '../../utils/tx'
 
 type XCMTeleportParams = {
-	amount: string
+	amount: bigint
 	source: Chain
 	target: Chain
 	address: string
@@ -72,7 +69,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		target,
 		address,
 		asset,
-	}: XCMTeleportParams): Promise<string> {
+	}: XCMTeleportParams): Promise<bigint> {
 		const tx = await this.teleport({
 			amount: amount,
 			source,
@@ -91,26 +88,32 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		amount,
 		actions,
 	}: TeleportParams): Promise<Quote | null> {
-		// 1. get chains where the token is avaialbe
+		// 1. get chains where the token is available
 		const chains = getChainsOfAsset(asset)
+		// TODO: filter by selected chains
 
-		// 2. get address balances on all chains where the token is avaialbe
+		// 2. get address balances on all chains where the token is available
 		const balances = await this.balanceService.getBalances({
 			address,
 			chains,
 			asset,
 		})
 
+		const currentChainBalance = balances.find(
+			(balance) => balance.chain === targetChain,
+		)
+
 		// 3. from possible target chains find the one with the highest transferable balance
 		const targetChainBalances = balances.filter(
 			(balance) => balance.chain !== targetChain,
 		)
 
-		const highestBalanceChain = maxBy(targetChainBalances, (balance) =>
-			Number(balance.transferable),
+		const highestBalanceChain = maxBy(
+			targetChainBalances,
+			(balance) => balance.transferable,
 		)
 
-		if (!highestBalanceChain) {
+		if (!highestBalanceChain || !currentChainBalance) {
 			return null
 		}
 
@@ -132,26 +135,34 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			}),
 		])
 
-		const totalFees = Number(telportFees) + Number(actionsFees)
-		const totalAmount = Number(amount) + totalFees
+		const totalFees = telportFees + actionsFees
+		const totalAmount = BigInt(amount) + totalFees
 
-		if (Number(highestBalanceChain.transferable) < totalAmount) {
+		if (
+			currentChainBalance.transferable + highestBalanceChain.transferable <
+			totalAmount
+		) {
 			return null
 		}
 
+		const neededAmount = BigInt(amount) - currentChainBalance.transferable
+
+		const total = neededAmount + totalFees
+
 		return {
+			amount: neededAmount,
+			total: total,
+			asset: asset,
 			route: {
 				source: sourceChain,
 				target: targetChain,
 				protocol: this.protocol,
 			},
 			fees: {
-				network: telportFees,
+				bridge: telportFees,
 				actions: actionsFees,
-				total: totalFees.toString(),
+				total: totalFees,
 			},
-			amount: amount,
-			total: totalAmount.toString(),
 		}
 	}
 
@@ -173,10 +184,6 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			address,
 			signer: (await this.config.getSigner()) as any,
 		})
-	}
-
-	getStatus(teleportId: string): Promise<TransactionStatus> {
-		throw new Error('Method not implemented.')
 	}
 
 	async initialize(): Promise<void> {

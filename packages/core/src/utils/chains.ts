@@ -5,10 +5,10 @@ import {
 import { chainPrefixOf } from '.'
 import type { Chain } from '../types/common'
 
-export const edOf = (chain: Chain) => {
-	return existentialDeposit[chainPrefixOf(chain)]
+export const edOf = (chain: Chain): bigint => {
+	return BigInt(existentialDeposit[chainPrefixOf(chain)])
 }
 
-export const teleportEdOf = (chain: Chain) => {
-	return teleportExistentialDeposit[chainPrefixOf(chain)]
+export const teleportEdOf = (chain: Chain): bigint => {
+	return BigInt(teleportExistentialDeposit[chainPrefixOf(chain)])
 }

@@ -14,6 +14,7 @@ import type {
 	TeleportParams,
 } from '../types/teleport'
 import { GenericEmitter } from '../utils/GenericEmitter'
+import { convertToBigInt } from '../utils/number'
 
 export default class AutoTeleportSDK extends Initializable {
 	private readonly config: SDKConfig
@@ -105,17 +106,30 @@ export default class AutoTeleportSDK extends Initializable {
 	private async calculateTeleport(
 		params: TeleportParams,
 	): Promise<AutoteleportResponse> {
+		const hasEnoughBalance = await this.balanceService.hasEnoughBalance(params)
+
+		if (hasEnoughBalance) {
+			return {
+				quotes: [],
+				needed: false,
+				executable: false,
+			}
+		}
+
 		const quotes = await this.getQuotes(params)
 
 		return {
 			quotes,
-			needed: !(await this.balanceService.hasEnoughBalance(params)),
+			needed: !hasEnoughBalance,
+			executable: quotes.length > 0,
 		}
 	}
 
 	async autoteleport(
-		params: TeleportParams,
+		p: TeleportParams<string>,
 	): Promise<AutoteleportResponse & { unsubscribe: () => void }> {
+		const params = convertToBigInt(p, ['amount'])
+
 		const response = await this.calculateTeleport(params)
 
 		this.subscribeBalanceChanges(params, async () => {
@@ -129,7 +143,7 @@ export default class AutoTeleportSDK extends Initializable {
 	}
 
 	public async teleport(
-		params: TeleportParams,
+		params: TeleportParams<string>,
 		quote: Quote,
 	): Promise<{ id: string; retry: () => void }> {
 		this.ensureInitialized()
@@ -139,7 +153,7 @@ export default class AutoTeleportSDK extends Initializable {
 		}
 
 		const teleportId = await this.teleportManager.initiateTeleport(
-			params,
+			convertToBigInt(params, ['amount']),
 			quote,
 		)
 

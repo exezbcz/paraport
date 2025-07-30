@@ -3,18 +3,16 @@ import type SubstrateApi from './SubstrateApi'
 export default class FeeService {
 	constructor(private api: SubstrateApi) {}
 
-	async calculateFee(tx: any, address: string): Promise<string> {
+	async calculateFee(tx: any, address: string): Promise<bigint> {
 		const paymentInfo = await tx.paymentInfo(address)
-		return paymentInfo.partialFee.toString()
+		return BigInt(paymentInfo.partialFee)
 	}
 
-	async calculateBatchFees(txs: any[], address: string): Promise<string> {
+	async calculateBatchFees(txs: any[], address: string): Promise<bigint> {
 		const fees = await Promise.all(
 			txs.map((tx) => this.calculateFee(tx, address)),
 		)
 
-		return fees
-			.reduce((total, fee) => BigInt(total) + BigInt(fee), BigInt(0))
-			.toString()
+		return fees.reduce((total, fee) => BigInt(total) + BigInt(fee), BigInt(0))
 	}
 }

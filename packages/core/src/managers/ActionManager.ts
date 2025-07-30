@@ -21,8 +21,8 @@ export class ActionManager {
 		actions,
 		chain,
 		address,
-	}: { actions: Action[]; chain: Chain; address: string }): Promise<string> {
-		if (!actions.length) return '0'
+	}: { actions: Action[]; chain: Chain; address: string }): Promise<bigint> {
+		if (!actions.length) return BigInt(0)
 
 		const txs = await Promise.all(
 			actions.map((action) => this.createTx(action, chain)),

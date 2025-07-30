@@ -9,8 +9,8 @@ type Balance = {
 	chain: Chain
 	address: string
 	asset: Asset
-	amount: string
-	transferable: string
+	amount: bigint
+	transferable: bigint
 }
 
 type GetBalancesParams = {
@@ -33,10 +33,10 @@ export default class BalanceService {
 		address,
 		asset,
 		amount,
-	}: GetBalanceParams & { amount: string }) {
+	}: GetBalanceParams & { amount: bigint }) {
 		const balance = await this.getBalance({ chain, address, asset })
 
-		return Number(balance.transferable) >= Number(amount)
+		return balance.transferable >= BigInt(amount)
 	}
 
 	private async getBalance({
@@ -48,14 +48,14 @@ export default class BalanceService {
 
 		// TODO: support non native assets
 		const balance = await balanceOf(api, address)
-		const amount = balance.toString()
+		const amount = BigInt(balance)
 
 		return {
 			chain,
 			asset,
 			address: formatAddress(address, chainPropListOf(chain).ss58Format),
 			amount,
-			transferable: transferableBalanceOf(amount, chain).toString(),
+			transferable: transferableBalanceOf(amount, chain),
 		} as Balance
 	}
 
@@ -113,14 +113,11 @@ export default class BalanceService {
 		address: string
 		asset: Asset
 		chains: Chain[]
-		amount: string
+		amount: bigint
 	}): Promise<Balance> {
 		const getBalanceAttempt = async (): Promise<Balance> => {
 			const balances = await this.getBalances({ address, asset, chains })
-			if (
-				balances.length > 0 &&
-				Number(balances[0].transferable) >= Number(amount)
-			) {
+			if (balances.length > 0 && balances[0].transferable >= amount) {
 				return balances[0]
 			}
 			throw new Error('Not enough balance yet.')
