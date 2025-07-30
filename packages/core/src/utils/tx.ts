@@ -26,11 +26,13 @@ export const txCb =
 		onResult({ result, status: resolveStatus(result.status) })
 
 		if (result.dispatchError) {
-			onError(result.dispatchError)
+			console.warn('[EXEC] dispatchError', result)
 			onError({ error: result.dispatchError, txHash: result.txHash })
 		}
 
 		if (result.status.isFinalized) {
+			console.log('[EXEC] Finalized', result)
+			console.log(`[EXEC] blockHash ${result.status.asFinalized}`)
 			onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash })
 		}
 	}
