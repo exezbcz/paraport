@@ -3,11 +3,12 @@ import {
 	TransactionStatus,
 	TransactionType,
 } from '@autoteleport/core'
-import type { TeleportEventPayload } from '@autoteleport/core'
+import type { Action, TeleportEventPayload } from '@autoteleport/core'
 import { TeleportStatus } from '@autoteleport/core'
 import { type ComputedRef, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { type TeleportStepDetails, TeleportStepStatus } from '../types'
+import { getExtrinsicDetails } from '../utils/extrinsics'
 
 export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 	const { t } = useI18n()
@@ -69,7 +70,7 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 		if (status === TeleportStatus.Waiting) {
 			return {
 				status: TeleportStepStatus.Loading,
-				message: 'Signature not needed',
+				message: t('autoteleport.status.noSignatureRequired'),
 			}
 		}
 
@@ -107,7 +108,7 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 				statusLabel: balanceCheckDetails.value.message,
 			},
 			...actionTransactions.map((transaction) => ({
-				title: transaction.name || '',
+				title: getExtrinsicDetails(transaction.details as Action)?.docs,
 				status: getStepStatus(transaction),
 				txHash: transaction.txHash,
 			})),

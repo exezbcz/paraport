@@ -1,4 +1,4 @@
-import type { Action } from '../types/common'
+import type { Action } from '@autoteleport/core'
 
 type ExtrinsicDetails = {
 	docs: string
