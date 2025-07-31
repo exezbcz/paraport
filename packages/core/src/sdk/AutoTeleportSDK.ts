@@ -112,7 +112,8 @@ export default class AutoTeleportSDK extends Initializable {
 			return {
 				quotes: [],
 				needed: false,
-				executable: false,
+				available: false,
+				noFundsAtAll: false,
 			}
 		}
 
@@ -121,7 +122,8 @@ export default class AutoTeleportSDK extends Initializable {
 		return {
 			quotes,
 			needed: !hasEnoughBalance,
-			executable: quotes.length > 0,
+			available: quotes.length > 0,
+			noFundsAtAll: !hasEnoughBalance && quotes.length === 0,
 		}
 	}
 

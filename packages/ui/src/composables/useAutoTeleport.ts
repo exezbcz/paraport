@@ -17,13 +17,12 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 	const session = ref<Awaited<ReturnType<AutoTeleportSDK['autoteleport']>>>()
 	const loading = ref(true)
 	const enabled = ref(false)
-	const autoTeleport = ref<TeleportEventPayload>()
+	const autoteleport = ref<TeleportEventPayload>()
 	const retry = ref<() => void>()
 
 	const selectedQuote = computed(() => session.value?.quotes[0])
-	const needed = computed(() => Boolean(session.value?.needed))
 
-	const teleport = async () => {
+	const exec = async () => {
 		if (selectedQuote.value) {
 			const response = await sdk.teleport(params, selectedQuote.value)
 			retry.value = response.retry
@@ -34,7 +33,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 		for (const event of TELEPORT_EVENTS) {
 			sdk.on(event, (teleport) => {
 				console.log(`[UI] ${event}`, teleport)
-				autoTeleport.value = teleport
+				autoteleport.value = teleport
 
 				if (event === TeleportEventType.TELEPORT_COMPLETED) {
 					eventBus.emit('teleport:completed')
@@ -59,6 +58,17 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 		console.log('Quotes', session.value?.quotes)
 	})
 
+	const isReady = computed(() => !loading.value && Boolean(session.value))
+	const isAvailable = computed(() => true) // TODO
+	const canAutoTeleport = computed(
+		() => isAvailable.value && Boolean(session.value?.available),
+	)
+	const needsAutoTeleport = computed(() => Boolean(session.value?.needed))
+	const hasNoFundsAtAll = computed(() => Boolean(session.value?.noFundsAtAll))
+	const hasEnoughInCurrentChain = computed(
+		() => !needsAutoTeleport.value && isReady.value,
+	)
+
 	watchEffect(() => {
 		if (session.value) {
 			enabled.value = session.value.needed
@@ -66,12 +76,15 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
 	})
 
 	return {
-		loading,
 		enabled,
-		session,
-		needed,
-		teleport,
-		autoTeleport,
+		needsAutoTeleport,
+		hasEnoughInCurrentChain,
+		exec,
+		autoteleport,
 		retry,
+		isReady,
+		isAvailable,
+		canAutoTeleport,
+		hasNoFundsAtAll,
 	}
 }

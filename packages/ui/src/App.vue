@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center justify-center gap-4">
-        <div class="flex w-full justify-between items-center" v-if="needed">
+        <div class="flex w-full justify-between items-center" v-if="showAutoTeleport">
             <div >
             </div>
 
@@ -10,9 +10,8 @@
         </div>
 
         <Button
-            :disabled="disabled"
+            :disabled="isDisabled"
             :label="label"
-            :loading="loading"
             @click="submit"
             expanded
         />
@@ -20,7 +19,7 @@
 
     <Modal
       v-model="open"
-      :teleport="autoTeleport"
+      :teleport="autoteleport"
       @retry="retry"
     />
 </template>
@@ -28,50 +27,97 @@
 <script setup lang="ts">
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Modal from './components/Modal.vue'
 import Button from './components/ui/Button/Button.vue'
 import Switch from './components/ui/Switch/Switch.vue'
 import useAutoTeleport from './composables/useAutoTeleport'
+import useAutoTeleportButton from './composables/useAutoTeleportButton'
 import eventBus from './utils/event-bus'
 
 const props = defineProps<{
 	sdk: AutoTeleportSDK
 	autoteleport: TeleportParams
+	label: string
+	disabled?: boolean
 }>()
+
+const { t } = useI18n()
 
 const open = ref(false)
 
 const {
 	enabled,
-	needed,
-	teleport,
-	loading: autotelportLoading,
-	autoTeleport,
+	needsAutoTeleport,
+	hasEnoughInCurrentChain,
+	exec,
+	autoteleport,
 	retry,
+	isAvailable,
+	isReady,
+	canAutoTeleport,
+	hasNoFundsAtAll,
 } = useAutoTeleport(props.sdk, props.autoteleport)
 
-const disabled = computed(() => !enabled.value || autotelportLoading.value)
+const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
+	needsAutoTeleport,
+	isAvailable,
+	isReady,
+	canAutoTeleport,
+	hasNoFundsAtAll,
+})
 
-const loading = computed(() => autotelportLoading.value)
+const confirmButtonTitle = computed(() => 'confirmButtonTitle')
 
 const label = computed(() => {
-	if (needed.value && !enabled.value) {
-		return `Not enough funds on ${props.autoteleport.chain}`
+	if (hasEnoughInCurrentChain.value || props.disabled) {
+		return props.label || confirmButtonTitle.value
 	}
 
-	return loading.value ? 'Loading...' : 'Teleport'
+	if (!isReady.value) {
+		return t('checking')
+	}
+
+	if (allowAutoTeleport.value) {
+		if (!enabled.value) {
+			return t('autoTeleport.notEnoughTokenInChain', [
+				props.autoteleport.asset,
+				props.autoteleport.chain,
+			])
+		}
+
+		return props.label
+	}
+
+	return t('checking')
+})
+
+const isDisabled = computed(() => {
+	if (props.disabled || !isReady.value) {
+		return true
+	}
+
+	if (hasEnoughInCurrentChain.value) {
+		return false
+	}
+
+	if (needsAutoTeleport.value) {
+		return !enabled.value
+	}
+
+	return true
 })
 
 const submit = async () => {
-	eventBus.emit('teleport:submit', needed.value)
+	eventBus.emit('teleport:submit', needsAutoTeleport.value)
 
-	if (needed.value) {
-		await teleport()
+	if (needsAutoTeleport.value) {
+		await exec()
 	}
 }
 
 watchEffect(() => {
-	if (autoTeleport.value) {
+	if (autoteleport.value) {
 		open.value = true
 	}
 })

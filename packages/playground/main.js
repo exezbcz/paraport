@@ -30,10 +30,12 @@ const main = async () => {
     onCompleted: () => {
         console.log('auto-teleport completed')
     },
+    label: 'Confirm',
     autoteleport: {
   		address: USER_ADDRESS,
   		amount: '1000000',
   		sourceChain: Chain.KUSAMA,
+  		chain: Chain.KUSAMA,
   		asset: Asset.KSM,
   		actions: [
   			{

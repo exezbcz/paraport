@@ -11,10 +11,13 @@ export interface MountOptions {
 	autoteleport: TeleportParams
 	onSubmit?: (autotelport: boolean) => void
 	onCompleted?: () => void
+	label: string
 }
 
 const enTranslations = {
 	autoteleport: {
+		checking: 'Checking Funds ...',
+		notEnoughTokenInChain: 'Not enough {0} on {1}',
 		steps: {
 			1: {
 				title: 'Bridging',
@@ -35,6 +38,8 @@ const enTranslations = {
 			waiting: 'Awaiting Your Signature',
 		},
 	},
+	loading: 'Loading...',
+	teleport: 'Teleport',
 }
 
 const attachEventListeners = ({
@@ -56,6 +61,7 @@ export function mount({
 	autoteleport,
 	onSubmit,
 	onCompleted,
+	label,
 }: MountOptions) {
 	const targetElement =
 		typeof target === 'string' ? document.querySelector(target) : target
@@ -76,7 +82,7 @@ export function mount({
 		setup() {
 			attachEventListeners({ onCompleted, onSubmit })
 		},
-		render: () => h(App, { sdk, autoteleport }),
+		render: () => h(App, { sdk, autoteleport, label }),
 	})
 
 	app.use(i18n).mount(targetElement)
