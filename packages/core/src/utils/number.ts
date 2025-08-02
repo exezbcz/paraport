@@ -3,17 +3,24 @@ type ConvertToBigInt<T, K extends keyof T> = {
 }
 
 export const convertToBigInt = <
-	T extends Record<string, any>,
-	K extends keyof T,
+	T extends Record<string, unknown>,
+	K extends keyof T & string,
 >(
 	obj: T,
-	keys: K[],
+	keys: readonly K[],
 ): ConvertToBigInt<T, K> => {
 	const result = { ...obj }
 
 	for (const key of keys) {
 		if (key in obj && typeof obj[key] === 'string') {
-			result[key] = BigInt(obj[key]) as any
+			const partialResult: Partial<ConvertToBigInt<T, K>> = {}
+
+			partialResult[key] = BigInt(obj[key] as string) as ConvertToBigInt<
+				T,
+				K
+			>[K]
+
+			Object.assign(result, partialResult)
 		}
 	}
 

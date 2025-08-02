@@ -34,7 +34,6 @@ export class TransactionManager extends BaseManager<
 		details,
 		order,
 		id,
-		name,
 	}: {
 		id: string
 		chain: Chain

@@ -13,7 +13,7 @@ const TELEPORT_EVENTS = [
 	TeleportEventType.TELEPORT_UPDATED,
 ]
 
-export default (sdk: AutoTeleportSDK, params: TeleportParams) => {
+export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	const session = ref<Awaited<ReturnType<AutoTeleportSDK['autoteleport']>>>()
 	const loading = ref(true)
 	const enabled = ref(false)

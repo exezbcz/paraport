@@ -72,8 +72,8 @@ export default class BalanceService {
 			const balances = await Promise.all(balancePromises)
 
 			return balances
-		} catch (error: any) {
-			throw new Error(`Failed to fetch balances: ${error.message}`)
+		} catch (error: unknown) {
+			throw new Error(`Failed to fetch balances: ${String(error)}`)
 		}
 	}
 

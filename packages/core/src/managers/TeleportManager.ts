@@ -5,6 +5,7 @@ import type SubstrateApi from '../services/SubstrateApi'
 import type { Action, Quote, SDKConfig } from '../types/common'
 import {
 	type TeleportDetails,
+	type TeleportEvent,
 	type TeleportEventPayload,
 	TeleportEventType,
 	type TeleportEventTypeString,
@@ -27,7 +28,7 @@ import { TransactionManager } from './TransactionManager'
 export class TeleportManager extends BaseManager<
 	TeleportDetails,
 	TeleportStatus,
-	any,
+	TeleportEvent,
 	TeleportEventTypeString,
 	TeleportEventPayload,
 	{ checked?: boolean }
@@ -242,7 +243,11 @@ export class TeleportManager extends BaseManager<
 	}
 
 	private executeTeleportTransaction(transaction: TransactionDetails) {
-		const teleport = this.getItem(transaction.teleportId)!
+		const teleport = this.getItem(transaction.teleportId)
+
+		if (!teleport) {
+			return
+		}
 
 		if (transaction.status !== TransactionStatus.Unknown) {
 			this.transactionManager.updateStatus(
@@ -283,11 +288,11 @@ export class TeleportManager extends BaseManager<
 		const teleport = this.getItem(teleportId)
 
 		if (!teleport) {
-			throw new Error(`Teleport not found`)
+			throw new Error('Teleport not found')
 		}
 
 		if (teleport.status !== TeleportStatus.Failed) {
-			throw new Error(`Teleport is not failed`)
+			throw new Error('Teleport is not failed')
 		}
 
 		const transaction = this.findNextPendingTransaction(teleport)

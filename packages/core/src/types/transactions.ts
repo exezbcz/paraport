@@ -68,4 +68,4 @@ export type TransactionCallback = (
 		  },
 ) => void
 
-export type TransactionUnsubscribe = void | (() => void)
+export type TransactionUnsubscribe = undefined | (() => void)

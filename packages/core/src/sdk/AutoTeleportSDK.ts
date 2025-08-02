@@ -162,7 +162,7 @@ export default class AutoTeleportSDK extends Initializable {
 		return {
 			id: teleportId.id,
 			retry: () => {
-				this.teleportManager!.retryTeleport(teleportId.id)
+				this.teleportManager?.retryTeleport(teleportId.id)
 			},
 		}
 	}

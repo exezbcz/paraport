@@ -4,7 +4,7 @@ import type {
 	ExtrinsicStatus,
 	Hash,
 } from '@polkadot/types/interfaces'
-import type { ISubmittableResult } from '@polkadot/types/types'
+import type { ISubmittableResult, Signer } from '@polkadot/types/types'
 import {
 	type TransactionCallback,
 	TransactionStatus,
@@ -68,7 +68,7 @@ export const signAndSend = async ({
 	tx: Extrinsic
 	callback: TransactionCallback
 	address: string
-	signer: any
+	signer: Signer
 }): Promise<TransactionUnsubscribe> => {
 	const subscription = await tx
 		.signAndSend(
@@ -91,7 +91,7 @@ export const signAndSend = async ({
 				onResult: ({ result, status }) => {
 					if (status !== TransactionStatus.Finalized && !result.dispatchError) {
 						callback({
-							status: status as any,
+							status,
 							txHash: result.txHash.toString(),
 						})
 					}

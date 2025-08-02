@@ -182,7 +182,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			tx,
 			callback,
 			address,
-			signer: (await this.config.getSigner()) as any,
+			signer: await this.config.getSigner(),
 		})
 	}
 
