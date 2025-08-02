@@ -9,7 +9,11 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"complexity": {
+				"noUselessConstructor": "off",
+				"noStaticOnlyClass": "off"
+			}
 		}
 	},
 	"javascript": {
