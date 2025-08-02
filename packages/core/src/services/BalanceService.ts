@@ -3,6 +3,7 @@ import type { AccountInfo } from '@polkadot/types/interfaces'
 import pRetry from 'p-retry'
 import type { Asset, Chain } from '../types/common'
 import { chainPropListOf, formatAddress, transferableBalanceOf } from '../utils'
+import type { Logger } from './LoggerService'
 import type SubstrateApi from './SubstrateApi'
 
 type Balance = {
@@ -22,11 +23,10 @@ type GetBalancesParams = {
 type GetBalanceParams = { chain: Chain; address: string; asset: Asset }
 
 export default class BalanceService {
-	private api: SubstrateApi
-
-	constructor(api: SubstrateApi) {
-		this.api = api
-	}
+	constructor(
+		private readonly api: SubstrateApi,
+		private readonly logger: Logger,
+	) {}
 
 	async hasEnoughBalance({
 		chain,
@@ -79,7 +79,7 @@ export default class BalanceService {
 
 	async subscribeBalances(
 		{ address, chains }: GetBalancesParams,
-		callback: () => void = () => {},
+		callback: () => void,
 	) {
 		const balancePromises = chains.map(async (chainId) => {
 			const api = await this.api.getInstance(chainId)
@@ -88,9 +88,13 @@ export default class BalanceService {
 				data: { free: previousFree },
 			} = (await api.query.system.account(address)) as AccountInfo
 
-			return api.query.system.account(
-				address,
-				({ data: { free: currentFree } }: AccountInfo) => {
+			return api.query.system.account.multi(
+				[address],
+				([
+					{
+						data: { free: currentFree },
+					},
+				]: AccountInfo[]) => {
 					const change = currentFree.sub(previousFree)
 
 					if (!change.isZero()) {
@@ -101,7 +105,13 @@ export default class BalanceService {
 			)
 		})
 
-		return await Promise.all(balancePromises)
+		const voidFns = await Promise.all(balancePromises)
+
+		return () => {
+			for (const voidFn of voidFns) {
+				voidFn()
+			}
+		}
 	}
 
 	async waitForFunds({
@@ -131,7 +141,7 @@ export default class BalanceService {
 			})
 			return balance
 		} catch (error) {
-			console.error('Error waiting for sufficient balance:', error)
+			this.logger.error('Error waiting for sufficient balance:', error)
 			throw error
 		}
 	}

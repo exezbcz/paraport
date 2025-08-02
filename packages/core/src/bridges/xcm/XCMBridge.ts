@@ -26,21 +26,17 @@ type XCMTeleportParams = {
 
 export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
-	private readonly config: SDKConfig
-	private balanceService: BalanceService
-	private readonly api: SubstrateApi
+
 	private readonly feeService: FeeService
 	private readonly actionManager: ActionManager
 
 	constructor(
-		config: SDKConfig,
-		balanceService: BalanceService,
-		api: SubstrateApi,
+		private readonly config: SDKConfig,
+		private readonly balanceService: BalanceService,
+		private readonly api: SubstrateApi,
 	) {
 		super()
-		this.config = config
 		this.api = api
-		this.balanceService = balanceService
 		this.feeService = new FeeService(this.api)
 		this.actionManager = new ActionManager(this.api, this.config)
 	}
@@ -71,7 +67,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		asset,
 	}: XCMTeleportParams): Promise<bigint> {
 		const tx = await this.teleport({
-			amount: amount,
+			amount,
 			source,
 			target,
 			address,
@@ -136,7 +132,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		])
 
 		const totalFees = telportFees + actionsFees
-		const totalAmount = BigInt(amount) + totalFees
+		const totalAmount = amount + totalFees
 
 		if (
 			currentChainBalance.transferable + highestBalanceChain.transferable <
@@ -145,7 +141,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			return null
 		}
 
-		const neededAmount = BigInt(amount) - currentChainBalance.transferable
+		const neededAmount = amount - currentChainBalance.transferable
 
 		const total = neededAmount + totalFees
 

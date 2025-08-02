@@ -32,10 +32,8 @@ export default class AutoTeleportSDK extends Initializable {
 		this.config = combinedConfig
 
 		this.subApi = new SubstrateApi()
-		this.balanceService = new BalanceService(this.subApi)
-		this.logger = new Logger({
-			minLevel: this.config.logLevel,
-		})
+		this.logger = new Logger({ minLevel: this.config.logLevel })
+		this.balanceService = new BalanceService(this.subApi, this.logger)
 	}
 
 	async initialize() {
@@ -59,7 +57,7 @@ export default class AutoTeleportSDK extends Initializable {
 				this.bridgeRegistry,
 				this.config,
 				this.subApi,
-				this.logger
+				this.logger,
 			)
 
 			this.markInitialized()
@@ -140,13 +138,13 @@ export default class AutoTeleportSDK extends Initializable {
 
 		const response = await this.calculateTeleport(params)
 
-		this.subscribeBalanceChanges(params, async () => {
+		const unsub = await this.subscribeBalanceChanges(params, async () => {
 			console.log('balance change', await this.calculateTeleport(params))
 		})
 
 		return {
 			...response,
-			unsubscribe: () => {},
+			unsubscribe: unsub,
 		}
 	}
 

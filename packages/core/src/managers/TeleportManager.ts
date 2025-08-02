@@ -35,31 +35,25 @@ export class TeleportManager extends BaseManager<
 	{ checked?: boolean }
 > {
 	private readonly transactionManager: TransactionManager
-	private readonly bridgeRegistry: BridgeRegistry
-	private readonly subApi: SubstrateApi
 	private readonly balanceService: BalanceService
 	private readonly actionManager: ActionManager
-	private readonly logger: Logger
 
 	constructor(
 		teleportEventEmitter: GenericEmitter<
 			TeleportEventPayload,
 			TeleportEventTypeString
 		>,
-		bridgeRegistry: BridgeRegistry,
+		private readonly bridgeRegistry: BridgeRegistry,
 		config: SDKConfig,
-		subApi: SubstrateApi,
-		logger: Logger,
+		private readonly subApi: SubstrateApi,
+		private readonly logger: Logger,
 	) {
 		super(teleportEventEmitter)
 		this.transactionManager = new TransactionManager(
 			new GenericEmitter<TransactionDetails, TransactionEventTypeString>(),
 		)
-		this.bridgeRegistry = bridgeRegistry
-		this.subApi = subApi
-		this.balanceService = new BalanceService(this.subApi)
 		this.actionManager = new ActionManager(this.subApi, config)
-		this.logger = logger
+		this.balanceService = new BalanceService(this.subApi, this.logger)
 
 		this.registerListeners()
 	}
