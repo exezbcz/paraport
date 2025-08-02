@@ -1,6 +1,7 @@
 import { BaseManager } from '../base/BaseManager'
 import type BridgeRegistry from '../bridges/BridgeRegistry'
 import BalanceService from '../services/BalanceService'
+import type { Logger } from '../services/LoggerService'
 import type SubstrateApi from '../services/SubstrateApi'
 import type { Action, Quote, SDKConfig } from '../types/common'
 import {
@@ -38,6 +39,7 @@ export class TeleportManager extends BaseManager<
 	private readonly subApi: SubstrateApi
 	private readonly balanceService: BalanceService
 	private readonly actionManager: ActionManager
+	private readonly logger: Logger
 
 	constructor(
 		teleportEventEmitter: GenericEmitter<
@@ -47,6 +49,7 @@ export class TeleportManager extends BaseManager<
 		bridgeRegistry: BridgeRegistry,
 		config: SDKConfig,
 		subApi: SubstrateApi,
+		logger: Logger,
 	) {
 		super(teleportEventEmitter)
 		this.transactionManager = new TransactionManager(
@@ -56,6 +59,7 @@ export class TeleportManager extends BaseManager<
 		this.subApi = subApi
 		this.balanceService = new BalanceService(this.subApi)
 		this.actionManager = new ActionManager(this.subApi, config)
+		this.logger = logger
 
 		this.registerListeners()
 	}
@@ -71,7 +75,9 @@ export class TeleportManager extends BaseManager<
 		})
 
 		this.subscribe(TeleportEventType.TELEPORT_UPDATED, async (teleport) => {
-			console.log(`[${TeleportEventType.TELEPORT_UPDATED}]`, teleport.status)
+			this.logger.debug(
+				`[${TeleportEventType.TELEPORT_UPDATED}] ${teleport.status}`,
+			)
 
 			if (teleport.status === TeleportStatus.Completed) {
 				return this.eventEmitter.emit({
@@ -86,7 +92,7 @@ export class TeleportManager extends BaseManager<
 				teleport.status === TeleportStatus.Executing &&
 				this.isTeleportActionsFirstRun(teleport)
 			) {
-				await this.executeTeleportActions(teleport)
+				this.executeTeleportActions(teleport)
 			}
 		})
 
@@ -96,9 +102,8 @@ export class TeleportManager extends BaseManager<
 		this.transactionManager.subscribe(
 			TransactionEventType.TRANSACTION_UPDATED,
 			async (transaction) => {
-				console.log(
-					`[${TransactionEventType.TRANSACTION_UPDATED}]`,
-					transaction.status,
+				this.logger.debug(
+					`[${TransactionEventType.TRANSACTION_UPDATED}] ${transaction.status}`,
 				)
 
 				const teleport = this.getTeleportById(transaction.teleportId)

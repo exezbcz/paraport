@@ -104,5 +104,5 @@ export const signAndSend = async ({
 			})
 		})
 
-	return subscription
+	return subscription || undefined
 }

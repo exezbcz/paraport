@@ -1,5 +1,6 @@
 import ConfigValidationError from '../errors/ConfigError'
 import type { SDKConfig } from '../types/common'
+import { LogLevel } from '../types/sdk'
 
 export class SDKConfigManager {
 	public static validateConfig(config: SDKConfig) {
@@ -14,6 +15,7 @@ export class SDKConfigManager {
 		return {
 			...config,
 			bridgeProtocols: ['XCM'],
+			logLevel: LogLevel.ERROR,
 		}
 	}
 }

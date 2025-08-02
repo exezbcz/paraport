@@ -1,6 +1,7 @@
 import type { Prefix } from '@kodadot1/static'
 import type { Signer } from '@polkadot/api/types'
 import type { BridgeProtocol } from './bridges'
+import type { LogLevel } from './sdk'
 
 export type ChainPrefix = Prefix
 
@@ -14,6 +15,7 @@ export type SDKConfig = {
 	rpcUrls?: Record<number | string, string>
 	chains: Chain[]
 	getSigner: () => Promise<Signer>
+	logLevel?: LogLevel
 }
 
 export enum Chain {
