@@ -59,6 +59,7 @@ export default class AutoTeleportSDK extends Initializable {
 				this.bridgeRegistry,
 				this.config,
 				this.subApi,
+				this.logger
 			)
 
 			this.markInitialized()
