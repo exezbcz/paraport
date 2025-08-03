@@ -41,6 +41,10 @@ export class BaseManager<
 		return Array.from(this.items.values())
 	}
 
+	removeItem(id: string): boolean {
+		return this.items.delete(id)
+	}
+
 	addEvent(id: string, event: EventType): void {
 		const item = this.items.get(id)
 		if (!item) return

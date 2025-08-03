@@ -9,8 +9,8 @@ import { Logger } from '../services/LoggerService'
 import SubstrateApi from '../services/SubstrateApi'
 import type { Quote, SDKConfig } from '../types/common'
 import {
-	type AutoTeleportSessionCalculation,
 	type AutoTeleportEventTypeSdk,
+	type AutoTeleportSessionCalculation,
 	type TeleportSession,
 	TeleportSessionStatus,
 } from '../types/sdk'
@@ -24,9 +24,9 @@ import { GenericEmitter } from '../utils/GenericEmitter'
 import { convertToBigInt } from '../utils/number'
 
 export default class AutoTeleportSDK extends Initializable {
+	private teleportManager: TeleportManager | undefined
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
-	private teleportManager: TeleportManager | undefined
 	private readonly balanceService: BalanceService
 	private readonly subApi: SubstrateApi
 	private readonly logger: Logger
@@ -41,7 +41,7 @@ export default class AutoTeleportSDK extends Initializable {
 		this.subApi = new SubstrateApi()
 		this.logger = new Logger({ minLevel: this.config.logLevel })
 		this.balanceService = new BalanceService(this.subApi, this.logger)
-		this.sessionManager = new SessionManager()
+		this.sessionManager = new SessionManager(new GenericEmitter())
 	}
 
 	async initialize() {
@@ -165,7 +165,7 @@ export default class AutoTeleportSDK extends Initializable {
 			unsubscribe,
 		})
 
-		const session = this.sessionManager.getSession(sessionId)
+		const session = this.sessionManager.getItem(sessionId)
 
 		if (!session) {
 			throw new Error('Session not found')
@@ -183,7 +183,7 @@ export default class AutoTeleportSDK extends Initializable {
 			throw new Error('No teleport manager found.')
 		}
 
-		const session = this.sessionManager.getSession(sessionId)
+		const session = this.sessionManager.getItem(sessionId)
 
 		if (!session?.selectedQuote) {
 			throw new Error('Invalid session or no quote selected')

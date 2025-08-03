@@ -1,9 +1,18 @@
-import { type TeleportSession, TeleportSessionStatus } from '../types/sdk'
+import { BaseManager } from '../base/BaseManager'
+import {
+	AutoTeleportEventType,
+	type TeleportSession,
+	type TeleportSessionEvent,
+	TeleportSessionStatus,
+} from '../types/sdk'
 import type { TeleportParams } from '../types/teleport'
 
-export default class SessionManager {
-	private sessions = new Map<string, TeleportSession>()
-
+export default class SessionManager extends BaseManager<
+	TeleportSession,
+	TeleportSessionStatus,
+	TeleportSessionEvent,
+	AutoTeleportEventType
+> {
 	createSession(
 		params: TeleportParams,
 		initialState: Partial<TeleportSession>,
@@ -18,31 +27,33 @@ export default class SessionManager {
 			needed: false,
 			available: false,
 			noFundsAtAll: false,
+			events: [],
 			unsubscribe: () => {},
+			timestamp: Date.now(),
 			...initialState,
 		}
 
-		this.sessions.set(sessionId, session)
+		this.setItem(sessionId, session)
 
 		return sessionId
 	}
 
-	getSession(sessionId: string): TeleportSession | undefined {
-		return this.sessions.get(sessionId)
-	}
-
 	updateSession(sessionId: string, updates: Partial<TeleportSession>) {
-		const session = this.sessions.get(sessionId)
+		const session = this.getItem(sessionId)
 		if (session) {
-			this.sessions.set(sessionId, { ...session, ...updates })
+			this.setItem(sessionId, { ...session, ...updates })
 		}
 	}
 
 	removeSession(sessionId: string) {
-		const session = this.sessions.get(sessionId)
+		const session = this.getItem(sessionId)
 		if (session) {
 			session.unsubscribe()
-			this.sessions.delete(sessionId)
+			this.removeItem(sessionId)
 		}
+	}
+
+	getUpdateEventType() {
+		return AutoTeleportEventType.SESSION_UPDATED
 	}
 }

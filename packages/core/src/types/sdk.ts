@@ -1,3 +1,4 @@
+import type { BaseDetails, BaseDetailsEvent } from '../base/BaseManager'
 import type { Quote } from './common'
 import type { TeleportEventType, TeleportParams } from './teleport'
 
@@ -9,20 +10,24 @@ export enum TeleportSessionStatus {
 	Failed = 'failed',
 }
 
-export type AutoTeleportSessionCalculation = {
+export interface AutoTeleportSessionCalculation {
 	quotes: Quote[]
 	needed: boolean
 	available: boolean
 	noFundsAtAll: boolean
 }
 
-export type TeleportSession = {
+export interface TeleportSessionEvent extends BaseDetailsEvent {}
+
+export interface TeleportSession
+	extends AutoTeleportSessionCalculation,
+		BaseDetails<TeleportSessionStatus, TeleportSessionEvent> {
 	id: string
 	status: TeleportSessionStatus
 	params: TeleportParams
 	selectedQuote?: Quote
 	unsubscribe: () => void
-} & AutoTeleportSessionCalculation
+}
 
 export enum AutoTeleportEventType {
 	SESSION_CREATED = 'SESSION_CREATED',
