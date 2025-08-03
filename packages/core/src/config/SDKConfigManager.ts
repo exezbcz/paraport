@@ -1,5 +1,5 @@
 import ConfigValidationError from '../errors/ConfigError'
-import type { SDKConfig } from '../types/common'
+import { Chain, type SDKConfig } from '../types/common'
 import { LogLevel } from '../types/sdk'
 
 export class SDKConfigManager {
@@ -11,11 +11,17 @@ export class SDKConfigManager {
 		}
 	}
 
-	public static getDefaultConfig(config: SDKConfig): SDKConfig {
+	public static getDefaultConfig(config: SDKConfig<false>): SDKConfig {
 		return {
 			...config,
 			bridgeProtocols: ['XCM'],
 			logLevel: LogLevel.ERROR,
+			chains: [
+				Chain.POLKADOT,
+				Chain.ASSETHUBPOLKADOT,
+				Chain.KUSAMA,
+				Chain.ASSETHUBKUSAMA,
+			],
 		}
 	}
 }

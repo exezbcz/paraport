@@ -3,7 +3,7 @@ import type {
 	TeleportEventPayload,
 	TeleportParams,
 } from '@autoteleport/core'
-import { TeleportEventType } from '@autoteleport/core'
+import { TeleportEventType, TeleportSession } from '@autoteleport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
 import eventBus from '../utils/event-bus'
 
@@ -14,18 +14,17 @@ const TELEPORT_EVENTS = [
 ]
 
 export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
-	const session = ref<Awaited<ReturnType<AutoTeleportSDK['autoteleport']>>>()
+	const session = ref<TeleportSession>()
 	const loading = ref(true)
 	const enabled = ref(false)
 	const autoteleport = ref<TeleportEventPayload>()
 	const retry = ref<() => void>()
 
-	const selectedQuote = computed(() => session.value?.quotes[0])
+	const selectedQuote = computed(() => session.value?.selectedQuote)
 
 	const exec = async () => {
-		if (selectedQuote.value) {
-			const response = await sdk.teleport(params, selectedQuote.value)
-			retry.value = response.retry
+		if (session.value && selectedQuote.value) {
+			await sdk.executeSession(session.value.id)
 		}
 	}
 
@@ -49,7 +48,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 
 		attachListeners()
 
-		session.value = await sdk.autoteleport(params)
+		session.value = await sdk.initSession(params)
 
 		loading.value = false
 

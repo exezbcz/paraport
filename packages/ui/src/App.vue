@@ -37,7 +37,7 @@ import eventBus from './utils/event-bus'
 
 const props = defineProps<{
 	sdk: AutoTeleportSDK
-	autoteleport: TeleportParams
+	autoteleport: TeleportParams<string>
 	label: string
 	disabled?: boolean
 }>()

@@ -2,17 +2,23 @@ import { Initializable } from '../base/Initializable'
 import BridgeRegistry from '../bridges/BridgeRegistry'
 import XCMBridge from '../bridges/xcm/XCMBridge'
 import { SDKConfigManager } from '../config/SDKConfigManager'
+import SessionManager from '../managers/SessionManager'
 import { TeleportManager } from '../managers/TeleportManager'
 import BalanceService from '../services/BalanceService'
 import { Logger } from '../services/LoggerService'
 import SubstrateApi from '../services/SubstrateApi'
 import type { Quote, SDKConfig } from '../types/common'
-import type { AutoteleportResponse } from '../types/sdk'
-import type {
-	TeleportEventPayload,
+import {
+	type AutoTeleportSessionCalculation,
+	type AutoTeleportEventTypeSdk,
+	type TeleportSession,
+	TeleportSessionStatus,
+} from '../types/sdk'
+import {
+	type TeleportEventPayload,
 	TeleportEventType,
-	TeleportEventTypeString,
-	TeleportParams,
+	type TeleportEventTypeString,
+	type TeleportParams,
 } from '../types/teleport'
 import { GenericEmitter } from '../utils/GenericEmitter'
 import { convertToBigInt } from '../utils/number'
@@ -24,8 +30,9 @@ export default class AutoTeleportSDK extends Initializable {
 	private readonly balanceService: BalanceService
 	private readonly subApi: SubstrateApi
 	private readonly logger: Logger
+	private readonly sessionManager: SessionManager
 
-	constructor(config: SDKConfig) {
+	constructor(config: SDKConfig<false>) {
 		super()
 		const combinedConfig = SDKConfigManager.getDefaultConfig(config)
 		SDKConfigManager.validateConfig(combinedConfig)
@@ -34,6 +41,7 @@ export default class AutoTeleportSDK extends Initializable {
 		this.subApi = new SubstrateApi()
 		this.logger = new Logger({ minLevel: this.config.logLevel })
 		this.balanceService = new BalanceService(this.subApi, this.logger)
+		this.sessionManager = new SessionManager()
 	}
 
 	async initialize() {
@@ -72,7 +80,7 @@ export default class AutoTeleportSDK extends Initializable {
 	}
 
 	on(
-		event: TeleportEventType | `${TeleportEventType}`,
+		event: AutoTeleportEventTypeSdk,
 		callback: (item: TeleportEventPayload) => void,
 	): void {
 		this.teleportManager?.subscribe(event, callback)
@@ -109,7 +117,7 @@ export default class AutoTeleportSDK extends Initializable {
 
 	private async calculateTeleport(
 		params: TeleportParams,
-	): Promise<AutoteleportResponse> {
+	): Promise<AutoTeleportSessionCalculation> {
 		const hasEnoughBalance = await this.balanceService.hasEnoughBalance(params)
 
 		if (hasEnoughBalance) {
@@ -131,26 +139,43 @@ export default class AutoTeleportSDK extends Initializable {
 		}
 	}
 
-	async autoteleport(
-		p: TeleportParams<string>,
-	): Promise<AutoteleportResponse & { unsubscribe: () => void }> {
+	async initSession(p: TeleportParams<string>): Promise<TeleportSession> {
 		const params = convertToBigInt(p, ['amount'])
 
-		const response = await this.calculateTeleport(params)
+		const { quotes, needed, available, noFundsAtAll } =
+			await this.calculateTeleport(params)
 
-		const unsub = await this.subscribeBalanceChanges(params, async () => {
-			console.log('balance change', await this.calculateTeleport(params))
+		const unsubscribe = await this.subscribeBalanceChanges(params, async () => {
+			const newState = await this.calculateTeleport(params)
+
+			this.sessionManager.updateSession(sessionId, {
+				quotes: newState.quotes,
+				needed: newState.needed,
+				available: newState.available,
+				noFundsAtAll: newState.noFundsAtAll,
+			})
 		})
 
-		return {
-			...response,
-			unsubscribe: unsub,
+		const sessionId = this.sessionManager.createSession(params, {
+			quotes,
+			needed,
+			available,
+			noFundsAtAll,
+			status: TeleportSessionStatus.Ready,
+			unsubscribe,
+		})
+
+		const session = this.sessionManager.getSession(sessionId)
+
+		if (!session) {
+			throw new Error('Session not found')
 		}
+
+		return session
 	}
 
-	public async teleport(
-		params: TeleportParams<string>,
-		quote: Quote,
+	public async executeSession(
+		sessionId: string,
 	): Promise<{ id: string; retry: () => void }> {
 		this.ensureInitialized()
 
@@ -158,15 +183,41 @@ export default class AutoTeleportSDK extends Initializable {
 			throw new Error('No teleport manager found.')
 		}
 
-		const teleportId = await this.teleportManager.initiateTeleport(
-			convertToBigInt(params, ['amount']),
-			quote,
+		const session = this.sessionManager.getSession(sessionId)
+
+		if (!session?.selectedQuote) {
+			throw new Error('Invalid session or no quote selected')
+		}
+
+		session.unsubscribe()
+
+		const teleport = await this.teleportManager.initiateTeleport(
+			session.params,
+			session.selectedQuote,
 		)
 
+		// Subscribe to teleport events for this session
+		this.teleportManager.subscribe(
+			TeleportEventType.TELEPORT_COMPLETED,
+			(payload) => {
+				if (payload.id === teleport.id) {
+					this.sessionManager.updateSession(sessionId, {
+						status: TeleportSessionStatus.Completed,
+					})
+				}
+			},
+		)
+
+		// this.teleportManager.subscribe(TeleportEventType.TELEPORT_FAILED, (payload) => {
+		// 	if (payload.id === result.id) {
+		// 		this.sessionManager.updateSession(sessionId, { status: 'failed' })
+		// 	}
+		// })
+
 		return {
-			id: teleportId.id,
+			id: teleport.id,
 			retry: () => {
-				this.teleportManager?.retryTeleport(teleportId.id)
+				this.teleportManager?.retryTeleport(teleport.id)
 			},
 		}
 	}

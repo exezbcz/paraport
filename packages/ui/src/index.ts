@@ -8,7 +8,7 @@ import eventBus from './utils/event-bus'
 export interface MountOptions {
 	sdk: AutoTeleportSDK
 	target: string | HTMLElement
-	autoteleport: TeleportParams
+	autoteleport: TeleportParams<string>
 	onSubmit?: (autotelport: boolean) => void
 	onCompleted?: () => void
 	label: string
