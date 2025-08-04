@@ -80,7 +80,7 @@ const label = computed(() => {
 
 	if (allowAutoTeleport.value) {
 		if (!enabled.value) {
-			return t('autoTeleport.notEnoughTokenInChain', [
+			return t('autoteleport.notEnoughTokenInChain', [
 				props.autoteleport.asset,
 				props.autoteleport.chain,
 			])
