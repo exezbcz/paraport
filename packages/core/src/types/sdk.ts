@@ -39,17 +39,13 @@ export interface TeleportSession
 	unsubscribe: () => void
 }
 
-export enum AutoTeleportEventType {
-	SESSION_CREATED = 'SESSION_CREATED',
-	SESSION_UPDATED = 'SESSION_UPDATED',
-	SESSION_DELETED = 'SESSION_DELETED',
+export enum AutoTeleportSessionEventType {
+	SESSION_CREATED = 'session:created',
+	SESSION_UPDATED = 'session:updated',
+	SESSION_DELETED = 'session:deleted',
+	SESSION_COMPLETED = 'session:completed',
+	SESSION_FAILED = 'session:failed',
 }
-
-export type AutoTeleportEventTypeSdk =
-	| AutoTeleportEventType
-	| `${AutoTeleportEventType}`
-	| TeleportEventType
-	| `${TeleportEventType}`
 
 export enum LogLevel {
 	DEBUG = 'DEBUG',

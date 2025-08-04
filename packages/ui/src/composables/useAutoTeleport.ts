@@ -1,7 +1,8 @@
-import type {
-	AutoTeleportSDK,
-	TeleportEventPayload,
-	TeleportParams,
+import {
+	type AutoTeleportSDK,
+	type TeleportEventPayload,
+	type TeleportParams,
+	AutoTeleportSessionEventType
 } from '@autoteleport/core'
 import { TeleportEventType, TeleportSession } from '@autoteleport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
@@ -13,11 +14,18 @@ const TELEPORT_EVENTS = [
 	TeleportEventType.TELEPORT_UPDATED,
 ]
 
+const SESSION_EVENTS = [
+	AutoTeleportSessionEventType.SESSION_CREATED,
+	AutoTeleportSessionEventType.SESSION_UPDATED,
+	AutoTeleportSessionEventType.SESSION_DELETED,
+]
+
 export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	const session = ref<TeleportSession>()
+	const autoteleport = ref<TeleportEventPayload>()
+
 	const loading = ref(true)
 	const enabled = ref(false)
-	const autoteleport = ref<TeleportEventPayload>()
 	const retry = ref<() => void>()
 
 	const selectedQuote = computed(() => session.value?.quotes.selected)
@@ -29,8 +37,15 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	}
 
 	const attachListeners = () => {
+	   for (const event of SESSION_EVENTS) {
+			sdk.onSession(event, (session) => {
+				console.log(`[UI] ${event}`, session)
+				session.value = session
+			})
+		}
+
 		for (const event of TELEPORT_EVENTS) {
-			sdk.on(event, (teleport) => {
+			sdk.onTeleport(event, (teleport) => {
 				console.log(`[UI] ${event}`, teleport)
 				autoteleport.value = teleport
 

@@ -9,8 +9,8 @@ import { Logger } from '../services/LoggerService'
 import SubstrateApi from '../services/SubstrateApi'
 import type { Quote, SDKConfig } from '../types/common'
 import {
-	type AutoTeleportEventTypeSdk,
 	type AutoTeleportSessionCalculation,
+	type AutoTeleportSessionEventType,
 	type TeleportSession,
 	TeleportSessionStatus,
 } from '../types/sdk'
@@ -81,8 +81,15 @@ export default class AutoTeleportSDK extends Initializable {
 		}
 	}
 
-	on(
-		event: AutoTeleportEventTypeSdk,
+	onSession(
+		event: AutoTeleportSessionEventType | `${AutoTeleportSessionEventType}`,
+		callback: (item: any) => void,
+	): void {
+		this.sessionManager?.subscribe(event, callback)
+	}
+
+	onTeleport(
+		event: TeleportEventType | `${TeleportEventType}`,
 		callback: (item: TeleportEventPayload) => void,
 	): void {
 		this.teleportManager?.subscribe(event, callback)
