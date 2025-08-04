@@ -68,6 +68,8 @@ export default class AutoTeleportSDK extends Initializable {
 				this.logger,
 			)
 
+			this.registerListeners()
+
 			this.markInitialized()
 
 			this.logger.info('SDK initialized successfully')
@@ -196,23 +198,9 @@ export default class AutoTeleportSDK extends Initializable {
 			session.selectedQuote,
 		)
 
-		// Subscribe to teleport events for this session
-		this.teleportManager.subscribe(
-			TeleportEventType.TELEPORT_COMPLETED,
-			(payload) => {
-				if (payload.id === teleport.id) {
-					this.sessionManager.updateSession(sessionId, {
-						status: TeleportSessionStatus.Completed,
-					})
-				}
-			},
-		)
-
-		// this.teleportManager.subscribe(TeleportEventType.TELEPORT_FAILED, (payload) => {
-		// 	if (payload.id === result.id) {
-		// 		this.sessionManager.updateSession(sessionId, { status: 'failed' })
-		// 	}
-		// })
+		this.sessionManager.updateSession(sessionId, {
+			teleportId: teleport.id,
+		})
 
 		return {
 			id: teleport.id,
@@ -220,6 +208,23 @@ export default class AutoTeleportSDK extends Initializable {
 				this.teleportManager?.retryTeleport(teleport.id)
 			},
 		}
+	}
+
+	private registerListeners() {
+		if (!this.teleportManager) return
+
+		this.teleportManager.subscribe(
+			TeleportEventType.TELEPORT_COMPLETED,
+			(payload) => {
+				const session = this.sessionManager.getSessionByTeleportId(payload.id)
+
+				if (!session) return
+
+				this.sessionManager.updateSession(session.id, {
+					status: TeleportSessionStatus.Completed,
+				})
+			},
+		)
 	}
 
 	private validateTeleportParams(params: TeleportParams) {

@@ -56,4 +56,8 @@ export default class SessionManager extends BaseManager<
 	getUpdateEventType() {
 		return AutoTeleportEventType.SESSION_UPDATED
 	}
+
+	getSessionByTeleportId(teleportId: string): TeleportSession | undefined {
+		return this.getItemsWhere((session) => session.teleportId === teleportId)[0]
+	}
 }
