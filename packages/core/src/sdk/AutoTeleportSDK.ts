@@ -124,46 +124,55 @@ export default class AutoTeleportSDK extends Initializable {
 
 		if (hasEnoughBalance) {
 			return {
-				quotes: [],
-				needed: false,
-				available: false,
-				noFundsAtAll: false,
+				quotes: {
+					available: [],
+					selected: undefined,
+					bestQuote: undefined,
+				},
+				funds: {
+					needed: false,
+					available: false,
+					noFundsAtAll: false,
+				},
 			}
 		}
 
 		const quotes = await this.getQuotes(params)
 
+		const bestQuote = this.teleportManager?.selectBestQuote(quotes)
+
 		return {
-			quotes,
-			needed: !hasEnoughBalance,
-			available: quotes.length > 0,
-			noFundsAtAll: !hasEnoughBalance && quotes.length === 0,
+			quotes: {
+				available: quotes,
+				selected: bestQuote,
+				bestQuote: bestQuote,
+			},
+			funds: {
+				needed: !hasEnoughBalance,
+				available: quotes.length > 0,
+				noFundsAtAll: !hasEnoughBalance && quotes.length === 0,
+			},
 		}
 	}
 
 	async initSession(p: TeleportParams<string>): Promise<TeleportSession> {
 		const params = convertToBigInt(p, ['amount'])
 
-		const { quotes, needed, available, noFundsAtAll } =
-			await this.calculateTeleport(params)
+		const { quotes, funds } = await this.calculateTeleport(params)
 
 		const unsubscribe = await this.subscribeBalanceChanges(params, async () => {
 			const newState = await this.calculateTeleport(params)
 
 			this.sessionManager.updateSession(sessionId, {
 				quotes: newState.quotes,
-				needed: newState.needed,
-				available: newState.available,
-				noFundsAtAll: newState.noFundsAtAll,
+				funds: newState.funds,
 			})
 		})
 
 		const sessionId = this.sessionManager.createSession(params, {
-			quotes,
-			needed,
-			available,
-			noFundsAtAll,
 			status: TeleportSessionStatus.Ready,
+			quotes,
+			funds,
 			unsubscribe,
 		})
 
@@ -187,7 +196,7 @@ export default class AutoTeleportSDK extends Initializable {
 
 		const session = this.sessionManager.getItem(sessionId)
 
-		if (!session?.selectedQuote) {
+		if (!session?.quotes.selected) {
 			throw new Error('Invalid session or no quote selected')
 		}
 
@@ -195,7 +204,7 @@ export default class AutoTeleportSDK extends Initializable {
 
 		const teleport = await this.teleportManager.initiateTeleport(
 			session.params,
-			session.selectedQuote,
+			session.quotes.selected,
 		)
 
 		this.sessionManager.updateSession(sessionId, {

@@ -10,11 +10,21 @@ export enum TeleportSessionStatus {
 	Failed = 'failed',
 }
 
-export interface AutoTeleportSessionCalculation {
-	quotes: Quote[]
+interface FundsStatus {
 	needed: boolean
 	available: boolean
 	noFundsAtAll: boolean
+}
+
+interface QuoteSelection {
+	available: Quote[]
+	selected?: Quote
+	bestQuote?: Quote
+}
+
+export interface AutoTeleportSessionCalculation {
+	quotes: QuoteSelection
+	funds: FundsStatus
 }
 
 export interface TeleportSessionEvent extends BaseDetailsEvent {}
@@ -25,7 +35,7 @@ export interface TeleportSession
 	id: string
 	status: TeleportSessionStatus
 	params: TeleportParams
-	selectedQuote?: Quote
+	teleportId?: string
 	unsubscribe: () => void
 }
 

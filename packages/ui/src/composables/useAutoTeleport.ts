@@ -20,7 +20,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	const autoteleport = ref<TeleportEventPayload>()
 	const retry = ref<() => void>()
 
-	const selectedQuote = computed(() => session.value?.selectedQuote)
+	const selectedQuote = computed(() => session.value?.quotes.selected)
 
 	const exec = async () => {
 		if (session.value && selectedQuote.value) {
@@ -58,19 +58,19 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	})
 
 	const isReady = computed(() => !loading.value && Boolean(session.value))
-	const isAvailable = computed(() => true) // TODO
+	const isAvailable = computed(() => true) // TODO check if chain has autoteleport support
 	const canAutoTeleport = computed(
-		() => isAvailable.value && Boolean(session.value?.available),
+		() => isAvailable.value && Boolean(session.value?.funds.available),
 	)
-	const needsAutoTeleport = computed(() => Boolean(session.value?.needed))
-	const hasNoFundsAtAll = computed(() => Boolean(session.value?.noFundsAtAll))
+	const needsAutoTeleport = computed(() => Boolean(session.value?.funds.needed))
+	const hasNoFundsAtAll = computed(() => Boolean(session.value?.funds.noFundsAtAll))
 	const hasEnoughInCurrentChain = computed(
 		() => !needsAutoTeleport.value && isReady.value,
 	)
 
 	watchEffect(() => {
 		if (session.value) {
-			enabled.value = session.value.needed
+			enabled.value = needsAutoTeleport.value
 		}
 	})
 
