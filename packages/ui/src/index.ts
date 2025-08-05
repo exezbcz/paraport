@@ -1,5 +1,5 @@
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
-import { createApp, h } from 'vue'
+import { createApp, h, ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 import App from './App.vue'
 import './styles/index.scss'
@@ -62,7 +62,7 @@ export function mount({
 	autoteleport,
 	onSubmit,
 	onCompleted,
-	label,
+	...options
 }: MountOptions) {
 	const targetElement =
 		typeof target === 'string' ? document.querySelector(target) : target
@@ -79,17 +79,25 @@ export function mount({
 		},
 	})
 
+	const label = ref(options.label)
+	const disabled = ref(false)
+
 	const app = createApp({
 		setup() {
 			attachEventListeners({ onCompleted, onSubmit })
 		},
-		render: () => h(App, { sdk, autoteleport, label }),
+		render: () => h(App, { sdk, autoteleport, label, disabled }),
 	})
 
 	app.use(i18n).mount(targetElement)
 
 	return {
-		subscribe: eventBus.on,
+		updateLabel: (value: string) => {
+			label.value = value
+		},
+		updateDisabled: (value: boolean) => {
+			disabled.value = value
+		},
 		destroy: () => app.unmount(),
 	}
 }
