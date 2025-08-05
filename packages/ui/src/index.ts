@@ -17,6 +17,7 @@ export interface MountOptions {
 const enTranslations = {
 	autoteleport: {
 		checking: 'Checking Funds ...',
+		insufficientFunds: 'Insufficient Funds',
 		notEnoughTokenInChain: 'Not enough {0} on {1}',
 		steps: {
 			1: {

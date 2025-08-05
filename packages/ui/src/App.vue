@@ -57,7 +57,24 @@ const {
 	isReady,
 	canAutoTeleport,
 	hasNoFundsAtAll,
+	insufficientFunds,
 } = useAutoTeleport(props.sdk, props.autoteleport)
+
+const isDisabled = computed(() => {
+	if (props.disabled || !isReady.value || insufficientFunds.value) {
+		return true
+	}
+
+	if (hasEnoughInCurrentChain.value) {
+		return false
+	}
+
+	if (needsAutoTeleport.value) {
+		return !enabled.value
+	}
+
+	return true
+})
 
 const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 	needsAutoTeleport,
@@ -65,6 +82,7 @@ const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 	isReady,
 	canAutoTeleport,
 	hasNoFundsAtAll,
+	disabled: isDisabled,
 })
 
 const confirmButtonTitle = computed(() => 'confirmButtonTitle')
@@ -74,8 +92,12 @@ const label = computed(() => {
 		return props.label || confirmButtonTitle.value
 	}
 
+	if (insufficientFunds.value) {
+		return t('autoteleport.insufficientFunds')
+	}
+
 	if (!isReady.value) {
-		return t('checking')
+		return t('autoteleport.checking')
 	}
 
 	if (allowAutoTeleport.value) {
@@ -90,22 +112,6 @@ const label = computed(() => {
 	}
 
 	return t('checking')
-})
-
-const isDisabled = computed(() => {
-	if (props.disabled || !isReady.value) {
-		return true
-	}
-
-	if (hasEnoughInCurrentChain.value) {
-		return false
-	}
-
-	if (needsAutoTeleport.value) {
-		return !enabled.value
-	}
-
-	return true
 })
 
 const submit = async () => {

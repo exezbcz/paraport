@@ -1,10 +1,10 @@
 import {
 	type AutoTeleportSDK,
+	AutoTeleportSessionEventType,
 	type TeleportEventPayload,
 	type TeleportParams,
-	AutoTeleportSessionEventType
 } from '@autoteleport/core'
-import { TeleportEventType, TeleportSession } from '@autoteleport/core'
+import { TeleportEventType, type TeleportSession } from '@autoteleport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
 import eventBus from '../utils/event-bus'
 
@@ -37,7 +37,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	}
 
 	const attachListeners = () => {
-	   for (const event of SESSION_EVENTS) {
+		for (const event of SESSION_EVENTS) {
 			sdk.onSession(event, (session) => {
 				console.log(`[UI] ${event}`, session)
 				session.value = session
@@ -77,8 +77,13 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	const canAutoTeleport = computed(
 		() => isAvailable.value && Boolean(session.value?.funds.available),
 	)
+	const insufficientFunds = computed(
+		() => isReady.value && hasNoFundsAtAll.value,
+	)
 	const needsAutoTeleport = computed(() => Boolean(session.value?.funds.needed))
-	const hasNoFundsAtAll = computed(() => Boolean(session.value?.funds.noFundsAtAll))
+	const hasNoFundsAtAll = computed(() =>
+		Boolean(session.value?.funds.noFundsAtAll),
+	)
 	const hasEnoughInCurrentChain = computed(
 		() => !needsAutoTeleport.value && isReady.value,
 	)
@@ -100,5 +105,6 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 		isAvailable,
 		canAutoTeleport,
 		hasNoFundsAtAll,
+		insufficientFunds,
 	}
 }

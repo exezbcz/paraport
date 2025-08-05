@@ -10,7 +10,7 @@ export default ({
 	needsAutoTeleport: Ref<boolean>
 	isAvailable: Ref<boolean>
 	isReady: Ref<boolean>
-	disabled?: Ref<boolean>
+	disabled: Ref<boolean>
 	canAutoTeleport: Ref<boolean>
 	hasNoFundsAtAll: Ref<boolean>
 }) => {
@@ -19,7 +19,7 @@ export default ({
 			needsAutoTeleport.value &&
 			isAvailable.value &&
 			isReady.value &&
-			!disabled?.value
+			!disabled.value
 		)
 	})
 

@@ -1,10 +1,13 @@
 import {
-	type TransactionDetails,
+	TeleportStatus,
 	TransactionStatus,
 	TransactionType,
 } from '@autoteleport/core'
-import type { Action, TeleportEventPayload } from '@autoteleport/core'
-import { TeleportStatus } from '@autoteleport/core'
+import type {
+	Action,
+	TeleportEventPayload,
+	TransactionDetails,
+} from '@autoteleport/core'
 import { type ComputedRef, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { type TeleportStepDetails, TeleportStepStatus } from '../types'
