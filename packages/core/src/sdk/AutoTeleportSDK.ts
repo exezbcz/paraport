@@ -25,7 +25,7 @@ import {
 import { convertToBigInt } from '@/utils/number'
 
 export default class AutoTeleportSDK extends Initializable {
-	private teleportManager: TeleportManager
+	private readonly teleportManager: TeleportManager
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
 	private readonly balanceService: BalanceService
