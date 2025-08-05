@@ -1,6 +1,6 @@
-import type { BaseDetails, BaseDetailsEvent } from '../base/BaseManager'
-import type { Quote } from './common'
-import type { TeleportEventType, TeleportParams } from './teleport'
+import type { BaseDetails, BaseDetailsEvent } from '@/base/BaseManager'
+import type { Quote } from '@/types/common'
+import type { TeleportParams } from '@/types/teleport'
 
 export enum TeleportSessionStatus {
 	Pending = 'pending',

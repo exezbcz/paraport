@@ -1,3 +1,8 @@
+import {
+	type TransactionCallback,
+	TransactionStatus,
+	type TransactionUnsubscribe,
+} from '@/types/transactions'
 import type { Extrinsic } from '@kodadot1/sub-api'
 import type {
 	DispatchError,
@@ -5,11 +10,6 @@ import type {
 	Hash,
 } from '@polkadot/types/interfaces'
 import type { ISubmittableResult, Signer } from '@polkadot/types/types'
-import {
-	type TransactionCallback,
-	TransactionStatus,
-	type TransactionUnsubscribe,
-} from '../types/transactions'
 
 type TxCbParams = {
 	onSuccess: (params: { blockHash: Hash; txHash: Hash }) => void

@@ -1,27 +1,27 @@
-import { Initializable } from '../base/Initializable'
-import BridgeRegistry from '../bridges/BridgeRegistry'
-import XCMBridge from '../bridges/xcm/XCMBridge'
-import { SDKConfigManager } from '../config/SDKConfigManager'
-import SessionManager from '../managers/SessionManager'
-import { TeleportManager } from '../managers/TeleportManager'
-import BalanceService from '../services/BalanceService'
-import { Logger } from '../services/LoggerService'
-import SubstrateApi from '../services/SubstrateApi'
-import type { Quote, SDKConfig } from '../types/common'
+import { Initializable } from '@/base/Initializable'
+import BridgeRegistry from '@/bridges/BridgeRegistry'
+import XCMBridge from '@/bridges/xcm/XCMBridge'
+import { SDKConfigManager } from '@/config/SDKConfigManager'
+import SessionManager from '@/managers/SessionManager'
+import { TeleportManager } from '@/managers/TeleportManager'
+import BalanceService from '@/services/BalanceService'
+import { Logger } from '@/services/LoggerService'
+import SubstrateApi from '@/services/SubstrateApi'
+import type { Quote, SDKConfig } from '@/types/common'
 import {
 	type AutoTeleportSessionCalculation,
 	type AutoTeleportSessionEventType,
 	type TeleportSession,
 	TeleportSessionStatus,
-} from '../types/sdk'
+} from '@/types/sdk'
 import {
 	type TeleportEventPayload,
 	TeleportEventType,
 	type TeleportEventTypeString,
 	type TeleportParams,
-} from '../types/teleport'
-import { GenericEmitter } from '../utils/GenericEmitter'
-import { convertToBigInt } from '../utils/number'
+} from '@/types/teleport'
+import { GenericEmitter } from '@/utils/GenericEmitter'
+import { convertToBigInt } from '@/utils/number'
 
 export default class AutoTeleportSDK extends Initializable {
 	private teleportManager: TeleportManager | undefined

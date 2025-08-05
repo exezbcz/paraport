@@ -1,4 +1,4 @@
-import type { BridgeAdapter, BridgeProtocol } from '../types/bridges'
+import type { BridgeAdapter, BridgeProtocol } from '@/types/bridges'
 
 export default class BridgeRegistry {
 	private bridges: Map<BridgeProtocol, BridgeAdapter> = new Map()

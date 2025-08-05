@@ -1,10 +1,10 @@
-import type { IInitializable } from '../base/Initializable'
-import type { Asset, Chain, Quote } from './common'
-import type { TeleportParams } from './teleport'
+import type { IInitializable } from '@/base/Initializable'
+import type { Asset, Chain, Quote } from '@/types/common'
+import type { TeleportParams } from '@/types/teleport'
 import type {
 	TransactionCallback,
 	TransactionUnsubscribe,
-} from './transactions'
+} from '@/types/transactions'
 
 export type BridgeProtocol = 'XCM'
 

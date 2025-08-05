@@ -1,14 +1,14 @@
-import { type BaseDetailsEvent, BaseManager } from '../base/BaseManager'
-import type { BrigeTransferParams } from '../types/bridges'
-import type { Action, Chain } from '../types/common'
+import { type BaseDetailsEvent, BaseManager } from '@/base/BaseManager'
+import type { BrigeTransferParams } from '@/types/bridges'
+import type { Action, Chain } from '@/types/common'
 import {
 	type TransactionDetails,
 	TransactionEventType,
 	type TransactionEventTypeString,
 	TransactionStatus,
 	type TransactionType,
-} from '../types/transactions'
-import type { GenericEmitter } from '../utils/GenericEmitter'
+} from '@/types/transactions'
+import type { GenericEmitter } from '@/utils/GenericEmitter'
 
 export class TransactionManager extends BaseManager<
 	TransactionDetails,

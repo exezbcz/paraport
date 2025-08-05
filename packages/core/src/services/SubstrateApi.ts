@@ -1,6 +1,6 @@
+import type { Chain } from '@/types/common'
+import { chainPrefixOf } from '@/utils'
 import { ApiFactory } from '@kodadot1/sub-api'
-import type { Chain } from '../types/common'
-import { chainPrefixOf } from '../utils'
 
 interface IApiFactory<T> {
 	getInstance(chain: Chain): Promise<T>

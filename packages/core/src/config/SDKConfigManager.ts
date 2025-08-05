@@ -1,6 +1,6 @@
-import ConfigValidationError from '../errors/ConfigError'
-import { Chain, type SDKConfig } from '../types/common'
-import { LogLevel } from '../types/sdk'
+import ConfigValidationError from '@/errors/ConfigError'
+import { Chain, type SDKConfig } from '@/types/common'
+import { LogLevel } from '@/types/sdk'
 
 export class SDKConfigManager {
 	public static validateConfig(config: SDKConfig) {

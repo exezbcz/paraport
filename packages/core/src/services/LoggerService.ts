@@ -1,4 +1,4 @@
-import { LogLevel, type LoggerConfig } from '../types/sdk'
+import { LogLevel, type LoggerConfig } from '@/types/sdk'
 
 export class Logger {
 	private config: LoggerConfig

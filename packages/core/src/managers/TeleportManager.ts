@@ -1,9 +1,11 @@
-import { BaseManager } from '../base/BaseManager'
-import type BridgeRegistry from '../bridges/BridgeRegistry'
-import BalanceService from '../services/BalanceService'
-import type { Logger } from '../services/LoggerService'
-import type SubstrateApi from '../services/SubstrateApi'
-import type { Action, Quote, SDKConfig } from '../types/common'
+import { BaseManager } from '@/base/BaseManager'
+import type BridgeRegistry from '@/bridges/BridgeRegistry'
+import { ActionManager } from '@/managers/ActionManager'
+import { TransactionManager } from '@/managers/TransactionManager'
+import BalanceService from '@/services/BalanceService'
+import type { Logger } from '@/services/LoggerService'
+import type SubstrateApi from '@/services/SubstrateApi'
+import type { Action, Quote, SDKConfig } from '@/types/common'
 import {
 	type TeleportDetails,
 	type TeleportEvent,
@@ -12,7 +14,7 @@ import {
 	type TeleportEventTypeString,
 	type TeleportParams,
 	TeleportStatus,
-} from '../types/teleport'
+} from '@/types/teleport'
 import {
 	type TransactionCallback,
 	type TransactionDetails,
@@ -21,10 +23,8 @@ import {
 	TransactionStatus,
 	TransactionType,
 	type TransactionUnsubscribe,
-} from '../types/transactions'
-import { GenericEmitter } from '../utils/GenericEmitter'
-import { ActionManager } from './ActionManager'
-import { TransactionManager } from './TransactionManager'
+} from '@/types/transactions'
+import { GenericEmitter } from '@/utils/GenericEmitter'
 
 export class TeleportManager extends BaseManager<
 	TeleportDetails,

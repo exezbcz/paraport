@@ -1,11 +1,11 @@
-import FeeService from '../services/FeeService'
-import type SubstrateApi from '../services/SubstrateApi'
-import type { Action, Chain, SDKConfig } from '../types/common'
+import FeeService from '@/services/FeeService'
+import type SubstrateApi from '@/services/SubstrateApi'
+import type { Action, Chain, SDKConfig } from '@/types/common'
 import type {
 	TransactionCallback,
 	TransactionUnsubscribe,
-} from '../types/transactions'
-import { signAndSend } from '../utils/tx'
+} from '@/types/transactions'
+import { signAndSend } from '@/utils/tx'
 
 export class ActionManager {
 	private readonly feeService: FeeService

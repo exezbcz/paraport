@@ -1,20 +1,20 @@
-import * as paraspell from '@paraspell/sdk-pjs'
-import { maxBy } from 'lodash'
-import { Initializable } from '../../base/Initializable'
-import { ActionManager } from '../../managers/ActionManager'
-import type BalanceService from '../../services/BalanceService'
-import FeeService from '../../services/FeeService'
-import type SubstrateApi from '../../services/SubstrateApi'
+import { Initializable } from '@/base/Initializable'
+import { ActionManager } from '@/managers/ActionManager'
+import type BalanceService from '@/services/BalanceService'
+import FeeService from '@/services/FeeService'
+import type SubstrateApi from '@/services/SubstrateApi'
 import type {
 	BridgeAdapter,
 	BridgeProtocol,
 	BrigeTransferParams,
-} from '../../types/bridges'
-import type { Asset, Chain, Quote, SDKConfig } from '../../types/common'
-import type { TeleportParams } from '../../types/teleport'
-import type { TransactionCallback } from '../../types/transactions'
-import { getChainsOfAsset } from '../../utils'
-import { signAndSend } from '../../utils/tx'
+} from '@/types/bridges'
+import type { Asset, Chain, Quote, SDKConfig } from '@/types/common'
+import type { TeleportParams } from '@/types/teleport'
+import type { TransactionCallback } from '@/types/transactions'
+import { getChainsOfAsset } from '@/utils'
+import { signAndSend } from '@/utils/tx'
+import * as paraspell from '@paraspell/sdk-pjs'
+import { maxBy } from 'lodash'
 
 type XCMTeleportParams = {
 	amount: bigint

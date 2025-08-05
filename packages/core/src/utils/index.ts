@@ -1,7 +1,7 @@
+import { formatAddress } from '@/utils/account'
+import { transferableBalanceOf } from '@/utils/balance'
+import { edOf, teleportEdOf } from '@/utils/chains'
 import { CHAINS } from '@kodadot1/static'
-import { formatAddress } from './account'
-import { transferableBalanceOf } from './balance'
-import { edOf, teleportEdOf } from './chains'
 
 import type { ChainProperties } from '@kodadot1/static'
 import type { Asset, Chain, ChainPrefix } from '../types/common'

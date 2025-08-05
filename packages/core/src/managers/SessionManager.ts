@@ -1,11 +1,11 @@
-import { BaseManager } from '../base/BaseManager'
+import { BaseManager } from '@/base/BaseManager'
 import {
 	AutoTeleportSessionEventType,
 	type TeleportSession,
 	type TeleportSessionEvent,
 	TeleportSessionStatus,
-} from '../types/sdk'
-import type { TeleportParams } from '../types/teleport'
+} from '@/types/sdk'
+import type { TeleportParams } from '@/types/teleport'
 
 export default class SessionManager extends BaseManager<
 	TeleportSession,

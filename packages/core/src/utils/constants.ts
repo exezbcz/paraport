@@ -1,4 +1,4 @@
-import { Asset, Chain, type ChainPrefix } from '../types/common'
+import { Asset, Chain, type ChainPrefix } from '@/types/common'
 
 export const ASSET_CHAINS_MAP: Partial<Record<Asset, Chain[]>> = {
 	[Asset.DOT]: [Chain.POLKADOT, Chain.ASSETHUBPOLKADOT],
