@@ -3,6 +3,7 @@ import {
 	AutoTeleportSessionEventType,
 	type TeleportSession,
 	type TeleportSessionEvent,
+	type TeleportSessionPayload,
 	TeleportSessionStatus,
 } from '@/types/sdk'
 import type { TeleportParams } from '@/types/teleport'
@@ -11,7 +12,8 @@ export default class SessionManager extends BaseManager<
 	TeleportSession,
 	TeleportSessionStatus,
 	TeleportSessionEvent,
-	`${AutoTeleportSessionEventType}`
+	`${AutoTeleportSessionEventType}`,
+	TeleportSessionPayload
 > {
 	createSession(
 		params: TeleportParams,

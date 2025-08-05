@@ -13,6 +13,7 @@ import {
 	type AutoTeleportSessionCalculation,
 	type AutoTeleportSessionEventType,
 	type TeleportSession,
+	type TeleportSessionPayload,
 	TeleportSessionStatus,
 } from '@/types/sdk'
 import {
@@ -83,9 +84,9 @@ export default class AutoTeleportSDK extends Initializable {
 
 	onSession(
 		event: AutoTeleportSessionEventType | `${AutoTeleportSessionEventType}`,
-		callback: (item: any) => void,
+		callback: (item: TeleportSessionPayload) => void,
 	): void {
-		this.sessionManager?.subscribe(event, callback)
+		this.sessionManager.subscribe(event, callback)
 	}
 
 	onTeleport(

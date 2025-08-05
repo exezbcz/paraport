@@ -58,7 +58,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 	const retry = async () => {
 		if (!session.value) return
 
-		await sdk.retrySession(session.value.id)
+		sdk.retrySession(session.value.id)
 	}
 
 	onBeforeMount(async () => {

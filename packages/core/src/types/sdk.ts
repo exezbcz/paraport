@@ -27,6 +27,8 @@ export interface AutoTeleportSessionCalculation {
 	funds: FundsStatus
 }
 
+export interface TeleportSessionPayload extends TeleportSession {}
+
 export interface TeleportSessionEvent extends BaseDetailsEvent {}
 
 export interface TeleportSession
