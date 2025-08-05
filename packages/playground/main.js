@@ -12,10 +12,6 @@ const main = async () => {
   mount({
     target: '#root',
     sdk: new AutoTeleportSDK({
-      chains: [
-        Chain.KUSAMA,
-        Chain.ASSETHUBKUSAMA
-      ],
       getSigner: async () => {
         await web3Enable(DAPP_NAME)
 
