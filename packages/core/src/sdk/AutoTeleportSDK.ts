@@ -96,9 +96,6 @@ export default class AutoTeleportSDK extends Initializable {
 	}
 
 	private async getQuotes(params: TeleportParams): Promise<Quote[]> {
-		this.ensureInitialized()
-		this.validateTeleportParams(params)
-
 		const bridges = this.bridgeRegistry.getAll()
 
 		const quotePromises = bridges.map((bridge) =>
@@ -163,6 +160,9 @@ export default class AutoTeleportSDK extends Initializable {
 	}
 
 	async initSession(p: TeleportParams<string>): Promise<TeleportSession> {
+		this.ensureInitialized()
+		this.validateTeleportParams(p)
+
 		const params = convertToBigInt(p, ['amount'])
 
 		const { quotes, funds } = await this.calculateTeleport(params)
@@ -243,7 +243,7 @@ export default class AutoTeleportSDK extends Initializable {
 		)
 	}
 
-	private validateTeleportParams(params: TeleportParams) {
+	private validateTeleportParams(params: TeleportParams<string>) {
 		const validAsset = Object.values(Asset).includes(params.asset)
 		const validChain = Object.values(Chain).includes(params.chain)
 		const validAmount = BigInt(params.amount) > BigInt(0)
@@ -253,7 +253,7 @@ export default class AutoTeleportSDK extends Initializable {
 				Object.hasOwn(action, 'section') && Object.hasOwn(action, 'method'),
 		)
 
-		const validAddress = Boolean(params.address)
+		const validAddress = Boolean(params.address) // TODO: validate address
 
 		const valid =
 			validActions && validAddress && validAsset && validAmount && validChain
