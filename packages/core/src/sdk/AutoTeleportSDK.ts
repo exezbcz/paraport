@@ -8,7 +8,7 @@ import { TeleportManager } from '@/managers/TeleportManager'
 import BalanceService from '@/services/BalanceService'
 import { Logger } from '@/services/LoggerService'
 import SubstrateApi from '@/services/SubstrateApi'
-import type { Quote, SDKConfig } from '@/types/common'
+import { Asset, Chain, type Quote, type SDKConfig } from '@/types/common'
 import {
 	type AutoTeleportSessionCalculation,
 	type AutoTeleportSessionEventType,
@@ -203,7 +203,7 @@ export default class AutoTeleportSDK extends Initializable {
 
 		const session = this.sessionManager.getItem(sessionId)
 
-		if (!session?.quotes.selected && !session?.funds.needed) {
+		if (!session?.quotes.selected || !session?.funds.needed) {
 			throw new Error('Invalid session or no quote selected')
 		}
 
@@ -244,16 +244,19 @@ export default class AutoTeleportSDK extends Initializable {
 	}
 
 	private validateTeleportParams(params: TeleportParams) {
-		const validActions = params.actions.every((action) => {
-			return Object.hasOwn(action, 'section') && Object.hasOwn(action, 'method')
-		})
+		const validAsset = Object.values(Asset).includes(params.asset)
+		const validChain = Object.values(Chain).includes(params.chain)
+		const validAmount = BigInt(params.amount) > BigInt(0)
+
+		const validActions = params.actions.every(
+			(action) =>
+				Object.hasOwn(action, 'section') && Object.hasOwn(action, 'method'),
+		)
+
+		const validAddress = Boolean(params.address)
 
 		const valid =
-			validActions &&
-			Boolean(params.address) &&
-			Boolean(params.asset) &&
-			Boolean(params.amount) &&
-			Boolean(params.chain)
+			validActions && validAddress && validAsset && validAmount && validChain
 
 		if (!valid) {
 			throw new Error('Invalid actions')
