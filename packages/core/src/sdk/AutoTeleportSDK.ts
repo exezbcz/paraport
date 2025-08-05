@@ -192,9 +192,7 @@ export default class AutoTeleportSDK extends Initializable {
 		return session
 	}
 
-	public async executeSession(
-		sessionId: string,
-	): Promise<{ id: string; retry: () => void }> {
+	public async executeSession(sessionId: string): Promise<string> {
 		this.ensureInitialized()
 
 		if (!this.teleportManager) {
@@ -218,12 +216,17 @@ export default class AutoTeleportSDK extends Initializable {
 			teleportId: teleport.id,
 		})
 
-		return {
-			id: teleport.id,
-			retry: () => {
-				this.teleportManager?.retryTeleport(teleport.id)
-			},
+		return teleport.id
+	}
+
+	public retrySession(sessionId: string): void {
+		const session = this.sessionManager.getItem(sessionId)
+
+		if (!session?.teleportId) {
+			throw new Error('Session has no teleport ID')
 		}
+
+		this.teleportManager.retryTeleport(session.teleportId)
 	}
 
 	private registerListeners() {

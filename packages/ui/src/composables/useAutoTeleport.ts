@@ -26,7 +26,6 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 
 	const loading = ref(true)
 	const enabled = ref(false)
-	const retry = ref<() => void>()
 
 	const selectedQuote = computed(() => session.value?.quotes.selected)
 
@@ -54,6 +53,12 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 				}
 			})
 		}
+	}
+
+	const retry = async () => {
+		if (!session.value) return
+
+		await sdk.retrySession(session.value.id)
 	}
 
 	onBeforeMount(async () => {
