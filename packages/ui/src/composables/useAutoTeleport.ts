@@ -37,16 +37,16 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 
 	const attachListeners = () => {
 		for (const event of SESSION_EVENTS) {
-			sdk.onSession(event, (session) => {
-				console.log(`[UI] ${event}`, session)
-				session.value = session
+			sdk.onSession(event, (payload) => {
+				console.log(`[UI] ${event}`, payload)
+				session.value = payload
 			})
 		}
 
 		for (const event of TELEPORT_EVENTS) {
-			sdk.onTeleport(event, (teleport) => {
-				console.log(`[UI] ${event}`, teleport)
-				autoteleport.value = teleport
+			sdk.onTeleport(event, (payload) => {
+				console.log(`[UI] ${event}`, payload)
+				autoteleport.value = payload
 
 				if (event === TeleportEventType.TELEPORT_COMPLETED) {
 					eventBus.emit('teleport:completed')
