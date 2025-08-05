@@ -24,7 +24,7 @@ import {
 import { convertToBigInt } from '@/utils/number'
 
 export default class AutoTeleportSDK extends Initializable {
-	private teleportManager: TeleportManager | undefined
+	private teleportManager: TeleportManager
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
 	private readonly balanceService: BalanceService
@@ -42,6 +42,14 @@ export default class AutoTeleportSDK extends Initializable {
 		this.logger = new Logger({ minLevel: this.config.logLevel })
 		this.balanceService = new BalanceService(this.subApi, this.logger)
 		this.sessionManager = new SessionManager(new GenericEmitter())
+
+		this.teleportManager = new TeleportManager(
+			new GenericEmitter<TeleportEventPayload, TeleportEventTypeString>(),
+			this.bridgeRegistry,
+			this.config,
+			this.subApi,
+			this.logger,
+		)
 	}
 
 	async initialize() {
@@ -58,14 +66,6 @@ export default class AutoTeleportSDK extends Initializable {
 
 			await Promise.all(
 				this.bridgeRegistry.getAll().map((bridge) => bridge.initialize()),
-			)
-
-			this.teleportManager = new TeleportManager(
-				new GenericEmitter<TeleportEventPayload, TeleportEventTypeString>(),
-				this.bridgeRegistry,
-				this.config,
-				this.subApi,
-				this.logger,
 			)
 
 			this.registerListeners()
@@ -92,7 +92,7 @@ export default class AutoTeleportSDK extends Initializable {
 		event: TeleportEventType | `${TeleportEventType}`,
 		callback: (item: TeleportEventPayload) => void,
 	): void {
-		this.teleportManager?.subscribe(event, callback)
+		this.teleportManager.subscribe(event, callback)
 	}
 
 	private async getQuotes(params: TeleportParams): Promise<Quote[]> {
@@ -143,7 +143,7 @@ export default class AutoTeleportSDK extends Initializable {
 
 		const quotes = await this.getQuotes(params)
 
-		const bestQuote = this.teleportManager?.selectBestQuote(quotes)
+		const bestQuote = this.teleportManager.selectBestQuote(quotes)
 
 		return {
 			quotes: {
