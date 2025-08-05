@@ -25,12 +25,11 @@
 </template>
 
 <script setup lang="ts">
+import Modal from './components/Modal.vue'
+import Button from './components/ui/Button/Button.vue'
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Modal from './components/Modal.vue'
-import Button from './components/ui/Button/Button.vue'
-import Switch from './components/ui/Switch/Switch.vue'
 import useAutoTeleport from './composables/useAutoTeleport'
 import useAutoTeleportButton from './composables/useAutoTeleportButton'
 import eventBus from './utils/event-bus'
@@ -60,29 +59,13 @@ const {
 	insufficientFunds,
 } = useAutoTeleport(props.sdk, props.autoteleport)
 
-const isDisabled = computed(() => {
-	if (props.disabled || !isReady.value || insufficientFunds.value) {
-		return true
-	}
-
-	if (hasEnoughInCurrentChain.value) {
-		return false
-	}
-
-	if (needsAutoTeleport.value) {
-		return !enabled.value
-	}
-
-	return true
-})
-
 const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 	needsAutoTeleport,
 	isAvailable,
 	isReady,
 	canAutoTeleport,
 	hasNoFundsAtAll,
-	disabled: isDisabled,
+	disabled: computed(() => props.disabled),
 })
 
 const confirmButtonTitle = computed(() => 'confirmButtonTitle')
@@ -112,6 +95,22 @@ const label = computed(() => {
 	}
 
 	return t('checking')
+})
+
+const isDisabled = computed(() => {
+	if (props.disabled || !isReady.value || insufficientFunds.value) {
+		return true
+	}
+
+	if (hasEnoughInCurrentChain.value) {
+		return false
+	}
+
+	if (needsAutoTeleport.value) {
+		return !enabled.value
+	}
+
+	return true
 })
 
 const submit = async () => {
