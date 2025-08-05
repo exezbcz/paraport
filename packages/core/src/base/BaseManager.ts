@@ -1,4 +1,4 @@
-import type { GenericEmitter, GenericEvent } from '@/utils/GenericEmitter'
+import type { GenericEmitter, GenericEvent } from '@/base/GenericEmitter'
 
 export interface BaseDetails<StatusType, EventType> {
 	id: string

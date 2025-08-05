@@ -1,3 +1,4 @@
+import { GenericEmitter } from '@/base/GenericEmitter'
 import { Initializable } from '@/base/Initializable'
 import BridgeRegistry from '@/bridges/BridgeRegistry'
 import XCMBridge from '@/bridges/xcm/XCMBridge'
@@ -20,7 +21,6 @@ import {
 	type TeleportEventTypeString,
 	type TeleportParams,
 } from '@/types/teleport'
-import { GenericEmitter } from '@/utils/GenericEmitter'
 import { convertToBigInt } from '@/utils/number'
 
 export default class AutoTeleportSDK extends Initializable {
@@ -203,7 +203,7 @@ export default class AutoTeleportSDK extends Initializable {
 
 		const session = this.sessionManager.getItem(sessionId)
 
-		if (!session?.quotes.selected) {
+		if (!session?.quotes.selected && !session?.funds.needed) {
 			throw new Error('Invalid session or no quote selected')
 		}
 

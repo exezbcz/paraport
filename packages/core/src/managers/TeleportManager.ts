@@ -1,4 +1,5 @@
 import { BaseManager } from '@/base/BaseManager'
+import { GenericEmitter } from '@/base/GenericEmitter'
 import type BridgeRegistry from '@/bridges/BridgeRegistry'
 import { ActionManager } from '@/managers/ActionManager'
 import { TransactionManager } from '@/managers/TransactionManager'
@@ -24,7 +25,6 @@ import {
 	TransactionType,
 	type TransactionUnsubscribe,
 } from '@/types/transactions'
-import { GenericEmitter } from '@/utils/GenericEmitter'
 
 export class TeleportManager extends BaseManager<
 	TeleportDetails,
