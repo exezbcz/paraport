@@ -49,7 +49,13 @@ export function mount({
 		setup() {
 			attachEventListeners({ onCompleted, onSubmit })
 		},
-		render: () => h(App, { sdk, autoteleport, label, disabled }),
+		render: () =>
+			h(App, {
+				sdk,
+				autoteleport,
+				label: label.value,
+				disabled: disabled.value,
+			}),
 	})
 
 	app.use(i18n).mount(targetElement)
