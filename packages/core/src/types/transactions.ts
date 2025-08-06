@@ -24,8 +24,8 @@ export enum TransactionStatus {
 }
 
 export enum TransactionType {
-	Teleport = 'Teleport',
-	Action = 'Action',
+	Teleport = 'teleport',
+	Action = 'action',
 }
 
 export interface TransactionDetails
