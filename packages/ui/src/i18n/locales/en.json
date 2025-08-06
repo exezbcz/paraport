@@ -1,0 +1,28 @@
+{
+	"autoteleport": {
+		"checking": "Checking Funds ...",
+		"insufficientFunds": "Insufficient Funds",
+		"notEnoughTokenInChain": "Not enough {0} on {1}",
+		"steps": {
+			"1": {
+				"title": "Bridging"
+			},
+			"2": {
+				"title": "Checking Funds"
+			}
+		},
+		"title": "Sign Transactions",
+		"status": {
+			"broadcastingTx": "Broadcasting tx",
+			"completed": "Completed",
+			"error": "Failed to Sign",
+			"finishAbove": "Finish steps above first",
+			"loading": "Transaction in Progress",
+			"noSignatureRequired": "Signature not needed",
+			"uploading": "Uploading data to IPFS",
+			"waiting": "Awaiting Your Signature"
+		}
+	},
+	"loading": "Loading...",
+	"teleport": "Teleport"
+}

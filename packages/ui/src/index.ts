@@ -1,7 +1,7 @@
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import { createApp, h, ref } from 'vue'
-import { createI18n } from 'vue-i18n'
 import App from './App.vue'
+import { i18n } from './i18n'
 import './styles/index.scss'
 import eventBus from './utils/event-bus'
 
@@ -12,35 +12,6 @@ export interface MountOptions {
 	onSubmit?: (autotelport: boolean) => void
 	onCompleted?: () => void
 	label: string
-}
-
-const enTranslations = {
-	autoteleport: {
-		checking: 'Checking Funds ...',
-		insufficientFunds: 'Insufficient Funds',
-		notEnoughTokenInChain: 'Not enough {0} on {1}',
-		steps: {
-			1: {
-				title: 'Bridging',
-			},
-			2: {
-				title: 'Checking Funds',
-			},
-		},
-		title: 'Sign Transactions',
-		status: {
-			broadcastingTx: 'Broadcasting tx',
-			completed: 'Completed',
-			error: 'Failed to Sign',
-			finishAbove: 'Finish steps above first',
-			loading: 'Transaction in Progress',
-			noSignatureRequired: 'Signature not needed',
-			uploading: 'Uploading data to IPFS',
-			waiting: 'Awaiting Your Signature',
-		},
-	},
-	loading: 'Loading...',
-	teleport: 'Teleport',
 }
 
 const attachEventListeners = ({
@@ -70,14 +41,6 @@ export function mount({
 	if (!targetElement) {
 		throw new Error(`Target element not found: ${target}`)
 	}
-
-	const i18n = createI18n({
-		locale: 'en',
-		legacy: false,
-		messages: {
-			en: enTranslations,
-		},
-	})
 
 	const label = ref(options.label)
 	const disabled = ref(false)
