@@ -25,11 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import Modal from './components/Modal.vue'
-import Button from './components/ui/Button/Button.vue'
 import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
+import Modal from './components/Modal.vue'
+import Button from './components/ui/Button/Button.vue'
 import useAutoTeleport from './composables/useAutoTeleport'
 import useAutoTeleportButton from './composables/useAutoTeleportButton'
 import eventBus from './utils/event-bus'

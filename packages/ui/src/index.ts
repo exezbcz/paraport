@@ -12,6 +12,7 @@ export interface MountOptions {
 	onSubmit?: (autotelport: boolean) => void
 	onCompleted?: () => void
 	label: string
+	disabled?: boolean
 }
 
 const attachEventListeners = ({
@@ -43,7 +44,7 @@ export function mount({
 	}
 
 	const label = ref(options.label)
-	const disabled = ref(false)
+	const disabled = ref(options.disabled)
 
 	const app = createApp({
 		setup() {
@@ -61,11 +62,9 @@ export function mount({
 	app.use(i18n).mount(targetElement)
 
 	return {
-		updateLabel: (value: string) => {
-			label.value = value
-		},
-		updateDisabled: (value: boolean) => {
-			disabled.value = value
+		update: (options: Pick<MountOptions, 'label' | 'disabled'>) => {
+			if (options.label !== undefined) label.value = options.label
+			if (options.disabled !== undefined) disabled.value = options.disabled
 		},
 		destroy: () => app.unmount(),
 	}
