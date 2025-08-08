@@ -2,7 +2,7 @@ import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
 import { createApp, h, ref } from 'vue'
 import App from './App.vue'
 import { i18n } from './i18n'
-import './styles/index.scss'
+import './assets/index.css'
 import eventBus from './utils/event-bus'
 
 export interface MountOptions {

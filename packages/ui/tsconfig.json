@@ -7,10 +7,20 @@
 		"skipLibCheck": true,
 		"noEmit": true,
 		"paths": {
-			"@autoteleport/core": ["../core/dist/index.d.ts"]
+			"@autoteleport/core": ["../core/dist/index.d.ts"],
+			"@/*": ["./src/*"],
+			"~/*": ["./src/*"],
+			"@components/*": ["./src/components/*"],
+			"@lib/*": ["./src/lib/*"],
+			"@utils/*": ["./src/utils/*"],
+			"@composables/*": ["./src/composables/*"],
+			"@ui/*": ["./src/components/ui/*"]
 		},
 		"types": ["vite/client"]
 	},
 	"include": ["src/**/*.ts", "src/**/*.vue"],
-	"references": [{ "path": "./tsconfig.node.json" }]
+	"references": [
+		{ "path": "./tsconfig.node.json" },
+		{ "path": "./tsconfig.node.json" }
+	]
 }

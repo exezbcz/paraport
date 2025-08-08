@@ -11,10 +11,10 @@
 
         <Button
             :disabled="isDisabled"
-            :label="label"
             @click="submit"
-            expanded
-        />
+        >
+            {{ label }}
+        </Button>
     </div>
 
     <Modal

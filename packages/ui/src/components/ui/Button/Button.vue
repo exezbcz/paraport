@@ -1,30 +1,26 @@
-<template>
-  <o-button
-    class="sdk-button"
-    v-bind="$props"
-    :expanded="expanded"
-    :label="label"
-    :disabled="disabled"
-    :loading="loading"
-  >
-    <template
-      v-if="$slots.default"
-      #default
-    >
-      <slot />
-    </template>
-  </o-button>
-</template>
+<script setup lang="ts">
+import { cn } from '@/lib/utils'
+import { Primitive, type PrimitiveProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { type ButtonVariants, buttonVariants } from '.'
 
-<script lang="ts" setup>
-import { OButton } from '@oruga-ui/oruga-next'
+interface Props extends PrimitiveProps {
+	variant?: ButtonVariants['variant']
+	size?: ButtonVariants['size']
+	class?: HTMLAttributes['class']
+}
 
-defineProps<{
-	disabled?: boolean
-	expanded?: boolean
-	label?: string
-	loading?: boolean
-}>()
+const props = withDefaults(defineProps<Props>(), {
+	as: 'button',
+})
 </script>
 
-<style src="./Button.scss" lang="scss" scoped></style>
+<template>
+  <Primitive
+    :as="as"
+    :as-child="asChild"
+    :class="cn(buttonVariants({ variant, size }), props.class)"
+  >
+    <slot />
+  </Primitive>
+</template>
