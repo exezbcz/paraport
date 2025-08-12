@@ -5,7 +5,7 @@ import type { TeleportParams } from '@/types/teleport'
 export enum TeleportSessionStatus {
 	Pending = 'pending',
 	Ready = 'ready',
-	Executing = 'executing',
+	Processing = 'processing',
 	Completed = 'completed',
 	Failed = 'failed',
 }

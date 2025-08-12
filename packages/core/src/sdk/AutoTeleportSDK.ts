@@ -208,7 +208,7 @@ export default class AutoTeleportSDK extends Initializable {
 
 		session.unsubscribe()
 
-		const teleport = await this.teleportManager.initiateTeleport(
+		const teleport = await this.teleportManager.createTeleport(
 			session.params,
 			session.quotes.selected,
 		)
@@ -216,6 +216,12 @@ export default class AutoTeleportSDK extends Initializable {
 		this.sessionManager.updateSession(sessionId, {
 			teleportId: teleport.id,
 		})
+
+		this.teleportManager.initiateTeleport(
+			teleport,
+			session.params,
+			session.quotes.selected,
+		)
 
 		return teleport.id
 	}
@@ -232,6 +238,21 @@ export default class AutoTeleportSDK extends Initializable {
 
 	private registerListeners() {
 		if (!this.teleportManager) return
+
+		this.teleportManager.subscribe(
+			TeleportEventType.TELEPORT_STARTED,
+			(payload) => {
+				const session = this.sessionManager.getSessionByTeleportId(payload.id)
+
+				console.log('session', session)
+
+				if (!session) return
+
+				this.sessionManager.updateSession(session.id, {
+					status: TeleportSessionStatus.Processing,
+				})
+			},
+		)
 
 		this.teleportManager.subscribe(
 			TeleportEventType.TELEPORT_COMPLETED,

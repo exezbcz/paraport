@@ -212,10 +212,7 @@ export class TeleportManager extends BaseManager<
 		}
 	}
 
-	async initiateTeleport(
-		params: TeleportParams,
-		quote: Quote,
-	): Promise<TeleportDetails> {
+	async createTeleport(params: TeleportParams, quote: Quote): Promise<TeleportDetails> {
 		const teleportId = crypto.randomUUID() as string
 
 		const teleport: TeleportDetails = {
@@ -234,11 +231,17 @@ export class TeleportManager extends BaseManager<
 
 		this.setItem(teleportId, teleport, false)
 
-		this.createTelportTransactions(params, quote, teleportId)
+		return teleport
+	}
+
+	initiateTeleport(
+		teleport: TeleportDetails,
+		params: TeleportParams,
+		quote: Quote,
+	) {
+		this.createTelportTransactions(params, quote, teleport.id)
 
 		this.startTeleport(teleport)
-
-		return teleport
 	}
 
 	private executeTeleportTransaction(transaction: TransactionDetails) {
