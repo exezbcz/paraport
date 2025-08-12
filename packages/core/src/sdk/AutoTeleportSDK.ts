@@ -252,7 +252,7 @@ export default class AutoTeleportSDK extends Initializable {
 		const validChain = Object.values(Chain).includes(params.chain)
 		const validAmount = BigInt(params.amount) > BigInt(0)
 
-		const validActions = params.actions.every(
+		const validActions = [].every(
 			(action) =>
 				Object.hasOwn(action, 'section') && Object.hasOwn(action, 'method'),
 		)

@@ -8,7 +8,7 @@ import type {
 	BridgeProtocol,
 	BrigeTransferParams,
 } from '@/types/bridges'
-import type { Asset, Chain, Quote, SDKConfig } from '@/types/common'
+import type { Action, Asset, Chain, Quote, SDKConfig } from '@/types/common'
 import type { TeleportParams } from '@/types/teleport'
 import type { TransactionCallback } from '@/types/transactions'
 import { getChainsOfAsset } from '@/utils'
@@ -82,8 +82,9 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		asset,
 		chain: targetChain,
 		amount,
-		actions,
 	}: TeleportParams): Promise<Quote | null> {
+		const actions = [] as Action[]
+
 		// 1. get chains where the token is available
 		const chains = getChainsOfAsset(asset)
 		// TODO: filter by selected chains

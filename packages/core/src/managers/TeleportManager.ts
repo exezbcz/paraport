@@ -332,7 +332,9 @@ export class TeleportManager extends BaseManager<
 			chain: source,
 		})
 
-		params.actions.forEach((action, index) => {
+		const actions = [] as Action[] // params.actions
+
+		actions.forEach((action, index) => {
 			this.transactionManager.createTransaction({
 				id: this.getActionTransactionId(teleportId, index),
 				type: TransactionType.Action,

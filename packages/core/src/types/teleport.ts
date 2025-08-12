@@ -9,7 +9,7 @@ export type TeleportParams<Amount = bigint> = {
 	chain: Chain
 	amount: Amount
 	asset: Asset
-	actions: Action[]
+	// actions: Action[]
 }
 
 export interface TeleportDetails
