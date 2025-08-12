@@ -33,16 +33,24 @@ const main = async () => {
   		sourceChain: Chain.KUSAMA,
   		chain: Chain.KUSAMA,
   		asset: Asset.KSM,
-  		actions: [
-  			{
-  				section: 'balances',
-  				method: 'transferAllowDeath',
-  				args: [
-  					'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY',
-  					'1000000000000',
-  				],
-  			},
-  		],
+  		// actions: [
+  		// 	{
+  		// 		section: 'balances',
+  		// 		method: 'transferAllowDeath',
+  		// 		args: [
+  		// 			'EokuN2xVQ2doATZGrwZdrumivCXD8XazC8Np5MBYqS3ucMp',
+  		// 			'600000000',
+  		// 		],
+  		// 	},
+    // 	{
+  		// 		section: 'balances',
+  		// 		method: 'transferAllowDeath',
+  		// 		args: [
+  		// 			'EokuN2xVQ2doATZGrwZdrumivCXD8XazC8Np5MBYqS3ucMp',
+  		// 			'600000000',
+  		// 		],
+  		// 	},
+  		// ],
   	}
   })
 
