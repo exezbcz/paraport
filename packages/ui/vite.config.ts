@@ -36,7 +36,7 @@ export default defineConfig({
 			include: ['src/**/*'],
 		},
 		rollupOptions: {
-			external: ['vue', '@autoteleport/core', '@oruga-ui/oruga-next'],
+			external: ['vue', '@autoteleport/core'],
 			output: {
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.name === 'style.css') return 'index.css'

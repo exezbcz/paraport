@@ -8,12 +8,12 @@ import type {
 	TeleportEventPayload,
 	TransactionDetails,
 } from '@autoteleport/core'
-import { type ComputedRef, computed } from 'vue'
+import { type Ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { type TeleportStepDetails, TeleportStepStatus } from '../types'
 import { getExtrinsicDetails } from '../utils/extrinsics'
 
-export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
+export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 	const { t } = useI18n()
 
 	const getTeleportStepText = ({
@@ -101,19 +101,22 @@ export default (teleport: ComputedRef<TeleportEventPayload | undefined>) => {
 
 		const teleportSteps = [
 			{
-				title: t('autoteleport.steps.1.title'),
 				status: getStepStatus(teleportTransaction),
 				txHash: teleportTransaction.txHash,
+				type: TransactionType.Teleport,
+				duration: 30000,
 			},
 			{
-				title: t('autoteleport.steps.2.title'),
 				status: balanceCheckDetails.value.status,
 				statusLabel: balanceCheckDetails.value.message,
+				type: 'balance-check',
+				duration: 5000,
 			},
 			...actionTransactions.map((transaction) => ({
 				title: getExtrinsicDetails(transaction.details as Action)?.docs,
 				status: getStepStatus(transaction),
 				txHash: transaction.txHash,
+				type: TransactionType.Action,
 			})),
 		]
 

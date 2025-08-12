@@ -3,6 +3,7 @@ import {
 	AutoTeleportSessionEventType,
 	type TeleportEventPayload,
 	type TeleportParams,
+	TeleportSessionStatus,
 } from '@autoteleport/core'
 import { TeleportEventType, type TeleportSession } from '@autoteleport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
@@ -77,7 +78,9 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 		console.log('Quotes', session.value?.quotes)
 	})
 
-	const isReady = computed(() => !loading.value && Boolean(session.value))
+	const isReady = computed(
+		() => session.value?.status === TeleportSessionStatus.Ready,
+	)
 	const isAvailable = computed(() => true) // TODO check if chain has autoteleport support
 	const canAutoTeleport = computed(
 		() => isAvailable.value && Boolean(session.value?.funds.available),
@@ -105,6 +108,7 @@ export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
 		hasEnoughInCurrentChain,
 		exec,
 		autoteleport,
+		session,
 		retry,
 		isReady,
 		isAvailable,

@@ -1,16 +1,13 @@
 {
 	"autoteleport": {
-		"checking": "Checking Funds ...",
+		"sign": "Teleport Funds",
+		"moving": "Moving {0} to {1}",
+		"finalizing": "Finalizing Transfer",
+		"required": "Autoteleport Required",
+		"estimatedSeconds": "~{0}seconds",
+		"transactionSent": "Transaction Sent",
 		"insufficientFunds": "Insufficient Funds",
 		"notEnoughTokenInChain": "Not enough {0} on {1}",
-		"steps": {
-			"1": {
-				"title": "Bridging"
-			},
-			"2": {
-				"title": "Checking Funds"
-			}
-		},
 		"title": "Sign Transactions",
 		"status": {
 			"broadcastingTx": "Broadcasting tx",
@@ -20,9 +17,10 @@
 			"loading": "Transaction in Progress",
 			"noSignatureRequired": "Signature not needed",
 			"uploading": "Uploading data to IPFS",
-			"waiting": "Awaiting Your Signature"
+			"waiting": "Approve in your wallet"
 		}
 	},
 	"loading": "Loading...",
-	"teleport": "Teleport"
+	"teleport": "Teleport",
+	"toMove": "To Move {0} to {1}"
 }

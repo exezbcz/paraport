@@ -1,4 +1,6 @@
-import type { TransactionStatus } from '@autoteleport/core'
+import type { TransactionType } from '@autoteleport/core'
+
+export type DisplayMode = 'integrated' | 'modal'
 
 export enum TeleportStepStatus {
 	Failed = 'failed',
@@ -14,6 +16,8 @@ export type TeleportStep = {
 	isError?: boolean
 	isActive: boolean
 	txHash?: string
+	type: TransactionType | 'balance-check'
+	duration?: number
 }
 
 export type TeleportStepDetails = TeleportStep & {

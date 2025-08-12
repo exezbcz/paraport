@@ -81,12 +81,6 @@ importers:
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
-      '@oruga-ui/oruga-next':
-        specifier: ^0.9.0
-        version: 0.9.3(vue@3.5.13(typescript@5.7.3))
-      '@oruga-ui/theme-oruga':
-        specifier: ^0.5.1
-        version: 0.5.1(@oruga-ui/oruga-next@0.9.3(vue@3.5.13(typescript@5.7.3)))
       '@tanstack/vue-table':
         specifier: ^8.21.2
         version: 8.21.2(vue@3.5.13(typescript@5.7.3))
@@ -493,16 +487,6 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
-
-  '@oruga-ui/oruga-next@0.9.3':
-    resolution: {integrity: sha512-XTO8tz9h62j+MQzW1oIsezxlToSMjOKvpSzzqpuxsDYa0x1MioESiBuwRcQVw8RfnKxmRLIPGyJCmWBJgICvWg==}
-    peerDependencies:
-      vue: ^3.0.0
-
-  '@oruga-ui/theme-oruga@0.5.1':
-    resolution: {integrity: sha512-Cg9FfXDxTP0VRACLocCA5a8isPLoHBldgLQ7zYmsnpAKTheqOx1afGKTXZ3O5p4pfrzhJfZdalNbP4Pa+di1zA==}
-    peerDependencies:
-      '@oruga-ui/oruga-next': ^0.9.0
 
   '@paraspell/sdk-core@8.2.2':
     resolution: {integrity: sha512-uxJSkocXGRYorNb5nOq70hhODW9ZdEakfqXZ/5tvixlBWbZ7qQALP9Zf+QZqs6DnKQYByljunZ432YG+sFbb3Q==}
@@ -2255,9 +2239,6 @@ packages:
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
 
-  vue-component-type-helpers@2.2.0:
-    resolution: {integrity: sha512-cYrAnv2me7bPDcg9kIcGwjJiSB6Qyi08+jLDo9yuvoFQjzHiPTzML7RnkJB1+3P6KMsX/KbCD4QE3Tv/knEllw==}
-
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
@@ -2612,15 +2593,6 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.0
-
-  '@oruga-ui/oruga-next@0.9.3(vue@3.5.13(typescript@5.7.3))':
-    dependencies:
-      vue: 3.5.13(typescript@5.7.3)
-      vue-component-type-helpers: 2.2.0
-
-  '@oruga-ui/theme-oruga@0.5.1(@oruga-ui/oruga-next@0.9.3(vue@3.5.13(typescript@5.7.3)))':
-    dependencies:
-      '@oruga-ui/oruga-next': 0.9.3(vue@3.5.13(typescript@5.7.3))
 
   '@paraspell/sdk-core@8.2.2(typescript@5.7.3)':
     dependencies:
@@ -4818,8 +4790,6 @@ snapshots:
       yaml: 2.7.0
 
   vscode-uri@3.0.8: {}
-
-  vue-component-type-helpers@2.2.0: {}
 
   vue-demi@0.14.10(vue@3.5.13(typescript@5.7.3)):
     dependencies:

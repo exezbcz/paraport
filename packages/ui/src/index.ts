@@ -3,11 +3,13 @@ import { createApp, h, ref } from 'vue'
 import App from './App.vue'
 import { i18n } from './i18n'
 import './assets/index.css'
+import type { DisplayMode } from '@/types'
 import eventBus from './utils/event-bus'
 
 export interface MountOptions {
 	sdk: AutoTeleportSDK
 	target: string | HTMLElement
+	displayMode?: DisplayMode
 	autoteleport: TeleportParams<string>
 	onSubmit?: (autotelport: boolean) => void
 	onCompleted?: () => void
@@ -34,6 +36,7 @@ export function mount({
 	autoteleport,
 	onSubmit,
 	onCompleted,
+	displayMode = 'integrated',
 	...options
 }: MountOptions) {
 	const targetElement =
@@ -48,7 +51,13 @@ export function mount({
 
 	const app = createApp({
 		setup() {
-			attachEventListeners({ onCompleted, onSubmit })
+			attachEventListeners({
+				onCompleted: () => {
+					app.unmount()
+					onCompleted?.()
+				},
+				onSubmit,
+			})
 		},
 		render: () =>
 			h(App, {
@@ -56,6 +65,7 @@ export function mount({
 				autoteleport,
 				label: label.value,
 				disabled: disabled.value,
+				displayMode,
 			}),
 	})
 
