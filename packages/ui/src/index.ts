@@ -1,4 +1,5 @@
-import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
+import type { SDKConfig, TeleportParams } from '@paraport/core'
+import { ParaPortSDK } from '@paraport/core'
 import { createApp, h, ref } from 'vue'
 import App from './App.vue'
 import { i18n } from './i18n'
@@ -7,9 +8,9 @@ import type { DisplayMode } from '@/types'
 import eventBus from './utils/event-bus'
 
 export interface MountOptions {
-	sdk: AutoTeleportSDK
-	target: string | HTMLElement
+	integratedTargetId: string
 	displayMode?: DisplayMode
+	getSigner: SDKConfig<false>['getSigner']
 	autoteleport: TeleportParams<string>
 	onSubmit?: (autotelport: boolean) => void
 	onCompleted?: () => void
@@ -30,21 +31,23 @@ const attachEventListeners = ({
 	}
 }
 
-export function mount({
-	target,
-	sdk,
+export function init({
+	integratedTargetId,
 	autoteleport,
 	onSubmit,
 	onCompleted,
 	displayMode = 'integrated',
 	...options
 }: MountOptions) {
-	const targetElement =
-		typeof target === 'string' ? document.querySelector(target) : target
+	const targetElement = document.querySelector(`#${integratedTargetId}`)
 
 	if (!targetElement) {
-		throw new Error(`Target element not found: ${target}`)
+		throw new Error(`Target element not found: ${integratedTargetId}`)
 	}
+
+	const sdk = new ParaPortSDK({
+		getSigner: options.getSigner,
+	})
 
 	const label = ref(options.label)
 	const disabled = ref(options.disabled)

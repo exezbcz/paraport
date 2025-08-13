@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import useTeleportSteps from '@/composables/useTeleportSteps'
 import { type TeleportStepDetails, TeleportStepStatus } from '@/types'
-import { type TeleportEventPayload, TransactionType } from '@autoteleport/core'
+import { type TeleportEventPayload, TransactionType } from '@paraport/core'
 import { LoaderCircle, X } from 'lucide-vue-next'
 import { type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'

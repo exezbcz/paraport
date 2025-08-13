@@ -1,17 +1,16 @@
+import { type TeleportStepDetails, TeleportStepStatus } from '@/types'
 import {
 	TeleportStatus,
 	TransactionStatus,
 	TransactionType,
-} from '@autoteleport/core'
+} from '@paraport/core'
 import type {
 	Action,
 	TeleportEventPayload,
 	TransactionDetails,
-} from '@autoteleport/core'
+} from '@paraport/core'
 import { type Ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { type TeleportStepDetails, TeleportStepStatus } from '../types'
-import { getExtrinsicDetails } from '../utils/extrinsics'
 
 export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 	const { t } = useI18n()
@@ -113,7 +112,6 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 				duration: 5000,
 			},
 			...actionTransactions.map((transaction) => ({
-				title: getExtrinsicDetails(transaction.details as Action)?.docs,
 				status: getStepStatus(transaction),
 				txHash: transaction.txHash,
 				type: TransactionType.Action,
@@ -131,7 +129,6 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 				...step,
 				isActive: isFirstActive || isPreviousCompleted,
 				id: crypto.randomUUID(),
-				title: step.title,
 			}
 
 			return {

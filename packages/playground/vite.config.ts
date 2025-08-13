@@ -1,8 +1,9 @@
+import path from 'node:path'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   optimizeDeps: {
-    exclude: ['@autoteleport/core', '@autoteleport/ui']
+    exclude: ['@paraport/core', '@paraport/ui']
   },
   },
   server: {

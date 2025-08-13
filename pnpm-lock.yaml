@@ -59,10 +59,10 @@ importers:
 
   packages/playground:
     dependencies:
-      '@autoteleport/core':
+      '@paraport/core':
         specifier: workspace:*
         version: link:../core
-      '@autoteleport/ui':
+      '@paraport/ui':
         specifier: workspace:*
         version: link:../ui
       '@polkadot/extension-dapp':
@@ -75,12 +75,12 @@ importers:
 
   packages/ui:
     dependencies:
-      '@autoteleport/core':
-        specifier: workspace:*
-        version: link:../core
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
+      '@paraport/core':
+        specifier: workspace:*
+        version: link:../core
       '@tanstack/vue-table':
         specifier: ^8.21.2
         version: 8.21.2(vue@3.5.13(typescript@5.7.3))

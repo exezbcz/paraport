@@ -1,4 +1,4 @@
-import type { TransactionType } from '@autoteleport/core'
+import type { TransactionType } from '@paraport/core'
 
 export type DisplayMode = 'integrated' | 'modal'
 
@@ -11,7 +11,6 @@ export enum TeleportStepStatus {
 
 export type TeleportStep = {
 	id: string
-	title: string
 	status: TeleportStepStatus
 	isError?: boolean
 	isActive: boolean

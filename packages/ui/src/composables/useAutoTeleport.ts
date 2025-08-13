@@ -1,13 +1,13 @@
+import eventBus from '@/utils/event-bus'
 import {
-	type AutoTeleportSDK,
 	AutoTeleportSessionEventType,
+	type ParaPortSDK,
 	type TeleportEventPayload,
 	type TeleportParams,
 	TeleportSessionStatus,
-} from '@autoteleport/core'
-import { TeleportEventType, type TeleportSession } from '@autoteleport/core'
+} from '@paraport/core'
+import { TeleportEventType, type TeleportSession } from '@paraport/core'
 import { computed, onBeforeMount, ref, watchEffect } from 'vue'
-import eventBus from '../utils/event-bus'
 
 const TELEPORT_EVENTS = [
 	TeleportEventType.TELEPORT_COMPLETED,
@@ -21,7 +21,7 @@ const SESSION_EVENTS = [
 	AutoTeleportSessionEventType.SESSION_DELETED,
 ]
 
-export default (sdk: AutoTeleportSDK, params: TeleportParams<string>) => {
+export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 	const session = ref<TeleportSession>()
 	const autoteleport = ref<TeleportEventPayload>()
 

@@ -26,7 +26,7 @@ export default defineConfig({
 	build: {
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
-			name: 'AutoTeleportUI',
+			name: 'ParaPortUI',
 			fileName: 'index',
 			formats: ['es'],
 		},
@@ -36,7 +36,7 @@ export default defineConfig({
 			include: ['src/**/*'],
 		},
 		rollupOptions: {
-			external: ['vue', '@autoteleport/core'],
+			external: ['vue', '@paraport/core'],
 			output: {
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.name === 'style.css') return 'index.css'

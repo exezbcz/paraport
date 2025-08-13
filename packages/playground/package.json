@@ -1,12 +1,12 @@
 {
-  "name": "@autoteleport/playground",
+  "name": "@paraport/playground",
   "type": "module",
   "scripts": {
     "dev": "vite"
   },
   "dependencies": {
-    "@autoteleport/core": "workspace:*",
-    "@autoteleport/ui": "workspace:*",
+    "@paraport/core": "workspace:*",
+    "@paraport/ui": "workspace:*",
     "@polkadot/extension-dapp": "^0.58.3"
   },
   "devDependencies": {

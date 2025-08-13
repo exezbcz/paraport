@@ -25,7 +25,7 @@ import {
 import { getChainsOfAsset } from '@/utils'
 import { convertToBigInt } from '@/utils/number'
 
-export default class AutoTeleportSDK extends Initializable {
+export default class ParaPortSDK extends Initializable {
 	private readonly teleportManager: TeleportManager
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()

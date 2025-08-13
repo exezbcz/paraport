@@ -11,10 +11,10 @@
 <script setup lang="ts">
 import TeleportButton from '@/components/TeleportButton.vue'
 import type { DisplayMode } from '@/types'
-import type { AutoTeleportSDK, TeleportParams } from '@autoteleport/core'
+import type { ParaPortSDK, TeleportParams } from '@paraport/core'
 
 defineProps<{
-	sdk: AutoTeleportSDK
+	sdk: ParaPortSDK
 	autoteleport: TeleportParams<string>
 	label: string
 	disabled?: boolean

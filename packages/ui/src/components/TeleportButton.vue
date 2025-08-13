@@ -31,14 +31,18 @@ import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import type { DisplayMode } from '@/types'
 import eventBus from '@/utils/event-bus'
-import TeleportState from './TeleportState.vue'
-import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
-import { type AutoTeleportSDK, type TeleportParams, TeleportSessionStatus } from '@autoteleport/core'
+import {
+	type ParaPortSDK,
+	type TeleportParams,
+	TeleportSessionStatus,
+} from '@paraport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
+import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
+import TeleportState from './TeleportState.vue'
 
 const props = defineProps<{
-	sdk: AutoTeleportSDK
+	sdk: ParaPortSDK
 	autoteleport: TeleportParams<string>
 	label: string
 	disabled?: boolean

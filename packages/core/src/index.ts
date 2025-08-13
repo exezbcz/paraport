@@ -1,6 +1,6 @@
-import AutoTeleportSDK from './sdk/AutoTeleportSDK'
+import ParaPortSDK from './sdk/ParaPortSDK'
 
-export { AutoTeleportSDK }
+export { ParaPortSDK }
 
 export * from './types/common'
 export * from './types/bridges'

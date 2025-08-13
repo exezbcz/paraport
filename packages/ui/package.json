@@ -1,5 +1,5 @@
 {
-	"name": "@autoteleport/ui",
+	"name": "@paraport/ui",
 	"version": "0.1.0",
 	"type": "module",
 	"files": ["dist"],
@@ -22,7 +22,7 @@
 		"lint": "biome check --write ."
 	},
 	"dependencies": {
-		"@autoteleport/core": "workspace:*",
+		"@paraport/core": "workspace:*",
 		"@mdi/font": "^7.4.47",
 		"@tanstack/vue-table": "^8.21.2",
 		"@vue/runtime-dom": "^3.5.13",

@@ -6,7 +6,7 @@ export class Logger {
 	constructor(config?: Partial<LoggerConfig>) {
 		this.config = {
 			minLevel: LogLevel.INFO,
-			prefix: '[AutoTeleportSDK]',
+			prefix: '[ParaPortSDK]',
 			...config,
 		}
 	}

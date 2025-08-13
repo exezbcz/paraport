@@ -7,7 +7,7 @@
 		"skipLibCheck": true,
 		"noEmit": true,
 		"paths": {
-			"@autoteleport/core": ["../core/dist/index.d.ts"],
+			"@paraport/core": ["../core/dist/index.d.ts"],
 			"@/*": ["./src/*"],
 			"~/*": ["./src/*"],
 			"@components/*": ["./src/components/*"],

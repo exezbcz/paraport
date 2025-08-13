@@ -212,7 +212,10 @@ export class TeleportManager extends BaseManager<
 		}
 	}
 
-	async createTeleport(params: TeleportParams, quote: Quote): Promise<TeleportDetails> {
+	async createTeleport(
+		params: TeleportParams,
+		quote: Quote,
+	): Promise<TeleportDetails> {
 		const teleportId = crypto.randomUUID() as string
 
 		const teleport: TeleportDetails = {
