@@ -51,19 +51,6 @@ type ComputedState = {
 	}
 }
 
-const props = defineProps<{
-	autoteleport: TeleportEventPayload
-}>()
-
-const { t } = useI18n()
-
-const steps = useTeleportSteps(computed(() => props.autoteleport))
-
-const activeStep = computed(() => {
-	const step = steps.value.find((step) => Boolean(step.isActive))
-	return step as TeleportStepDetails
-})
-
 const PingDot = () => {
 	return h('span', { class: 'relative flex size-3' }, [
 		h('span', {
@@ -93,6 +80,19 @@ const Loader = () => {
 		],
 	)
 }
+
+const props = defineProps<{
+	autoteleport: TeleportEventPayload
+}>()
+
+const { t } = useI18n()
+
+const steps = useTeleportSteps(computed(() => props.autoteleport))
+
+const activeStep = computed(() => {
+	const step = steps.value.find((step) => Boolean(step.isActive))
+	return step as TeleportStepDetails
+})
 
 const iconStatusMap: Partial<Record<TeleportStepStatus, ComputedIcon>> = {
 	[TeleportStepStatus.Waiting]: { icon: PingDot },

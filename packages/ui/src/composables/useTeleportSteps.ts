@@ -4,10 +4,7 @@ import {
 	TransactionStatus,
 	TransactionType,
 } from '@paraport/core'
-import type {
-	TeleportEventPayload,
-	TransactionDetails,
-} from '@paraport/core'
+import type { TeleportEventPayload, TransactionDetails } from '@paraport/core'
 import { type Ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
