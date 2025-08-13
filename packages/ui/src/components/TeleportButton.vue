@@ -1,10 +1,7 @@
 <template>
     <TeleportState v-if="isIntegrated && session?.status === TeleportSessionStatus.Processing && autoteleport" :autoteleport="autoteleport" />
 
-    <div v-else-if="!isReady" class="animate-pulse flex flex-col gap-2 w-full">
-        <div class="h-10 bg-gray-200 rounded-lg w-full"></div>
-        <div class="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
-    </div>
+    <TeleportButtonSkeleton v-else-if="!isReady" />
 
     <div v-else class="flex flex-col items-center justify-center relative">
 
@@ -35,12 +32,8 @@ import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import type { DisplayMode } from '@/types'
 import eventBus from '@/utils/event-bus'
 import TeleportState from './TeleportState.vue'
-
-import {
-	type AutoTeleportSDK,
-	type TeleportParams,
-	TeleportSessionStatus,
-} from '@autoteleport/core'
+import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
+import { type AutoTeleportSDK, type TeleportParams, TeleportSessionStatus } from '@autoteleport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
