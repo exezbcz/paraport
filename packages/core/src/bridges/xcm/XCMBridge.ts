@@ -1,5 +1,4 @@
 import { Initializable } from '@/base/Initializable'
-import { ActionManager } from '@/managers/ActionManager'
 import type BalanceService from '@/services/BalanceService'
 import FeeService from '@/services/FeeService'
 import type SubstrateApi from '@/services/SubstrateApi'
@@ -8,7 +7,7 @@ import type {
 	BridgeProtocol,
 	BrigeTransferParams,
 } from '@/types/bridges'
-import type { Action, Asset, Chain, Quote, SDKConfig } from '@/types/common'
+import type { Asset, Chain, Quote, SDKConfig } from '@/types/common'
 import type { TeleportParams } from '@/types/teleport'
 import type { TransactionCallback } from '@/types/transactions'
 import { getChainsOfAsset } from '@/utils'
@@ -28,7 +27,6 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
 
 	private readonly feeService: FeeService
-	private readonly actionManager: ActionManager
 
 	constructor(
 		private readonly config: SDKConfig,
@@ -38,7 +36,6 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		super()
 		this.api = api
 		this.feeService = new FeeService(this.api)
-		this.actionManager = new ActionManager(this.api, this.config)
 	}
 
 	private async teleport({
@@ -83,8 +80,6 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		chain: targetChain,
 		amount,
 	}: TeleportParams): Promise<Quote | null> {
-		const actions = [] as Action[]
-
 		// 1. get chains where the token is available
 		const chains = getChainsOfAsset(asset)
 		// TODO: filter by selected chains
@@ -116,23 +111,16 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 
 		const sourceChain = highestBalanceChain.chain
 
-		// 4. calculate tx fees asoociated action and telport
-		const [telportFees, actionsFees] = await Promise.all([
-			this.getTeleportFees({
-				amount,
-				source: sourceChain,
-				target: targetChain,
-				address,
-				asset,
-			}),
-			this.actionManager.estimate({
-				actions: actions,
-				chain: targetChain,
-				address,
-			}),
-		])
+		// 4. calculate tx fees
+		const telportFees = await this.getTeleportFees({
+			amount,
+			source: sourceChain,
+			target: targetChain,
+			address,
+			asset,
+		})
 
-		const totalFees = telportFees + actionsFees
+		const totalFees = telportFees
 		const totalAmount = amount + totalFees
 
 		if (
@@ -157,7 +145,6 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			},
 			fees: {
 				bridge: telportFees,
-				actions: actionsFees,
 				total: totalFees,
 			},
 		}

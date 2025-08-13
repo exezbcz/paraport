@@ -1,12 +1,11 @@
 import { BaseManager } from '@/base/BaseManager'
 import { GenericEmitter } from '@/base/GenericEmitter'
 import type BridgeRegistry from '@/bridges/BridgeRegistry'
-import { ActionManager } from '@/managers/ActionManager'
 import { TransactionManager } from '@/managers/TransactionManager'
 import BalanceService from '@/services/BalanceService'
 import type { Logger } from '@/services/LoggerService'
 import type SubstrateApi from '@/services/SubstrateApi'
-import type { Action, Quote, SDKConfig } from '@/types/common'
+import type { Quote } from '@/types/common'
 import {
 	type TeleportDetails,
 	type TeleportEvent,
@@ -36,7 +35,6 @@ export class TeleportManager extends BaseManager<
 > {
 	private readonly transactionManager: TransactionManager
 	private readonly balanceService: BalanceService
-	private readonly actionManager: ActionManager
 
 	constructor(
 		teleportEventEmitter: GenericEmitter<
@@ -44,7 +42,6 @@ export class TeleportManager extends BaseManager<
 			TeleportEventTypeString
 		>,
 		private readonly bridgeRegistry: BridgeRegistry,
-		config: SDKConfig,
 		private readonly subApi: SubstrateApi,
 		private readonly logger: Logger,
 	) {
@@ -52,7 +49,6 @@ export class TeleportManager extends BaseManager<
 		this.transactionManager = new TransactionManager(
 			new GenericEmitter<TransactionDetails, TransactionEventTypeString>(),
 		)
-		this.actionManager = new ActionManager(this.subApi, config)
 		this.balanceService = new BalanceService(this.subApi, this.logger)
 
 		this.registerListeners()
@@ -82,11 +78,6 @@ export class TeleportManager extends BaseManager<
 
 			if (teleport.status === TeleportStatus.Waiting) {
 				await this.waitForFunds(teleport)
-			} else if (
-				teleport.status === TeleportStatus.Executing &&
-				this.isTeleportActionsFirstRun(teleport)
-			) {
-				this.executeTeleportActions(teleport)
 			}
 		})
 
@@ -119,27 +110,11 @@ export class TeleportManager extends BaseManager<
 							this.emitTeleportUpdated(teleport)
 						}
 					},
-					[TransactionType.Action]: (transaction) => {
-						if (transaction.status === TransactionStatus.Finalized) {
-							this.emitTeleportUpdated(teleport)
-							this.executeTeleportActions(teleport)
-						} else {
-							this.emitTeleportUpdated(teleport)
-						}
-					},
 				}
 
 				transactionTypeHandler[transaction.type](transaction)
 			},
 		)
-	}
-
-	private isTeleportActionsFirstRun(teleport: TeleportDetails) {
-		return this.transactionManager
-			.getTelportTransactions(teleport.id, {
-				type: TransactionType.Action,
-			})
-			.every((transaction) => transaction.status === TransactionStatus.Unknown)
 	}
 
 	private teleportMapper(teleport: TeleportDetails): TeleportEventPayload {
@@ -171,7 +146,7 @@ export class TeleportManager extends BaseManager<
 			amount: teleport.details.amount,
 		})
 
-		this.updateStatus(teleport.id, TeleportStatus.Executing, {
+		this.updateStatus(teleport.id, TeleportStatus.Completed, {
 			checked: true,
 		})
 	}
@@ -189,16 +164,6 @@ export class TeleportManager extends BaseManager<
 		}
 
 		return transaction
-	}
-
-	private executeTeleportActions(teleport: TeleportDetails) {
-		const transaction = this.findNextPendingTransaction(teleport)
-
-		if (!transaction) {
-			return this.updateStatus(teleport.id, TeleportStatus.Completed)
-		}
-
-		this.executeTeleportTransaction(transaction)
 	}
 
 	private transactionCallbackHandler(
@@ -274,16 +239,6 @@ export class TeleportManager extends BaseManager<
 			[TransactionType.Teleport]: ({ teleport }) => {
 				this.transferFunds(teleport)
 			},
-			[TransactionType.Action]: ({ transaction, teleport }) => {
-				this.actionManager.execute(
-					{
-						action: transaction.details as Action,
-						chain: transaction.chain,
-						address: teleport.details.address,
-					},
-					this.transactionCallbackHandler(transaction.id),
-				)
-			},
 		}
 
 		actionExecutor[transaction.type]({ transaction, teleport })
@@ -337,27 +292,10 @@ export class TeleportManager extends BaseManager<
 			teleportId,
 			chain: source,
 		})
-
-		const actions = [] as Action[] // params.actions
-
-		actions.forEach((action, index) => {
-			this.transactionManager.createTransaction({
-				id: this.getActionTransactionId(teleportId, index),
-				type: TransactionType.Action,
-				order: index + 1,
-				details: action,
-				teleportId,
-				chain: source,
-			})
-		})
 	}
 
 	private getTeleportTransactionId(teleportId: string) {
 		return `${teleportId}-transaction` as const
-	}
-
-	private getActionTransactionId(teleportId: string, index: number) {
-		return `${teleportId}-transaction-${index.toString()}` as const
 	}
 
 	private async transferFunds(

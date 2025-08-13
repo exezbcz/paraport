@@ -5,7 +5,6 @@ import {
 	TransactionType,
 } from '@paraport/core'
 import type {
-	Action,
 	TeleportEventPayload,
 	TransactionDetails,
 } from '@paraport/core'
@@ -94,10 +93,6 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 			return []
 		}
 
-		const actionTransactions = items.filter(
-			(item) => item.type === TransactionType.Action,
-		)
-
 		const teleportSteps = [
 			{
 				status: getStepStatus(teleportTransaction),
@@ -111,11 +106,6 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 				type: 'balance-check',
 				duration: 5000,
 			},
-			...actionTransactions.map((transaction) => ({
-				status: getStepStatus(transaction),
-				txHash: transaction.txHash,
-				type: TransactionType.Action,
-			})),
 		]
 
 		return teleportSteps.map((step, index) => {

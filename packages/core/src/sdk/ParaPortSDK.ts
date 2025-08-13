@@ -48,7 +48,6 @@ export default class ParaPortSDK extends Initializable {
 		this.teleportManager = new TeleportManager(
 			new GenericEmitter<TeleportEventPayload, TeleportEventTypeString>(),
 			this.bridgeRegistry,
-			this.config,
 			this.subApi,
 			this.logger,
 		)
@@ -272,18 +271,12 @@ export default class ParaPortSDK extends Initializable {
 		const validChain = Object.values(Chain).includes(params.chain)
 		const validAmount = BigInt(params.amount) > BigInt(0)
 
-		const validActions = [].every(
-			(action) =>
-				Object.hasOwn(action, 'section') && Object.hasOwn(action, 'method'),
-		)
-
 		const validAddress = Boolean(params.address) // TODO: validate address
 
-		const valid =
-			validActions && validAddress && validAsset && validAmount && validChain
+		const valid = validAddress && validAsset && validAmount && validChain
 
 		if (!valid) {
-			throw new Error('Invalid actions')
+			throw new Error('Invalid params')
 		}
 	}
 }

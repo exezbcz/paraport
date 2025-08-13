@@ -25,12 +25,6 @@ export enum Chain {
 	ASSETHUBPOLKADOT = 'AssetHubPolkadot',
 }
 
-export type Action = {
-	section: string
-	method: string
-	args: unknown[]
-}
-
 export type Route = {
 	source: Chain
 	target: Chain
@@ -57,12 +51,6 @@ export type Quote<Amount = bigint> = {
 		 * evaluating the overall cost of the transfer.
 		 */
 		bridge: Amount
-		/**
-		 * Fees associated with actions performed during the transfer, such as executing specific
-		 * instructions on the destination chain (e.g., depositing tokens into a specific account).
-		 * This is optional in case there is no fees for actions to be performed
-		 */
-		actions: Amount
 		/**
 		 * The total of all fees involved in the bridge transfer. `total = fees.bridge + fees.actions`.
 		 */

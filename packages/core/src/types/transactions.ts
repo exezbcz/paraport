@@ -1,6 +1,6 @@
 import type { BaseDetails, BaseDetailsEvent } from '@/base/BaseManager'
 import type { BrigeTransferParams } from '@/types/bridges'
-import type { Action, Chain } from '@/types/common'
+import type { Chain } from '@/types/common'
 
 export enum TransactionEventType {
 	TRANSACTION_STARTED = 'transaction:started',
@@ -25,7 +25,6 @@ export enum TransactionStatus {
 
 export enum TransactionType {
 	Teleport = 'teleport',
-	Action = 'action',
 }
 
 export interface TransactionDetails
@@ -34,7 +33,7 @@ export interface TransactionDetails
 		BaseDetailsEvent<{ status: TransactionStatus; error?: string }>
 	> {
 	chain: Chain
-	details: BrigeTransferParams | Action
+	details: BrigeTransferParams
 	teleportId: string
 	type: TransactionType
 	order: number

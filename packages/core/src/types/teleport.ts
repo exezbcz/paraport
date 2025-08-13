@@ -1,5 +1,5 @@
 import type { BaseDetails, BaseDetailsEvent } from '@/base/BaseManager'
-import type { Action, Asset, Chain, Route } from '@/types/common'
+import type { Asset, Chain, Route } from '@/types/common'
 import type { TransactionDetails } from '@/types/transactions'
 
 export type TeleportEvent = BaseDetailsEvent
@@ -9,7 +9,6 @@ export type TeleportParams<Amount = bigint> = {
 	chain: Chain
 	amount: Amount
 	asset: Asset
-	// actions: Action[]
 }
 
 export interface TeleportDetails
@@ -30,7 +29,6 @@ export enum TeleportStatus {
 	Pending = 'pending',
 	Transferring = 'transferring',
 	Waiting = 'waiting',
-	Executing = 'executing',
 	Completed = 'completed',
 	Failed = 'failed',
 }

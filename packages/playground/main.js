@@ -25,24 +25,6 @@ const main = async () => {
   		amount: AMOUNT,
   		chain: Chain.KUSAMA,
   		asset: Asset.KSM,
-  		// actions: [
-  		// 	{
-  		// 		section: 'balances',
-  		// 		method: 'transferAllowDeath',
-  		// 		args: [
-  		// 			'EokuN2xVQ2doATZGrwZdrumivCXD8XazC8Np5MBYqS3ucMp',
-  		// 			'600000000',
-  		// 		],
-  		// 	},
-    // 	{
-  		// 		section: 'balances',
-  		// 		method: 'transferAllowDeath',
-  		// 		args: [
-  		// 			'EokuN2xVQ2doATZGrwZdrumivCXD8XazC8Np5MBYqS3ucMp',
-  		// 			'600000000',
-  		// 		],
-  		// 	},
-  		// ],
   	},
    onSubmit: (autoteleport) => {
        console.log('is auto-teleporting', autoteleport)
