@@ -1,23 +1,16 @@
 <template>
     <TeleportButton
+        v-if="displayMode === DisplayMode.Integrated"
         :sdk="sdk"
         :autoteleport="autoteleport"
         :label="label"
         :disabled="disabled"
-        :display-mode="displayMode"
     />
 </template>
 
 <script setup lang="ts">
 import TeleportButton from '@/components/TeleportButton.vue'
-import type { DisplayMode } from '@/types'
-import type { ParaPortSDK, TeleportParams } from '@paraport/core'
+import { type AppProps, DisplayMode } from '@/types'
 
-defineProps<{
-	sdk: ParaPortSDK
-	autoteleport: TeleportParams<string>
-	label: string
-	disabled?: boolean
-	displayMode?: DisplayMode
-}>()
+defineProps<AppProps>()
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <TeleportState v-if="isIntegrated && session?.status === TeleportSessionStatus.Processing && autoteleport" :autoteleport="autoteleport" />
+    <TeleportState v-if="session?.status === TeleportSessionStatus.Processing && autoteleport" :autoteleport="autoteleport" />
 
     <TeleportButtonSkeleton v-else-if="!isReady" />
 
@@ -29,25 +29,15 @@
 import Button from '@/components/ui/Button/Button.vue'
 import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
-import type { DisplayMode } from '@/types'
+import { type AppProps } from '@/types'
 import eventBus from '@/utils/event-bus'
-import {
-	type ParaPortSDK,
-	type TeleportParams,
-	TeleportSessionStatus,
-} from '@paraport/core'
+import { TeleportSessionStatus } from '@paraport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
 import TeleportState from './TeleportState.vue'
 
-const props = defineProps<{
-	sdk: ParaPortSDK
-	autoteleport: TeleportParams<string>
-	label: string
-	disabled?: boolean
-	displayMode?: DisplayMode
-}>()
+const props = defineProps<Exclude<AppProps, 'displayMode'>>()
 
 const { t } = useI18n()
 
@@ -76,8 +66,6 @@ const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 	hasNoFundsAtAll,
 	disabled: computed(() => props.disabled),
 })
-
-const isIntegrated = computed(() => props.displayMode === 'integrated')
 
 const label = computed(() => {
 	if (hasEnoughInCurrentChain.value || props.disabled) {

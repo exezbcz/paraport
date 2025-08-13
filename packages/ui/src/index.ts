@@ -1,11 +1,11 @@
+import { type AppProps, DisplayMode } from '@/types'
 import type { SDKConfig, TeleportParams } from '@paraport/core'
 import { ParaPortSDK } from '@paraport/core'
 import { createApp, h, ref } from 'vue'
 import App from './App.vue'
 import { i18n } from './i18n'
-import './assets/index.css'
-import type { DisplayMode } from '@/types'
 import eventBus from './utils/event-bus'
+import './assets/index.css'
 
 export interface MountOptions {
 	integratedTargetId: string
@@ -36,7 +36,7 @@ export function init({
 	autoteleport,
 	onSubmit,
 	onCompleted,
-	displayMode = 'integrated',
+	displayMode = DisplayMode.Integrated,
 	...options
 }: MountOptions) {
 	const targetElement = document.querySelector(`#${integratedTargetId}`)
@@ -52,6 +52,14 @@ export function init({
 	const label = ref(options.label)
 	const disabled = ref(options.disabled)
 
+	const appProps: AppProps = {
+		sdk,
+		autoteleport,
+		label: label.value,
+		disabled: disabled.value,
+		displayMode,
+	}
+
 	const app = createApp({
 		setup() {
 			attachEventListeners({
@@ -62,14 +70,7 @@ export function init({
 				onSubmit,
 			})
 		},
-		render: () =>
-			h(App, {
-				sdk,
-				autoteleport,
-				label: label.value,
-				disabled: disabled.value,
-				displayMode,
-			}),
+		render: () => h(App, appProps),
 	})
 
 	app.use(i18n).mount(targetElement)
