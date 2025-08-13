@@ -22,6 +22,7 @@ import {
 	type TeleportEventTypeString,
 	type TeleportParams,
 } from '@/types/teleport'
+import { getChainsOfAsset } from '@/utils'
 import { convertToBigInt } from '@/utils/number'
 
 export default class AutoTeleportSDK extends Initializable {
@@ -116,7 +117,7 @@ export default class AutoTeleportSDK extends Initializable {
 			{
 				address: params.address,
 				asset: params.asset,
-				chains: this.config?.chains || [],
+				chains: getChainsOfAsset(params.asset),
 			},
 			callback,
 		)
@@ -243,8 +244,6 @@ export default class AutoTeleportSDK extends Initializable {
 			TeleportEventType.TELEPORT_STARTED,
 			(payload) => {
 				const session = this.sessionManager.getSessionByTeleportId(payload.id)
-
-				console.log('session', session)
 
 				if (!session) return
 
