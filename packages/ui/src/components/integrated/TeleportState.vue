@@ -7,15 +7,15 @@
             </div>
         </div>
 
-        <p :class="state.top.title.class">
+        <p :class="[state.top.title.class, {'text-gray-500': !state.top.title.active}]">
             {{ state.top.title.label }}
         </p>
     </div>
     <div class="px-4 py-2 flex justify-between">
-      <p :class="state.bottom.left.class">
+      <p :class="[state.bottom.left.class, {'text-gray-500': !state.bottom.left.active}]">
         {{ state.bottom.left.label }}
       </p>
-      <p :class="state.bottom.right.class">
+      <p :class="[state.bottom.right.class, {'text-gray-500': !state.bottom.right.active}]">
         {{ state.bottom.right.label }}
       </p>
     </div>
@@ -24,7 +24,11 @@
 
 <script setup lang="ts">
 import useTeleportSteps from '@/composables/useTeleportSteps'
-import { type TeleportStepDetails, TeleportStepStatus } from '@/types'
+import {
+	type TeleportStepDetails,
+	TeleportStepStatus,
+	TeleportStepType,
+} from '@/types'
 import { type TeleportEventPayload, TransactionType } from '@paraport/core'
 import { LoaderCircle, X } from 'lucide-vue-next'
 import { type FunctionalComponent, computed, h } from 'vue'
@@ -38,6 +42,7 @@ type ComputedIcon = {
 type ComputedLabel = {
 	label: string
 	class?: string
+	active?: boolean
 }
 
 type ComputedState = {
@@ -100,57 +105,111 @@ const iconStatusMap: Partial<Record<TeleportStepStatus, ComputedIcon>> = {
 	[TeleportStepStatus.Failed]: { icon: X, class: 'text-red-500' },
 }
 
-const state = computed<ComputedState>(() => {
-	const activeTransactionBottom = {
-		left: {
-			label:
-				activeStep.value.status === TeleportStepStatus.Waiting
-					? t('autoteleport.required')
-					: t('autoteleport.transactionSent'),
-			class: 'text-gray-500',
-		},
-		right: {
-			label:
-				activeStep.value.status === TeleportStepStatus.Waiting
-					? 'View Details'
-					: t('autoteleport.estimatedSeconds', [
-							(activeStep.value.duration || 0) / 1000,
-						]),
-			class: 'text-gray-500',
-		},
-	}
-
-	if (activeStep.value?.type === TransactionType.Teleport) {
-		return {
+const stateStrategies: Partial<
+	Record<
+		TeleportStepType,
+		Partial<
+			Record<
+				TeleportStepStatus | 'general',
+				(params: {
+					step: TeleportStepDetails
+					payload: TeleportEventPayload
+					t: typeof t
+				}) => ComputedState
+			>
+		>
+	>
+> = {
+	[TransactionType.Teleport]: {
+		[TeleportStepStatus.Waiting]: ({ step, t }) => ({
 			top: {
-				icon: (iconStatusMap[activeStep.value.status] ||
-					iconStatusMap['waiting']) as ComputedIcon,
+				icon: iconStatusMap[TeleportStepStatus.Waiting] as ComputedIcon,
 				title: {
-					label:
-						activeStep.value.status === TeleportStepStatus.Loading
-							? t('autoteleport.moving', [
-									props.autoteleport.details.asset,
-									props.autoteleport.details.route.target,
-								])
-							: activeStep.value.statusLabel,
-					class:
-						activeStep.value.status === TeleportStepStatus.Waiting
-							? ''
-							: 'text-gray-500',
+					label: step.statusLabel,
+					active: true,
 				},
 			},
-			bottom: activeTransactionBottom,
-		}
+			bottom: {
+				left: {
+					label: t('autoteleport.required'),
+				},
+				right: {
+					label: 'View Details',
+				},
+			},
+		}),
+		[TeleportStepStatus.Loading]: ({ step, payload, t }) => ({
+			top: {
+				icon: iconStatusMap[TeleportStepStatus.Loading] as ComputedIcon,
+				title: {
+					label: t('autoteleport.moving', [
+						payload.details.asset,
+						payload.details.route.target,
+					]),
+				},
+			},
+			bottom: {
+				left: {
+					label: t('autoteleport.transactionSent'),
+				},
+				right: {
+					label: t('autoteleport.estimatedSeconds', [
+						(step.duration || 0) / 1000,
+					]),
+				},
+			},
+		}),
+	},
+	['balance-check']: {
+		general: ({ step }) => ({
+			top: {
+				icon: iconStatusMap.loading!,
+				title: {
+					label: t('autoteleport.finalizing'),
+				},
+			},
+			bottom: {
+				left: {
+					label: t('autoteleport.almostDone'),
+				},
+				right: {
+					label: t('autoteleport.estimatedSeconds', [
+						(step.duration || 0) / 1000,
+					]),
+				},
+			},
+		}),
+	},
+}
+
+const state = computed<ComputedState>(() => {
+	const customStepStrategy =
+		stateStrategies[activeStep.value.type]?.general ||
+		stateStrategies[activeStep.value.type]?.[activeStep.value.status]
+
+	if (customStepStrategy) {
+		return customStepStrategy({
+			step: activeStep.value,
+			payload: props.autoteleport,
+			t,
+		})
 	}
+
 	return {
 		top: {
-			icon: iconStatusMap['loading'],
+			icon: iconStatusMap[activeStep.value.status]!,
 			title: {
-				label: t('autoteleport.finalizing'),
-				class: 'text-gray-500',
+				label: activeStep.value.statusLabel,
 			},
 		},
-		bottom: activeTransactionBottom,
+		bottom: {
+			left: {
+				label: t('autoteleport.loading'),
+			},
+			right: {
+				label: t('autoteleport.loading'),
+			},
+		},
 	}
 })
 </script>
