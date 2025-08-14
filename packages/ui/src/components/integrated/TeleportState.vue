@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-gray-400 rounded-lg">
+  <div v-if="state" class="border border-gray-400 rounded-lg">
     <div class="flex gap-4 border-b border-gray-400 py-2 px-4 rounded-b-lg max-h-10 items-center">
         <div class="w-min h-min">
             <div :class="state.top.icon.class">
@@ -15,7 +15,7 @@
       <p :class="[state.bottom.left.class, {'text-gray-500': !state.bottom.left.active}]">
         {{ state.bottom.left.label }}
       </p>
-      <p :class="[state.bottom.right.class, {'text-gray-500': !state.bottom.right.active}]">
+      <p v-if="state.bottom.right" :class="[state.bottom.right.class, {'text-gray-500': !state.bottom.right.active}]">
         {{ state.bottom.right.label }}
       </p>
     </div>
@@ -29,10 +29,25 @@ import {
 	TeleportStepStatus,
 	TeleportStepType,
 } from '@/types'
-import { type TeleportEventPayload, TransactionType } from '@paraport/core'
+import {
+	type TeleportEventPayload,
+	TeleportStatus,
+	TransactionType,
+} from '@paraport/core'
 import { LoaderCircle, X } from 'lucide-vue-next'
 import { type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'
+
+type StateStrategy = Partial<
+	Record<
+		TeleportStepStatus | 'general',
+		(params: {
+			step: TeleportStepDetails
+			payload: TeleportEventPayload
+			t: typeof t
+		}) => ComputedState
+	>
+>
 
 type ComputedIcon = {
 	icon: FunctionalComponent
@@ -52,7 +67,7 @@ type ComputedState = {
 	}
 	bottom: {
 		left: ComputedLabel
-		right: ComputedLabel
+		right?: ComputedLabel
 	}
 }
 
@@ -105,87 +120,92 @@ const iconStatusMap: Partial<Record<TeleportStepStatus, ComputedIcon>> = {
 	[TeleportStepStatus.Failed]: { icon: X, class: 'text-red-500' },
 }
 
-const stateStrategies: Partial<
-	Record<
-		TeleportStepType,
-		Partial<
-			Record<
-				TeleportStepStatus | 'general',
-				(params: {
-					step: TeleportStepDetails
-					payload: TeleportEventPayload
-					t: typeof t
-				}) => ComputedState
-			>
-		>
-	>
-> = {
-	[TransactionType.Teleport]: {
-		[TeleportStepStatus.Waiting]: ({ step, t }) => ({
+const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
+	{
+		[TransactionType.Teleport]: {
+			[TeleportStepStatus.Waiting]: ({ step, t }) => ({
+				top: {
+					icon: iconStatusMap[TeleportStepStatus.Waiting] as ComputedIcon,
+					title: {
+						label: step.statusLabel,
+						active: true,
+					},
+				},
+				bottom: {
+					left: {
+						label: t('autoteleport.required'),
+					},
+					right: {
+						label: 'View Details',
+					},
+				},
+			}),
+			[TeleportStepStatus.Loading]: ({ step, payload, t }) => ({
+				top: {
+					icon: iconStatusMap[TeleportStepStatus.Loading] as ComputedIcon,
+					title: {
+						label: t('autoteleport.moving', [
+							payload.details.asset,
+							payload.details.route.target,
+						]),
+					},
+				},
+				bottom: {
+					left: {
+						label: t('autoteleport.transactionSent'),
+					},
+					right: {
+						label: t('autoteleport.estimatedSeconds', [
+							(step.duration || 0) / 1000,
+						]),
+					},
+				},
+			}),
+		},
+		['balance-check']: {
+			general: ({ step }) => ({
+				top: {
+					icon: iconStatusMap.loading!,
+					title: {
+						label: t('autoteleport.finalizing'),
+					},
+				},
+				bottom: {
+					left: {
+						label: t('autoteleport.almostDone'),
+					},
+					right: {
+						label: t('autoteleport.estimatedSeconds', [
+							(step.duration || 0) / 1000,
+						]),
+					},
+				},
+			}),
+		},
+	}
+
+const generalStatusStrategyMap: StateStrategy = {
+	[TeleportStatus.Failed]: ({ step }) => {
+		return {
 			top: {
-				icon: iconStatusMap[TeleportStepStatus.Waiting] as ComputedIcon,
+				icon: iconStatusMap.failed!,
 				title: {
 					label: step.statusLabel,
-					active: true,
 				},
 			},
 			bottom: {
 				left: {
-					label: t('autoteleport.required'),
-				},
-				right: {
-					label: 'View Details',
+					label: 'Retry',
 				},
 			},
-		}),
-		[TeleportStepStatus.Loading]: ({ step, payload, t }) => ({
-			top: {
-				icon: iconStatusMap[TeleportStepStatus.Loading] as ComputedIcon,
-				title: {
-					label: t('autoteleport.moving', [
-						payload.details.asset,
-						payload.details.route.target,
-					]),
-				},
-			},
-			bottom: {
-				left: {
-					label: t('autoteleport.transactionSent'),
-				},
-				right: {
-					label: t('autoteleport.estimatedSeconds', [
-						(step.duration || 0) / 1000,
-					]),
-				},
-			},
-		}),
-	},
-	['balance-check']: {
-		general: ({ step }) => ({
-			top: {
-				icon: iconStatusMap.loading!,
-				title: {
-					label: t('autoteleport.finalizing'),
-				},
-			},
-			bottom: {
-				left: {
-					label: t('autoteleport.almostDone'),
-				},
-				right: {
-					label: t('autoteleport.estimatedSeconds', [
-						(step.duration || 0) / 1000,
-					]),
-				},
-			},
-		}),
+		}
 	},
 }
 
-const state = computed<ComputedState>(() => {
+const state = computed<ComputedState | undefined>(() => {
 	const customStepStrategy =
-		stateStrategies[activeStep.value.type]?.general ||
-		stateStrategies[activeStep.value.type]?.[activeStep.value.status]
+		customStepStrategyMap[activeStep.value.type]?.general ||
+		customStepStrategyMap[activeStep.value.type]?.[activeStep.value.status]
 
 	if (customStepStrategy) {
 		return customStepStrategy({
@@ -195,21 +215,10 @@ const state = computed<ComputedState>(() => {
 		})
 	}
 
-	return {
-		top: {
-			icon: iconStatusMap[activeStep.value.status]!,
-			title: {
-				label: activeStep.value.statusLabel,
-			},
-		},
-		bottom: {
-			left: {
-				label: t('autoteleport.loading'),
-			},
-			right: {
-				label: t('autoteleport.loading'),
-			},
-		},
-	}
+	return generalStatusStrategyMap[activeStep.value.status]?.({
+		step: activeStep.value,
+		t,
+		payload: props.autoteleport,
+	})
 })
 </script>
