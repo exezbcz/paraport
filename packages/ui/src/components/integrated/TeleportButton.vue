@@ -37,7 +37,7 @@ import { useI18n } from 'vue-i18n'
 import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
 import TeleportState from './TeleportState.vue'
 
-const props = defineProps<Exclude<AppProps, 'displayMode'>>()
+const props = defineProps<AppProps>()
 
 const { t } = useI18n()
 

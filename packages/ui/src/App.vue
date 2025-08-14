@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import TeleportButton from '@/components/TeleportButton.vue'
+import TeleportButton from '@/components/integrated/TeleportButton.vue'
 import { type AppProps, DisplayMode } from '@/types'
 
 defineProps<AppProps>()
