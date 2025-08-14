@@ -2,6 +2,7 @@
 	"autoteleport": {
 		"sign": "Teleport Funds",
 		"moving": "Moving {0} to {1}",
+		"almostDone": "Almost Done",
 		"finalizing": "Finalizing Transfer",
 		"required": "Autoteleport Required",
 		"estimatedSeconds": "~{0}seconds",
