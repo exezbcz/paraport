@@ -9,7 +9,7 @@ import './assets/index.css'
 
 export interface MountOptions {
 	integratedTargetId: string
-	displayMode?: DisplayMode
+	displayMode?: DisplayMode | `${DisplayMode}`
 	getSigner: SDKConfig<false>['getSigner']
 	autoteleport: TeleportParams<string>
 	onSubmit?: (autotelport: boolean) => void
@@ -57,7 +57,7 @@ export function init({
 		autoteleport,
 		label: label.value,
 		disabled: disabled.value,
-		displayMode,
+		displayMode: displayMode as DisplayMode,
 	}
 
 	const app = createApp({
