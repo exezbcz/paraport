@@ -1,28 +1,35 @@
 <template>
-    <TeleportState v-if="session?.status === TeleportSessionStatus.Processing && autoteleport" :autoteleport="autoteleport" />
+
+    <TeleportState
+        v-if="session?.status === TeleportSessionStatus.Processing && autoteleport"
+        :session="session"
+        :autoteleport="autoteleport"
+        @retry="retry"
+    />
 
     <TeleportButtonSkeleton v-else-if="!isReady" />
 
-    <div v-else class="flex flex-col items-center justify-center relative">
+    <Container v-else>
+        <template #action>
+            <Button
+                :disabled="isDisabled"
+                class="w-full"
+                @click="submit"
+            >
+                <div class="inline-flex gap-3 items-center justify-center">
+                    <img src="@/assets/images/paraport_logo.svg">
+                    <span class="text-[16px] capitalize font-medium">{{ label }}</span>
+                </div>
+            </Button>
+        </template>
+        <template #bottom>
+            <span class="text-secondary inline-block align-bottom capitalize text-sm">
+                {{ t('autoteleport.required' )}}
+            </span>
 
-        <Button
-            :disabled="isDisabled"
-            class="w-full !rounded-xl"
-            @click="submit"
-        >
-            {{ label }}
-        </Button>
-
-
-        <div
-            class="mt-2 capitalize flex gap-1 text-xs"
-            v-if="showAutoTeleport"
-        >
-            <span>Uses</span>
-            <span class="font-bold">ParaPort</span>
-            <span> {{ $t('toMove', [ props.autoteleport.asset, props.autoteleport.chain ])}} </span>
-        </div>
-    </div>
+            <DetailsPill />
+        </template>
+    </Container>
 </template>
 
 <script setup lang="ts">
@@ -34,6 +41,8 @@ import eventBus from '@/utils/event-bus'
 import { TeleportSessionStatus } from '@paraport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
+import Container from './Container.vue'
+import DetailsPill from './DetailsPill.vue'
 import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
 import TeleportState from './TeleportState.vue'
 
@@ -88,7 +97,7 @@ const label = computed(() => {
 			])
 		}
 
-		return t('autoteleport.sign')
+		return t('autoteleport.sign', [props.autoteleport.chain])
 	}
 })
 

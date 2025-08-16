@@ -1,25 +1,28 @@
 <template>
-  <div v-if="state" class="border border-gray-400 rounded-lg">
-    <div class="flex gap-4 border-b border-gray-400 py-2 px-4 rounded-b-lg max-h-10 items-center">
-        <div class="w-min h-min">
-            <div :class="state.top.icon.class">
-                <component :is="state.top.icon.icon" />
-            </div>
-        </div>
+    <Container  v-if="state">
+        <template #top>
+            <div class="h-full w-full flex gap-4 items-center">
+                <div class="w-min h-min">
+                    <div :class="state.top.icon.class">
+                        <component :is="state.top.icon.icon" />
+                    </div>
+                </div>
 
-        <p :class="[state.top.title.class, {'text-gray-500': !state.top.title.active}]">
-            {{ state.top.title.label }}
-        </p>
-    </div>
-    <div class="px-4 py-2 flex justify-between">
-      <p :class="[state.bottom.left.class, {'text-gray-500': !state.bottom.left.active}]">
-        {{ state.bottom.left.label }}
-      </p>
-      <p v-if="state.bottom.right" :class="[state.bottom.right.class, {'text-gray-500': !state.bottom.right.active}]">
-        {{ state.bottom.right.label }}
-      </p>
-    </div>
-  </div>
+                <p :class="[state.top.title.class, {'text-secondary': !state.top.title.active}]">
+                    {{ state.top.title.label }}
+                </p>
+            </div>
+        </template>
+
+        <template #bottom>
+            <p :class="[state.bottom.left.class, {'text-secondary': !state.bottom.left.active}, 'text-sm']">
+                {{ state.bottom.left.label }}
+            </p>
+            <p v-if="state.bottom.right" :class="[state.bottom.right.class, {'text-secondary': !state.bottom.right.active}]">
+                {{ state.bottom.right.label }}
+            </p>
+        </template>
+    </Container>
 </template>
 
 <script setup lang="ts">
@@ -31,9 +34,12 @@ import {
 } from '@/types'
 import {
 	type TeleportEventPayload,
+	type TeleportSession,
 	TeleportStatus,
 	TransactionType,
 } from '@paraport/core'
+
+import Container from '@/components/integrated/Container.vue'
 import { LoaderCircle, X } from 'lucide-vue-next'
 import { type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -101,7 +107,10 @@ const Loader = () => {
 	)
 }
 
+const emit = defineEmits(['retry'])
+
 const props = defineProps<{
+	session: TeleportSession
 	autoteleport: TeleportEventPayload
 }>()
 
@@ -185,7 +194,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 	}
 
 const generalStatusStrategyMap: StateStrategy = {
-	[TeleportStatus.Failed]: ({ step }) => {
+	[TeleportStatus.Failed]: ({ step, t }) => {
 		return {
 			top: {
 				icon: iconStatusMap.failed!,
@@ -195,7 +204,7 @@ const generalStatusStrategyMap: StateStrategy = {
 			},
 			bottom: {
 				left: {
-					label: 'Retry',
+					label: t('retry'),
 				},
 			},
 		}

@@ -1,6 +1,6 @@
 {
 	"autoteleport": {
-		"sign": "Teleport Funds",
+		"sign": "Transfer to {0}",
 		"moving": "Moving {0} to {1}",
 		"almostDone": "Almost Done",
 		"finalizing": "Finalizing Transfer",
@@ -23,5 +23,6 @@
 	},
 	"loading": "Loading...",
 	"teleport": "Teleport",
-	"toMove": "To Move {0} to {1}"
+	"retry": "Retry",
+	"details": "Details"
 }

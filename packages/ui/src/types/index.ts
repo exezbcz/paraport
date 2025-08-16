@@ -24,13 +24,15 @@ export enum TeleportStepStatus {
 	Loading = 'loading',
 }
 
+export type TeleportStepType = TransactionType | 'balance-check'
+
 export type TeleportStep = {
 	id: string
 	status: TeleportStepStatus
 	isError?: boolean
 	isActive: boolean
 	txHash?: string
-	type: TransactionType | 'balance-check'
+	type: TeleportStepType
 	duration?: number
 }
 
