@@ -2,25 +2,35 @@
     <Container  v-if="state">
         <template #top>
             <div class="h-full w-full flex gap-4 items-center">
-                <div class="w-min h-min">
-                    <div :class="state.top.icon.class">
-                        <component :is="state.top.icon.icon" />
-                    </div>
+                <div class="h-[20px] w-[20px] relative" :class="state.top.icon.class">
+                    <component :is="state.top.icon.icon" />
                 </div>
 
-                <p :class="[state.top.title.class, {'text-secondary': !state.top.title.active}]">
-                    {{ state.top.title.label }}
-                </p>
+                <LabelComponent
+                    :label="state.top.title.label"
+                    :label-class="state.top.title.class"
+                    :active="state.top.title.active"
+                    :is="state.top.title.is"
+                />
             </div>
         </template>
 
         <template #bottom>
-            <p :class="[state.bottom.left.class, {'text-secondary': !state.bottom.left.active}, 'text-sm']">
-                {{ state.bottom.left.label }}
-            </p>
-            <p v-if="state.bottom.right" :class="[state.bottom.right.class, {'text-secondary': !state.bottom.right.active}]">
-                {{ state.bottom.right.label }}
-            </p>
+            <LabelComponent
+                :label="state.bottom.left.label"
+                :label-class="state.bottom.left.class"
+                :active="state.bottom.left.active"
+                :is="state.bottom.left.is"
+                additional-class="text-sm"
+            />
+
+            <LabelComponent
+                v-if="state.bottom.right"
+                :label="state.bottom.right.label"
+                :label-class="state.bottom.right.class"
+                :active="state.bottom.right.active"
+                :is="state.bottom.right.is"
+            />
         </template>
     </Container>
 </template>
@@ -40,9 +50,12 @@ import {
 } from '@paraport/core'
 
 import Container from '@/components/integrated/Container.vue'
-import { LoaderCircle, X } from 'lucide-vue-next'
-import { type FunctionalComponent, computed, h } from 'vue'
+import LabelComponent from '@/components/integrated/LabelComponent.vue'
+import { CircleAlert, LoaderCircle } from 'lucide-vue-next'
+import { type Component, type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'
+import DetailsPill from './DetailsPill.vue'
+import Pill from './Pill.vue'
 
 type StateStrategy = Partial<
 	Record<
@@ -56,15 +69,16 @@ type StateStrategy = Partial<
 >
 
 type ComputedIcon = {
-	icon: FunctionalComponent
+	icon: FunctionalComponent | Component
 	class?: string
 }
 
 type ComputedLabel = {
-	label: string
+	label?: string
 	class?: string
 	active?: boolean
-}
+	is?: FunctionalComponent | Component
+} & ({ label: string } | { is: FunctionalComponent | Component })
 
 type ComputedState = {
 	top: {
@@ -73,12 +87,12 @@ type ComputedState = {
 	}
 	bottom: {
 		left: ComputedLabel
-		right?: ComputedLabel
+		right: ComputedLabel
 	}
 }
 
 const PingDot = () => {
-	return h('span', { class: 'relative flex size-3' }, [
+	return h('span', { class: 'relative flex !size-3' }, [
 		h('span', {
 			class:
 				'absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75',
@@ -93,7 +107,7 @@ const Loader = () => {
 	return h(
 		'div',
 		{
-			class: 'rounded-full bg-blue-100',
+			class: 'rounded-full bg-blue-100 ',
 		},
 		[
 			h(
@@ -101,7 +115,37 @@ const Loader = () => {
 				{
 					class: 'animate-spin text-blue-500',
 				},
-				[h(LoaderCircle)],
+				[h(LoaderCircle, { size: 20 })],
+			),
+		],
+	)
+}
+
+const AlertIcon = (variant: 'error' | 'warning') => {
+	const text = {
+		error: 'text-error',
+		warning: 'text-warning',
+	}
+
+	const bg = {
+		error: 'bg-error-fill',
+		warning: 'bg-warning-fill',
+	}
+
+	return h(
+		'div',
+		{
+			class:
+				'rounded-full flex items-center justify-center w-[inherit] h-[inherit] ' +
+				bg[variant],
+		},
+		[
+			h(
+				'div',
+				{
+					class: text[variant],
+				},
+				[h(CircleAlert, { size: 12 })],
 			),
 		],
 	)
@@ -119,6 +163,7 @@ const { t } = useI18n()
 const steps = useTeleportSteps(computed(() => props.autoteleport))
 
 const activeStep = computed(() => {
+  console.log(steps.value)
 	const step = steps.value.find((step) => Boolean(step.isActive))
 	return step as TeleportStepDetails
 })
@@ -126,7 +171,7 @@ const activeStep = computed(() => {
 const iconStatusMap: Partial<Record<TeleportStepStatus, ComputedIcon>> = {
 	[TeleportStepStatus.Waiting]: { icon: PingDot },
 	[TeleportStepStatus.Loading]: { icon: Loader },
-	[TeleportStepStatus.Failed]: { icon: X, class: 'text-red-500' },
+	[TeleportStepStatus.Failed]: { icon: () => AlertIcon('error') },
 }
 
 const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
@@ -145,7 +190,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						label: t('autoteleport.required'),
 					},
 					right: {
-						label: 'View Details',
+						is: DetailsPill,
 					},
 				},
 			}),
@@ -167,6 +212,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						label: t('autoteleport.estimatedSeconds', [
 							(step.duration || 0) / 1000,
 						]),
+						class: 'text-xs',
 					},
 				},
 			}),
@@ -187,6 +233,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						label: t('autoteleport.estimatedSeconds', [
 							(step.duration || 0) / 1000,
 						]),
+						class: 'text-xs',
 					},
 				},
 			}),
@@ -200,11 +247,24 @@ const generalStatusStrategyMap: StateStrategy = {
 				icon: iconStatusMap.failed!,
 				title: {
 					label: step.statusLabel,
+					class: '!text-error',
 				},
 			},
 			bottom: {
 				left: {
-					label: t('retry'),
+					label: t('autoteleport.status.error'),
+				},
+				right: {
+					is: () =>
+						h(
+							Pill,
+							{
+								variant: 'error',
+								as: 'button',
+								onClick: () => emit('retry'),
+							},
+							[h('span', t('retry'))],
+						),
 				},
 			},
 		}

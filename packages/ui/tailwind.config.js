@@ -41,6 +41,8 @@ export default {
 					foreground: 'hsl(var(--destructive-foreground))',
 				},
 				'surface-grey': 'var(--surface-grey)',
+				error: 'var(--error)',
+				'error-fill': 'var(--error-fill)',
 
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

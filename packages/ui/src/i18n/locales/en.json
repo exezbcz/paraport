@@ -5,7 +5,7 @@
 		"almostDone": "Almost Done",
 		"finalizing": "Finalizing Transfer",
 		"required": "Autoteleport Required",
-		"estimatedSeconds": "~{0}seconds",
+		"estimatedSeconds": "~{0} Seconds",
 		"transactionSent": "Transaction Sent",
 		"insufficientFunds": "Insufficient Funds",
 		"notEnoughTokenInChain": "Not enough {0} on {1}",
@@ -13,7 +13,7 @@
 		"status": {
 			"broadcastingTx": "Broadcasting tx",
 			"completed": "Completed",
-			"error": "Failed to Sign",
+			"error": "Transaction couldn't complete",
 			"finishAbove": "Finish steps above first",
 			"loading": "Transaction in Progress",
 			"noSignatureRequired": "Signature not needed",
