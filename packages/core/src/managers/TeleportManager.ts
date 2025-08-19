@@ -113,23 +113,24 @@ export class TeleportManager extends BaseManager<
 		}
 
 		if (teleport.status !== TeleportStatus.Failed) {
-			throw new Error('Teleport is not failed')
+			throw new Error('Only failed teleports can be retried')
 		}
 
-		const transaction = this.findNextPendingTransaction(teleport)
+		this.logger.debug(`Retrying failed teleport: ${teleportId}`)
 
-		if (!transaction) {
-			return
+		const teleportTransactions = this.transactionManager.getItemsWhere(
+			(transaction) => transaction.teleportId === teleportId,
+		)
+
+		for (const transaction of teleportTransactions) {
+			if (this.transactionManager.isTransactionFailed(transaction)) {
+				this.transactionManager.resetTransaction(transaction)
+			}
 		}
 
-		const currentStatus =
-			this.findNextTeleportStatusBasedPendingTransaction(transaction)
+		this.updateStatus(teleport.id, TeleportStatus.Pending)
 
-		if (!currentStatus) {
-			return
-		}
-
-		this.updateStatus(teleport.id, currentStatus)
+		this.processNextStep(teleport)
 	}
 
 	selectBestQuote(quotes: Quote[]): Quote | undefined {
@@ -311,11 +312,7 @@ export class TeleportManager extends BaseManager<
 		}
 
 		if (transaction.status !== TransactionStatus.Unknown) {
-			// reset retry transaction state
-			this.transactionManager.updateStatus(
-				transaction.id,
-				TransactionStatus.Unknown,
-			)
+			this.transactionManager.resetTransaction(transaction)
 		}
 
 		const actionExecutor: Record<
@@ -380,16 +377,6 @@ export class TeleportManager extends BaseManager<
 					tx.order > currentTransaction.order &&
 					tx.status === TransactionStatus.Unknown,
 			)
-	}
-
-	private findNextTeleportStatusBasedPendingTransaction(
-		transaction: TransactionDetails,
-	): TeleportStatus | undefined {
-		const map = {
-			[TransactionType.Teleport]: TeleportStatus.Transferring,
-		}
-
-		return map[transaction.type] || undefined
 	}
 
 	private transactionCallbackHandler(
