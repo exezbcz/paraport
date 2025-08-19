@@ -73,4 +73,11 @@ export class TransactionManager extends BaseManager<
 				(!type || transaction.type === type),
 		)
 	}
+
+	isTransactionFailed(transaction: TransactionDetails): boolean {
+		return (
+			transaction.status === TransactionStatus.Cancelled ||
+			Boolean(transaction.error)
+		)
+	}
 }

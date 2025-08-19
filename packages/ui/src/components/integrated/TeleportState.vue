@@ -163,7 +163,6 @@ const { t } = useI18n()
 const steps = useTeleportSteps(computed(() => props.autoteleport))
 
 const activeStep = computed(() => {
-  console.log(steps.value)
 	const step = steps.value.find((step) => Boolean(step.isActive))
 	return step as TeleportStepDetails
 })

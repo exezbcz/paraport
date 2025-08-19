@@ -12,7 +12,11 @@ import type {
 import type { ISubmittableResult, Signer } from '@polkadot/types/types'
 
 type TxCbParams = {
-	onSuccess: (params: { blockHash: Hash; txHash: Hash }) => void
+	onFinalized: (params: {
+		blockHash: Hash
+		txHash: Hash
+		error?: DispatchError
+	}) => void
 	onError: (params: { error: DispatchError; txHash: Hash }) => void
 	onResult?: (params: {
 		result: ISubmittableResult
@@ -21,7 +25,7 @@ type TxCbParams = {
 }
 
 export const txCb =
-	({ onSuccess, onError, onResult = console.log }: TxCbParams) =>
+	({ onFinalized, onError, onResult = console.log }: TxCbParams) =>
 	(result: ISubmittableResult): void => {
 		onResult({ result, status: resolveStatus(result.status) })
 
@@ -33,7 +37,11 @@ export const txCb =
 		if (result.status.isFinalized) {
 			console.log('[EXEC] Finalized', result)
 			console.log(`[EXEC] blockHash ${result.status.asFinalized}`)
-			onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash })
+			onFinalized({
+				blockHash: result.status.asFinalized,
+				txHash: result.txHash,
+				error: result.dispatchError,
+			})
 		}
 	}
 
@@ -75,10 +83,11 @@ export const signAndSend = async ({
 			address,
 			{ signer },
 			txCb({
-				onSuccess: ({ txHash }) => {
+				onFinalized: ({ txHash, error }) => {
 					callback({
 						status: TransactionStatus.Finalized,
 						txHash: txHash.toString(),
+						error: error?.toString(),
 					})
 				},
 				onError: ({ error, txHash }) => {
