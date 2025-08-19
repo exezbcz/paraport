@@ -399,6 +399,7 @@ export class TeleportManager extends BaseManager<
 			this.transactionManager.updateStatus(transactionId, status, {
 				txHash,
 				error,
+				succeeded: status === TransactionStatus.Finalized ? !error : undefined,
 			})
 		}
 	}

@@ -38,6 +38,7 @@ export interface TransactionDetails
 	type: TransactionType
 	order: number
 	txHash?: string
+	succeeded?: boolean
 }
 
 export type TransactionCallback = (
