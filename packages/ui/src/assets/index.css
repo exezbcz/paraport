@@ -1,11 +1,19 @@
 @use "@mdi/font/css/materialdesignicons.css";
 
+
+body {
+	font-family: "Manrope", sans-serif;
+}
+
+* {
+	font-family: "Manrope", sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @layer base {
 	:root {
-		--background: 0 0% 100%;
 		--foreground: 0 0% 3.9%;
 		--card: 0 0% 100%;
 		--card-foreground: 0 0% 3.9%;
@@ -32,12 +40,23 @@
 		--radius: 0.5rem;
 
 		/* Custom  */
+		--text: #000000;
+		--text-secondary: #8f8f8f;
+		--background: #ffffff;
 		--surface-grey: #f2f2f2;
-		--error: #ee3534;
+		--surface-hover: #ebebeb;
+		--error-text: #ee3534;
 		--error-fill: #ffe4e4;
+		--error-action-hover: #fdd9d7;
+		--caution-text: #d68000;
+		--caution-fill: #fff1c5;
+		--caution-button: #fff6e0;
+		--success-text: #28a948;
+		--success-fill: #e9fbe8;
+		--accent-blue: #3c82f6;
+		--accent-background: #dbe9fe;
 	}
 	.dark {
-		--background: 0 0% 3.9%;
 		--foreground: 0 0% 98%;
 		--card: 0 0% 3.9%;
 		--card-foreground: 0 0% 98%;
@@ -63,9 +82,21 @@
 		--chart-5: 340 75% 55%;
 
 		/* Custom  */
-		--surface: #f2f2f2;
-		--error: #ee3534;
-		--error-fill: #ffe4e4;
+		--text: #ffffff;
+		--text-secondary: #8f8f8f;
+		--background: #000000;
+		--surface-grey: #1a1a1a;
+		--surface-hover: #1f1f1f;
+		--error-text: #e5484d;
+		--error-fill: #2a1314;
+		--error-action-hover: #3c1618;
+		--caution-text: #f5a623;
+		--caution-fill: #291800;
+		--caution-button: #331b00;
+		--success-text: #45a557;
+		--success-fill: #0b2212;
+		--accent-blue: #0072f5;
+		--accent-background: #0f1c2e;
 	}
 }
 @layer base {

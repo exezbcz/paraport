@@ -1,7 +1,10 @@
 <template>
   <component
       :is="is || 'p'"
-      :class="[labelClass, {'text-secondary': !active}, additionalClass]"
+      :class="[labelClass, {
+        'text-text': !passive,
+        'text-secondary': passive,
+      }, additionalClass]"
   >
     {{ label }}
   </component>
@@ -13,7 +16,7 @@ import { Component, DefineComponent, FunctionalComponent } from 'vue'
 defineProps<{
 	label?: string
 	labelClass?: string
-	active?: boolean
+	passive?: boolean
 	is?: Component | FunctionalComponent | DefineComponent<any, any, any>
 	additionalClass?: string
 }>()

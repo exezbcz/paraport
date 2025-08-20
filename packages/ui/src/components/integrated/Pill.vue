@@ -15,7 +15,7 @@ const pillVariantClasses: Record<PillVariant, string> = {
 	info: 'text-secondary bg-surface-grey',
 	success: 'text-success bg-success',
 	warning: 'text-warning bg-warning',
-	error: 'text-error bg-error-fill',
+	error: 'text-error-text bg-error-fill',
 }
 
 const props = withDefaults(

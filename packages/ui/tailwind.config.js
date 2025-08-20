@@ -10,7 +10,6 @@ export default {
 				sm: 'calc(var(--radius) - 4px)',
 			},
 			colors: {
-				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
 					DEFAULT: 'hsl(var(--card))',
@@ -40,9 +39,23 @@ export default {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))',
 				},
+
+				// custom
+				background: 'var(--background)',
 				'surface-grey': 'var(--surface-grey)',
-				error: 'var(--error)',
 				'error-fill': 'var(--error-fill)',
+				'caution-text': 'var(--caution-text)',
+				'caution-fill': 'var(--caution-fill)',
+				text: 'var(--text)',
+				'text-secondary': 'var(--text-secondary)',
+				'accent-blue': 'var(--accent-blue)',
+				'accent-background': 'var(--accent-background)',
+				'error-text': 'var(--error-text)',
+				'surface-hover': 'var(--surface-hover)',
+				'caution-button': 'var(--caution-button)',
+				'error-action-hover': 'var(--error-action-hover)',
+				'success-fill': 'var(--success-fill)',
+				'success-text': 'var(--success-text)',
 
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

@@ -9,7 +9,7 @@
       <slot name="top"/>
     </div>
 
-    <div class="h-[50px] px-4 py-2 flex justify-between border-r border-b border-l border-surface-grey rounded-b-xl -mt-2 pt-4">
+    <div class="h-[50px] px-4 py-2 flex justify-between items-center border-r border-b border-l border-surface-grey rounded-b-xl -mt-2 pt-4">
       <slot name="bottom" />
     </div>
   </div>

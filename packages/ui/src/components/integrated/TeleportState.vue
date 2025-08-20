@@ -1,7 +1,7 @@
 <template>
     <Container  v-if="state">
         <template #top>
-            <div class="h-full w-full flex gap-4 items-center">
+            <div class="h-full w-full flex gap-3 items-center">
                 <div class="h-[20px] w-[20px] relative" :class="state.top.icon.class">
                     <component :is="state.top.icon.icon" />
                 </div>
@@ -9,7 +9,7 @@
                 <LabelComponent
                     :label="state.top.title.label"
                     :label-class="state.top.title.class"
-                    :active="state.top.title.active"
+                    :passive="state.top.title.passive"
                     :is="state.top.title.is"
                 />
             </div>
@@ -19,16 +19,16 @@
             <LabelComponent
                 :label="state.bottom.left.label"
                 :label-class="state.bottom.left.class"
-                :active="state.bottom.left.active"
+                :passive="state.bottom.left.passive"
                 :is="state.bottom.left.is"
-                additional-class="text-sm"
+                additional-class="capitalize"
             />
 
             <LabelComponent
                 v-if="state.bottom.right"
                 :label="state.bottom.right.label"
                 :label-class="state.bottom.right.class"
-                :active="state.bottom.right.active"
+                :passive="state.bottom.right.passive"
                 :is="state.bottom.right.is"
             />
         </template>
@@ -51,11 +51,14 @@ import {
 
 import Container from '@/components/integrated/Container.vue'
 import LabelComponent from '@/components/integrated/LabelComponent.vue'
-import { CircleAlert, LoaderCircle } from 'lucide-vue-next'
 import { type Component, type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'
+import AlertIcon from './AlertIcon.vue'
 import DetailsPill from './DetailsPill.vue'
+import LoaderIcon from './LoaderIcon.vue'
 import Pill from './Pill.vue'
+import PingDot from './PingDot.vue'
+import TeleportOverview from './TeleportOverview.vue'
 
 type StateStrategy = Partial<
 	Record<
@@ -76,7 +79,7 @@ type ComputedIcon = {
 type ComputedLabel = {
 	label?: string
 	class?: string
-	active?: boolean
+	passive?: boolean
 	is?: FunctionalComponent | Component
 } & ({ label: string } | { is: FunctionalComponent | Component })
 
@@ -89,66 +92,6 @@ type ComputedState = {
 		left: ComputedLabel
 		right: ComputedLabel
 	}
-}
-
-const PingDot = () => {
-	return h('span', { class: 'relative flex !size-3' }, [
-		h('span', {
-			class:
-				'absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75',
-		}),
-		h('span', {
-			class: 'relative inline-flex size-3 rounded-full bg-blue-500',
-		}),
-	])
-}
-
-const Loader = () => {
-	return h(
-		'div',
-		{
-			class: 'rounded-full bg-blue-100 ',
-		},
-		[
-			h(
-				'div',
-				{
-					class: 'animate-spin text-blue-500',
-				},
-				[h(LoaderCircle, { size: 20 })],
-			),
-		],
-	)
-}
-
-const AlertIcon = (variant: 'error' | 'warning') => {
-	const text = {
-		error: 'text-error',
-		warning: 'text-warning',
-	}
-
-	const bg = {
-		error: 'bg-error-fill',
-		warning: 'bg-warning-fill',
-	}
-
-	return h(
-		'div',
-		{
-			class:
-				'rounded-full flex items-center justify-center w-[inherit] h-[inherit] ' +
-				bg[variant],
-		},
-		[
-			h(
-				'div',
-				{
-					class: text[variant],
-				},
-				[h(CircleAlert, { size: 12 })],
-			),
-		],
-	)
 }
 
 const emit = defineEmits(['retry'])
@@ -169,8 +112,8 @@ const activeStep = computed(() => {
 
 const iconStatusMap: Partial<Record<TeleportStepStatus, ComputedIcon>> = {
 	[TeleportStepStatus.Waiting]: { icon: PingDot },
-	[TeleportStepStatus.Loading]: { icon: Loader },
-	[TeleportStepStatus.Failed]: { icon: () => AlertIcon('error') },
+	[TeleportStepStatus.Loading]: { icon: LoaderIcon },
+	[TeleportStepStatus.Failed]: { icon: h(AlertIcon, { variant: 'error' }) },
 }
 
 const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
@@ -181,15 +124,16 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 					icon: iconStatusMap[TeleportStepStatus.Waiting] as ComputedIcon,
 					title: {
 						label: step.statusLabel,
-						active: true,
 					},
 				},
 				bottom: {
 					left: {
 						label: t('autoteleport.required'),
+						class: 'text-xs',
+						passive: true,
 					},
 					right: {
-						is: DetailsPill,
+						is: TeleportOverview,
 					},
 				},
 			}),
@@ -201,17 +145,21 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 							payload.details.asset,
 							payload.details.route.target,
 						]),
+						passive: true,
 					},
 				},
 				bottom: {
 					left: {
 						label: t('autoteleport.transactionSent'),
+						class: 'text-sm',
+						passive: true,
 					},
 					right: {
 						label: t('autoteleport.estimatedSeconds', [
 							(step.duration || 0) / 1000,
 						]),
 						class: 'text-xs',
+						passive: true,
 					},
 				},
 			}),
@@ -222,17 +170,21 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 					icon: iconStatusMap.loading!,
 					title: {
 						label: t('autoteleport.finalizing'),
+						passive: true,
 					},
 				},
 				bottom: {
 					left: {
 						label: t('autoteleport.almostDone'),
+						class: 'text-sm',
+						passive: true,
 					},
 					right: {
 						label: t('autoteleport.estimatedSeconds', [
 							(step.duration || 0) / 1000,
 						]),
 						class: 'text-xs',
+						passive: true,
 					},
 				},
 			}),
@@ -246,12 +198,14 @@ const generalStatusStrategyMap: StateStrategy = {
 				icon: iconStatusMap.failed!,
 				title: {
 					label: step.statusLabel,
-					class: '!text-error',
+					class: 'text-error-text',
 				},
 			},
 			bottom: {
 				left: {
 					label: t('autoteleport.status.error'),
+					class: 'text-sm',
+					passive: true,
 				},
 				right: {
 					is: () =>

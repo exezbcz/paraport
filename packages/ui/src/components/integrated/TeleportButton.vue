@@ -23,11 +23,11 @@
             </Button>
         </template>
         <template #bottom>
-            <span class="text-secondary inline-block align-bottom capitalize text-sm">
+            <p class="text-secondary capitalize text-xs">
                 {{ t('autoteleport.required' )}}
-            </span>
+            </p>
 
-            <DetailsPill />
+            <TeleportOverview :session="session" />
         </template>
     </Container>
 </template>
@@ -42,8 +42,8 @@ import { TeleportSessionStatus } from '@paraport/core'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Container from './Container.vue'
-import DetailsPill from './DetailsPill.vue'
 import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
+import TeleportOverview from './TeleportOverview.vue'
 import TeleportState from './TeleportState.vue'
 
 const props = defineProps<AppProps>()

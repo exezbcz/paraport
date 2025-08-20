@@ -33,7 +33,10 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 	}
 
 	const getStepStatus = (transaction: TransactionDetails) => {
-		if (transaction.status === TransactionStatus.Finalized && transaction.succeeded) {
+		if (
+			transaction.status === TransactionStatus.Finalized &&
+			transaction.succeeded
+		) {
 			return TeleportStepStatus.Completed
 		}
 
