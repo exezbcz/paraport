@@ -10,7 +10,10 @@
 
 <script setup lang="ts">
 import TeleportButton from '@/components/integrated/TeleportButton.vue'
+import useSystemDarkMode from '@/composables/useSystemDarkMode'
 import { type AppProps, DisplayMode } from '@/types'
 
 defineProps<AppProps>()
+
+useSystemDarkMode()
 </script>
