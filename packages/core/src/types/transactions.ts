@@ -39,6 +39,7 @@ export interface TransactionDetails
 	order: number
 	txHash?: string
 	succeeded?: boolean
+	unsubscribe?: TransactionUnsubscribe
 }
 
 export type TransactionCallback = (

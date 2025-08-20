@@ -333,14 +333,12 @@ export class TeleportManager extends BaseManager<
 		actionExecutor[transaction.type]({ transaction, teleport })
 	}
 
-	private async transferFunds(
-		teleport: TeleportDetails,
-	): Promise<TransactionUnsubscribe> {
+	private async transferFunds(teleport: TeleportDetails): Promise<void> {
 		const transactionId = this.getTeleportTransactionId(teleport.id)
 
 		const bridge = this.bridgeRegistry.get(teleport.details.route.protocol)
 
-		return await bridge.transfer(
+		const unsubscribe = await bridge.transfer(
 			{
 				amount: teleport.details.amount,
 				from: teleport.details.route.source,
@@ -350,6 +348,8 @@ export class TeleportManager extends BaseManager<
 			},
 			this.transactionCallbackHandler(transactionId),
 		)
+
+		this.transactionManager.updateItem(transactionId, { unsubscribe }, false)
 	}
 
 	private findNextPendingTransaction(

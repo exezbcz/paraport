@@ -15,8 +15,7 @@ export class TransactionManager extends BaseManager<
 	TransactionStatus,
 	BaseDetailsEvent,
 	TransactionEventTypeString,
-	TransactionDetails, // event payload
-	{ txHash?: string; error?: string; succeeded?: boolean }
+	TransactionDetails // event payload
 > {
 	constructor(
 		eventEmitter: GenericEmitter<
@@ -82,6 +81,13 @@ export class TransactionManager extends BaseManager<
 	}
 
 	resetTransaction(transaction: TransactionDetails): void {
-		this.updateStatus(transaction.id, TransactionStatus.Unknown)
+		transaction.unsubscribe?.()
+
+		this.updateStatus(transaction.id, TransactionStatus.Unknown, {
+			error: undefined,
+			succeeded: undefined,
+			txHash: undefined,
+			unsubscribe: undefined,
+		})
 	}
 }

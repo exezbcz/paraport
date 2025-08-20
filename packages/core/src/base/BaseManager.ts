@@ -20,7 +20,7 @@ export class BaseManager<
 	EventType extends BaseDetailsEvent,
 	EventTypeString extends string,
 	EventPayload = DetailsType,
-	OnUpdateParams extends Record<string, unknown> = { error?: string },
+	OnUpdateParams = Partial<DetailsType>,
 > {
 	protected items: Map<string, DetailsType> = new Map()
 	protected eventEmitter: GenericEmitter<EventPayload, EventTypeString>
@@ -78,6 +78,25 @@ export class BaseManager<
 		}
 
 		this.setItem(id, updatedItem)
+	}
+
+	updateItem(
+		id: string,
+		updates: Partial<DetailsType>,
+		emitUpdate = true,
+	): DetailsType | undefined {
+		const item = this.items.get(id)
+
+		if (!item) return undefined
+
+		const updatedItem: DetailsType = {
+			...item,
+			...updates,
+		}
+
+		this.setItem(id, updatedItem, emitUpdate)
+
+		return updatedItem
 	}
 
 	protected emitUpdate(item: EventPayload): void {
