@@ -1,5 +1,4 @@
 <template>
-
     <TeleportState
         v-if="session?.status === TeleportSessionStatus.Processing && autoteleport"
         :session="session"

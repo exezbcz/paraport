@@ -40,10 +40,11 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 			return TeleportStepStatus.Completed
 		}
 
-		if (
-			transaction.error ||
-			transaction.status === TransactionStatus.Cancelled
-		) {
+		if (transaction.status === TransactionStatus.Cancelled) {
+			return TeleportStepStatus.Cancelled
+		}
+
+		if (transaction.error) {
 			return TeleportStepStatus.Failed
 		}
 

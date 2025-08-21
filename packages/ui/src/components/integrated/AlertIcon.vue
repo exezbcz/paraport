@@ -23,8 +23,8 @@ const variantClassMap: Record<Variant, { text: string; bg: string }> = {
 		bg: 'bg-error-fill',
 	},
 	warning: {
-		text: 'text-warning',
-		bg: 'bg-warning-fill',
+		text: 'text-caution-text',
+		bg: 'bg-caution-button',
 	},
 }
 

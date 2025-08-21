@@ -26,5 +26,6 @@
 	"teleport": "Teleport",
 	"retry": "Retry",
 	"details": "Details",
-	"viewTx": "View Tx"
+	"viewTx": "View Tx",
+	"tryAgain": "Try Again"
 }

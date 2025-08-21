@@ -19,6 +19,7 @@ export enum DisplayMode {
 
 export enum TeleportStepStatus {
 	Failed = 'failed',
+	Cancelled = 'cancelled',
 	Completed = 'completed',
 	Waiting = 'waiting',
 	Loading = 'loading',

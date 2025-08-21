@@ -46,7 +46,6 @@ import {
 import {
 	type TeleportEventPayload,
 	type TeleportSession,
-	TeleportStatus,
 	TransactionType,
 } from '@paraport/core'
 
@@ -57,7 +56,6 @@ import { type Component, type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AlertIcon from './AlertIcon.vue'
 import LoaderIcon from './LoaderIcon.vue'
-import Pill from './Pill.vue'
 import PingDot from './PingDot.vue'
 import TeleportOverview from './TeleportOverview.vue'
 
@@ -115,6 +113,9 @@ const iconStatusMap: Partial<Record<TeleportStepStatus, ComputedIcon>> = {
 	[TeleportStepStatus.Waiting]: { icon: PingDot },
 	[TeleportStepStatus.Loading]: { icon: LoaderIcon },
 	[TeleportStepStatus.Failed]: { icon: h(AlertIcon, { variant: 'error' }) },
+	[TeleportStepStatus.Cancelled]: {
+		icon: h(AlertIcon, { variant: 'warning' }),
+	},
 }
 
 const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
@@ -196,13 +197,13 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 	}
 
 const generalStatusStrategyMap: StateStrategy = {
-	[TeleportStatus.Failed]: ({ step, t }) => {
+	[TeleportStepStatus.Failed]: ({ step, t }) => {
 		return {
 			top: {
 				icon: iconStatusMap.failed!,
 				title: {
 					label: step.statusLabel,
-					class: '!text-error-text',
+					class: 'text-error-text',
 				},
 			},
 			bottom: {
@@ -220,6 +221,35 @@ const generalStatusStrategyMap: StateStrategy = {
 								onClick: () => emit('retry'),
 							},
 							[h('span', t('retry'))],
+						),
+				},
+			},
+		}
+	},
+	[TeleportStepStatus.Cancelled]: () => {
+		return {
+			top: {
+				icon: iconStatusMap.cancelled!,
+				title: {
+					label: 'Signing cancelled',
+					class: 'text-caution-text',
+				},
+			},
+			bottom: {
+				left: {
+					label: "Transaction couldn't complete",
+					class: 'text-sm',
+					passive: true,
+				},
+				right: {
+					is: () =>
+						h(
+							Button,
+							{
+								variant: 'pill-warning',
+								onClick: () => emit('retry'),
+							},
+							[h('span', t('tryAgain'))],
 						),
 				},
 			},

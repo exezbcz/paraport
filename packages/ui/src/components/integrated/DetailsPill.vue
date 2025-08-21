@@ -14,7 +14,6 @@
 import Button from '@ui/Button/Button.vue'
 import { Info } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
-import Pill from './Pill.vue'
 
 const { t } = useI18n()
 </script>
