@@ -11,6 +11,7 @@
                     :label-class="state.top.title.class"
                     :passive="state.top.title.passive"
                     :is="state.top.title.is"
+                    additional-class="capitalize"
                 />
             </div>
         </template>
@@ -51,10 +52,10 @@ import {
 
 import Container from '@/components/integrated/Container.vue'
 import LabelComponent from '@/components/integrated/LabelComponent.vue'
+import Button from '@ui/Button/Button.vue'
 import { type Component, type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AlertIcon from './AlertIcon.vue'
-import DetailsPill from './DetailsPill.vue'
 import LoaderIcon from './LoaderIcon.vue'
 import Pill from './Pill.vue'
 import PingDot from './PingDot.vue'
@@ -124,6 +125,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 					icon: iconStatusMap[TeleportStepStatus.Waiting] as ComputedIcon,
 					title: {
 						label: step.statusLabel,
+						active: true,
 					},
 				},
 				bottom: {
@@ -133,7 +135,9 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						passive: true,
 					},
 					right: {
-						is: TeleportOverview,
+						is: h(TeleportOverview, {
+							session: props.session,
+						}),
 					},
 				},
 			}),
@@ -198,7 +202,7 @@ const generalStatusStrategyMap: StateStrategy = {
 				icon: iconStatusMap.failed!,
 				title: {
 					label: step.statusLabel,
-					class: 'text-error-text',
+					class: '!text-error-text',
 				},
 			},
 			bottom: {
@@ -210,10 +214,9 @@ const generalStatusStrategyMap: StateStrategy = {
 				right: {
 					is: () =>
 						h(
-							Pill,
+							Button,
 							{
-								variant: 'error',
-								as: 'button',
+								variant: 'pill-danger',
 								onClick: () => emit('retry'),
 							},
 							[h('span', t('retry'))],

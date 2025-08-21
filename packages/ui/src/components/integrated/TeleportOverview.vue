@@ -1,11 +1,12 @@
 <template>
     <div class="flex items-center gap-5">
-        <div class="flex gap-4 text-xs capitalize">
+        <div class="flex gap-1 text-xs capitalize">
             <span>
                 <span class="text-secondary">~ </span>
                 <span>1 mins</span>
             </span>
-            <span> 1 signature </span>
+            <div class="w-1 h-1 rounded-full bg-surface-grey self-center"></div>
+            <span> {{ session.quotes.selected?.signatureAmount}} signature </span>
         </div>
 
         <DetailsPill />

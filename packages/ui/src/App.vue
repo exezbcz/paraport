@@ -1,5 +1,5 @@
 <template>
-    <TeleportButton
+    <IntegratedAutoTeleport
         v-if="displayMode === DisplayMode.Integrated"
         :sdk="sdk"
         :autoteleport="autoteleport"
@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import TeleportButton from '@/components/integrated/TeleportButton.vue'
+import IntegratedAutoTeleport from '@/components/integrated/IntegratedAutoTeleport.vue'
 import useSystemDarkMode from '@/composables/useSystemDarkMode'
 import { type AppProps, DisplayMode } from '@/types'
 

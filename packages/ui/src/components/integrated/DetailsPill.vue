@@ -1,17 +1,17 @@
 <template>
-    <Pill
-        variant="info"
-        v-slot="{ size }"
+    <Button
+        variant="pill-info"
     >
-        <Info :size="size" />
+        <Info :size="10" />
 
         <span>
             {{ t('details') }}
         </span>
-    </Pill>
+    </Button>
 </template>
 
 <script setup lang="ts">
+import Button from '@ui/Button/Button.vue'
 import { Info } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import Pill from './Pill.vue'

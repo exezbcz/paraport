@@ -63,10 +63,7 @@ export function init({
 	const app = createApp({
 		setup() {
 			attachEventListeners({
-				onCompleted: () => {
-					app.unmount()
-					onCompleted?.()
-				},
+				onCompleted,
 				onSubmit,
 			})
 		},

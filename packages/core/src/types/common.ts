@@ -71,4 +71,6 @@ export type Quote<Amount = bigint> = {
 	total: Amount
 
 	asset: Asset
+
+	signatureAmount: number
 }

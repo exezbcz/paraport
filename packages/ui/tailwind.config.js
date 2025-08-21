@@ -24,7 +24,7 @@ export default {
 					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
+					DEFAULT: 'var(--secondary-text)',
 					foreground: 'hsl(var(--secondary-foreground))',
 				},
 				muted: {
@@ -47,7 +47,6 @@ export default {
 				'caution-text': 'var(--caution-text)',
 				'caution-fill': 'var(--caution-fill)',
 				text: 'var(--text)',
-				'text-secondary': 'var(--text-secondary)',
 				'accent-blue': 'var(--accent-blue)',
 				'accent-background': 'var(--accent-background)',
 				'error-text': 'var(--error-text)',
@@ -56,6 +55,7 @@ export default {
 				'error-action-hover': 'var(--error-action-hover)',
 				'success-fill': 'var(--success-fill)',
 				'success-text': 'var(--success-text)',
+				'success-action-hover': 'var(--success-action-hover)',
 
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

@@ -21,7 +21,7 @@ body {
 		--popover-foreground: 0 0% 3.9%;
 		--primary: 0 0% 9%;
 		--primary-foreground: 0 0% 98%;
-		--secondary: 0, 0%, 56%;
+		/* --secondary: 0, 0%, 56%; */
 		--secondary-foreground: 0 0% 9%;
 		--muted: 0 0% 96.1%;
 		--muted-foreground: 0 0% 45.1%;
@@ -41,7 +41,7 @@ body {
 
 		/* Custom  */
 		--text: #000000;
-		--text-secondary: #8f8f8f;
+		--secondary-text: #8f8f8f;
 		--background: #ffffff;
 		--surface-grey: #f2f2f2;
 		--surface-hover: #ebebeb;
@@ -53,6 +53,7 @@ body {
 		--caution-button: #fff6e0;
 		--success-text: #28a948;
 		--success-fill: #e9fbe8;
+		--success-action-hover: #d9f8d4;
 		--accent-blue: #3c82f6;
 		--accent-background: #dbe9fe;
 	}
@@ -64,7 +65,7 @@ body {
 		--popover-foreground: 0 0% 98%;
 		--primary: 0 0% 98%;
 		--primary-foreground: 0 0% 9%;
-		--secondary: 0 0% 14.9%;
+		/* --secondary: 0 0% 14.9%; */
 		--secondary-foreground: 0 0% 98%;
 		--muted: 0 0% 14.9%;
 		--muted-foreground: 0 0% 63.9%;
@@ -83,7 +84,7 @@ body {
 
 		/* Custom  */
 		--text: #ffffff;
-		--text-secondary: #8f8f8f;
+		--secondary-text: #8f8f8f;
 		--background: #000000;
 		--surface-grey: #1a1a1a;
 		--surface-hover: #1f1f1f;
@@ -95,6 +96,7 @@ body {
 		--caution-button: #331b00;
 		--success-text: #45a557;
 		--success-fill: #0b2212;
+		--success-action-hover: #0b2212;
 		--accent-blue: #0072f5;
 		--accent-background: #0f1c2e;
 	}

@@ -1,5 +1,7 @@
 {
 	"autoteleport": {
+		"checking": "Checking Funds",
+		"successfullyMoved": "{0} Successfully moved",
 		"sign": "Transfer to {0}",
 		"moving": "Moving {0} to {1}",
 		"almostDone": "Almost Done",
@@ -21,8 +23,8 @@
 			"waiting": "Approve in your wallet"
 		}
 	},
-	"loading": "Loading...",
 	"teleport": "Teleport",
 	"retry": "Retry",
-	"details": "Details"
+	"details": "Details",
+	"viewTx": "View Tx"
 }

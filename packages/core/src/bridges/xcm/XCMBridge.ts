@@ -25,6 +25,7 @@ type XCMTeleportParams = {
 
 export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
+	private readonly signatureAmount: number = 1
 
 	private readonly feeService: FeeService
 
@@ -135,6 +136,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		const total = neededAmount + totalFees
 
 		return {
+			signatureAmount: this.signatureAmount,
 			amount: neededAmount,
 			total: total,
 			asset: asset,

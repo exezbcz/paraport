@@ -22,7 +22,6 @@ import {
 	type TransactionEventTypeString,
 	TransactionStatus,
 	TransactionType,
-	type TransactionUnsubscribe,
 } from '@/types/transactions'
 
 export class TeleportManager extends BaseManager<

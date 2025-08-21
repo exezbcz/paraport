@@ -2,7 +2,7 @@
   <component
       :is="is || 'p'"
       :class="[labelClass, {
-        'text-text': !passive,
+        'text-text': active,
         'text-secondary': passive,
       }, additionalClass]"
   >
@@ -17,6 +17,7 @@ defineProps<{
 	label?: string
 	labelClass?: string
 	passive?: boolean
+	active?: boolean
 	is?: Component | FunctionalComponent | DefineComponent<any, any, any>
 	additionalClass?: string
 }>()

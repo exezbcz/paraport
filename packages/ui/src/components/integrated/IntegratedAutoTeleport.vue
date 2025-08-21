@@ -7,8 +7,6 @@
         @retry="retry"
     />
 
-    <TeleportButtonSkeleton v-else-if="!isReady" />
-
     <Container v-else>
         <template #action>
             <Button
@@ -17,34 +15,57 @@
                 @click="submit"
             >
                 <div class="inline-flex gap-3 items-center justify-center">
-                    <img src="@/assets/images/paraport_logo.svg">
+                    <img v-if="showAutoTeleport" src="@/assets/images/paraport_logo.svg">
                     <span class="text-[16px] capitalize font-medium">{{ label }}</span>
                 </div>
             </Button>
         </template>
-        <template #bottom>
-            <p class="text-secondary capitalize text-xs">
-                {{ t('autoteleport.required' )}}
-            </p>
+        <template #bottom v-if="showAutoTeleport || session?.status === TeleportSessionStatus.Completed">
+            <template v-if="session?.status === TeleportSessionStatus.Completed">
+                <div class="flex items-center gap-2">
+                    <SuccessIcon />
 
-            <TeleportOverview :session="session" />
+                    <p class="text-success-text capitalize text-xs">
+                        {{ t('autoteleport.successfullyMoved', [ session?.quotes.selected?.asset])}}
+                    </p>
+                </div>
+
+                <Button
+                    variant="pill-success"
+                    class="!gap-0"
+                >
+                    <span>
+                        {{ t('viewTx') }}
+                    </span>
+
+                    <ArrowUpRight :size="10" />
+                </Button>
+            </template>
+            <template v-else>
+                <p class="text-secondary capitalize text-xs">
+                    {{ t('autoteleport.required' )}}
+                </p>
+
+                <TeleportOverview v-if="session" :session="session" />
+            </template>
         </template>
     </Container>
 </template>
 
 <script setup lang="ts">
-import Button from '@/components/ui/Button/Button.vue'
 import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import { type AppProps } from '@/types'
 import eventBus from '@/utils/event-bus'
 import { TeleportSessionStatus } from '@paraport/core'
+import Button from '@ui/Button/Button.vue'
+import { ArrowUpRight } from 'lucide-vue-next'
 import { computed, defineProps, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Container from './Container.vue'
-import TeleportButtonSkeleton from './TeleportButtonSkeleton.vue'
 import TeleportOverview from './TeleportOverview.vue'
 import TeleportState from './TeleportState.vue'
+import SuccessIcon from './icon/SuccessIcon.vue'
 
 const props = defineProps<AppProps>()
 
