@@ -39,11 +39,10 @@
 
 
         <div class="flex items-center justify-between mt-[13px]">
-            <DetailsPill label="Learn More" />
+            <DetailsPill :label="t('learnMore')" />
 
             <img src="@/assets/images/paraport_full_logo.svg">
         </div>
-
 
       </div>
     </DialogContent>

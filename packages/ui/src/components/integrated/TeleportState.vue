@@ -54,10 +54,11 @@ import LabelComponent from '@/components/integrated/LabelComponent.vue'
 import Button from '@ui/Button/Button.vue'
 import { type Component, type FunctionalComponent, computed, h } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AlertIcon from './AlertIcon.vue'
-import LoaderIcon from './LoaderIcon.vue'
-import PingDot from './PingDot.vue'
+import GradientText from './GradientText.vue'
 import TeleportOverview from './TeleportOverview.vue'
+import AlertIcon from './icon/AlertIcon.vue'
+import LoaderIcon from './icon/LoaderIcon.vue'
+import PingDot from './icon/PingDot.vue'
 
 type StateStrategy = Partial<
 	Record<
@@ -146,11 +147,12 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 				top: {
 					icon: iconStatusMap[TeleportStepStatus.Loading] as ComputedIcon,
 					title: {
-						label: t('autoteleport.moving', [
-							payload.details.asset,
-							payload.details.route.target,
-						]),
-						passive: true,
+						is: h(GradientText, {
+							text: t('autoteleport.moving', [
+								payload.details.asset,
+								payload.details.route.target,
+							]),
+						}),
 					},
 				},
 				bottom: {
@@ -174,8 +176,9 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 				top: {
 					icon: iconStatusMap.loading!,
 					title: {
-						label: t('autoteleport.finalizing'),
-						passive: true,
+						is: h(GradientText, {
+							text: t('autoteleport.finalizing'),
+						}),
 					},
 				},
 				bottom: {

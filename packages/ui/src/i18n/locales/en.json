@@ -28,6 +28,7 @@
 	"details": "Details",
 	"viewTx": "View Tx",
 	"tryAgain": "Try Again",
+	"learnMore": "Learn More",
 	"detailsModal": {
 		"title": "Autoteleport Details",
 		"route": "Route",
