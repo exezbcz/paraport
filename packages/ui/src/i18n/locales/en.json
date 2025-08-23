@@ -27,5 +27,16 @@
 	"retry": "Retry",
 	"details": "Details",
 	"viewTx": "View Tx",
-	"tryAgain": "Try Again"
+	"tryAgain": "Try Again",
+	"detailsModal": {
+		"title": "Autoteleport Details",
+		"route": "Route",
+		"transferAmount": "Transfer Amount",
+		"fees": "Fees",
+		"timeEstimate": "Time Estimate",
+		"whatIsAutoteleport": {
+			"title": "What is Autoteleport?",
+			"description": "Autoteleport automatically moves your DOT from Polkadot to AssetHub to complete this transaction. This ensures you have tokens where you need them."
+		}
+	}
 }

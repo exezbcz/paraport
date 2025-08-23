@@ -1,11 +1,12 @@
 <template>
     <Button
         variant="pill-info"
+        @click="$emit('click')"
     >
         <Info :size="10" />
 
         <span>
-            {{ t('details') }}
+            {{ label || t('details') }}
         </span>
     </Button>
 </template>
@@ -14,6 +15,13 @@
 import Button from '@ui/Button/Button.vue'
 import { Info } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
+
+defineEmits(['click'])
+
+defineProps<{
+	active?: boolean
+	label?: string
+}>()
 
 const { t } = useI18n()
 </script>

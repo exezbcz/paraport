@@ -9,14 +9,27 @@
             <span> {{ session.quotes.selected?.signatureAmount}} signature </span>
         </div>
 
-        <DetailsPill />
+        <DetailsPill
+            :active="isModalActive"
+            @click="isModalActive = true"
+        />
     </div>
+
+
+    <DetailsModal
+        v-model="isModalActive"
+        :session="session"
+    />
 </template>
 <script setup lang="ts">
+import DetailsModal from '@components/integrated/DetailsModal.vue'
 import { type TeleportSession } from '@paraport/core'
+import { ref } from 'vue'
 import DetailsPill from './DetailsPill.vue'
 
 defineProps<{
 	session: TeleportSession
 }>()
+
+const isModalActive = ref(false)
 </script>

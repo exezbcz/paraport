@@ -45,7 +45,10 @@
                     {{ t('autoteleport.required' )}}
                 </p>
 
-                <TeleportOverview v-if="session" :session="session" />
+                <TeleportOverview
+                    v-if="session"
+                    :session="session"
+                />
             </template>
         </template>
     </Container>
@@ -69,8 +72,6 @@ import SuccessIcon from './icon/SuccessIcon.vue'
 const props = defineProps<AppProps>()
 
 const { t } = useI18n()
-
-const open = ref(false)
 
 const {
 	enabled,
@@ -144,10 +145,4 @@ const submit = async () => {
 		await exec()
 	}
 }
-
-watchEffect(() => {
-	if (autoteleport.value) {
-		open.value = true
-	}
-})
 </script>
