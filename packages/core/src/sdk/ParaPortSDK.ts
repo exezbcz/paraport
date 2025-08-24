@@ -8,7 +8,7 @@ import { TeleportManager } from '@/managers/TeleportManager'
 import BalanceService from '@/services/BalanceService'
 import { Logger } from '@/services/LoggerService'
 import SubstrateApi from '@/services/SubstrateApi'
-import { Asset, Chain, type Quote, type SDKConfig } from '@/types/common'
+import type { Quote, SDKConfig } from '@/types/common'
 import {
 	type AutoTeleportSessionCalculation,
 	type AutoTeleportSessionEventType,
@@ -24,6 +24,7 @@ import {
 } from '@/types/teleport'
 import { getChainsOfAsset } from '@/utils'
 import { convertToBigInt } from '@/utils/number'
+import { Asset, Chain } from '@paraport/static'
 
 export default class ParaPortSDK extends Initializable {
 	private readonly teleportManager: TeleportManager

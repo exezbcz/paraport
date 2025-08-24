@@ -17,7 +17,7 @@ export default defineConfig({
 		},
 		rollupOptions: {
 			external: [
-				'@kodadot1/static',
+				'@paraport/static',
 				'@kodadot1/sub-api',
 				'@paraspell/sdk-pjs',
 				'@polkadot/util-crypto',

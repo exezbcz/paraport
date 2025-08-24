@@ -1,8 +1,8 @@
 import type { Logger } from '@/services/LoggerService'
 import type SubstrateApi from '@/services/SubstrateApi'
-import type { Asset, Chain } from '@/types/common'
 import { chainPropListOf, formatAddress, transferableBalanceOf } from '@/utils'
 import { balanceOf } from '@kodadot1/sub-api'
+import type { Asset, Chain } from '@paraport/static'
 import type { AccountInfo } from '@polkadot/types/interfaces'
 import pRetry from 'p-retry'
 

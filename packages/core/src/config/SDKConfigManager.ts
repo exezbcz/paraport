@@ -1,6 +1,7 @@
 import ConfigValidationError from '@/errors/ConfigError'
-import { Chain, type SDKConfig } from '@/types/common'
+import type { SDKConfig } from '@/types/common'
 import { LogLevel } from '@/types/sdk'
+import { Chain } from '@paraport/static'
 
 export class SDKConfigManager {
 	public static validateConfig(config: SDKConfig) {
@@ -17,10 +18,10 @@ export class SDKConfigManager {
 			bridgeProtocols: ['XCM'],
 			logLevel: LogLevel.ERROR,
 			chains: [
-				Chain.POLKADOT,
-				Chain.ASSETHUBPOLKADOT,
-				Chain.KUSAMA,
-				Chain.ASSETHUBKUSAMA,
+				Chain.Polkadot,
+				Chain.AssetHubPolkadot,
+				Chain.Kusama,
+				Chain.AssetHubKusama,
 			],
 		}
 	}

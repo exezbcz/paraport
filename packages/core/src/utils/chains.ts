@@ -1,14 +1,13 @@
-import type { Chain } from '@/types/common'
-import { chainPrefixOf } from '@/utils'
 import {
+	type Chain,
 	existentialDeposit,
 	teleportExistentialDeposit,
-} from '@kodadot1/static'
+} from '@paraport/static'
 
 export const edOf = (chain: Chain): bigint => {
-	return BigInt(existentialDeposit[chainPrefixOf(chain)])
+	return BigInt(existentialDeposit[chain])
 }
 
 export const teleportEdOf = (chain: Chain): bigint => {
-	return BigInt(teleportExistentialDeposit[chainPrefixOf(chain)])
+	return BigInt(teleportExistentialDeposit[chain])
 }

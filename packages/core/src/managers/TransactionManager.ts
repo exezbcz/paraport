@@ -1,7 +1,6 @@
 import { type BaseDetailsEvent, BaseManager } from '@/base/BaseManager'
 import type { GenericEmitter } from '@/base/GenericEmitter'
 import type { BrigeTransferParams } from '@/types/bridges'
-import type { Chain } from '@/types/common'
 import {
 	type TransactionDetails,
 	TransactionEventType,
@@ -9,6 +8,7 @@ import {
 	TransactionStatus,
 	type TransactionType,
 } from '@/types/transactions'
+import type { Chain } from '@paraport/static'
 
 export class TransactionManager extends BaseManager<
 	TransactionDetails,

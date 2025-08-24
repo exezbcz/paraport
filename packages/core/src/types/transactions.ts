@@ -1,6 +1,6 @@
 import type { BaseDetails, BaseDetailsEvent } from '@/base/BaseManager'
 import type { BrigeTransferParams } from '@/types/bridges'
-import type { Chain } from '@/types/common'
+import type { Chain } from '@paraport/static'
 
 export enum TransactionEventType {
 	TRANSACTION_STARTED = 'transaction:started',

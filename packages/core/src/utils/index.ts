@@ -1,14 +1,17 @@
 import { formatAddress } from '@/utils/account'
 import { transferableBalanceOf } from '@/utils/balance'
 import { edOf, teleportEdOf } from '@/utils/chains'
-import { CHAINS } from '@kodadot1/static'
-
-import type { ChainProperties } from '@kodadot1/static'
-import type { Asset, Chain, ChainPrefix } from '../types/common'
-import { ASSET_CHAINS_MAP, CHAIN_TO_CHAIN_PREFIX_MAP } from './constants'
+import {
+	ASSET_CHAINS_MAP,
+	type Asset,
+	CHAINS,
+	type Chain,
+	type ChainProperties,
+	ENDPOINT_MAP,
+} from '@paraport/static'
 
 export const chainPropListOf = (chain: Chain): ChainProperties => {
-	return CHAINS[chainPrefixOf(chain)]
+	return CHAINS[chain]
 }
 
 export const ss58Of = (chain: Chain): number => {
@@ -23,8 +26,8 @@ export const getChainsOfAsset = (asset: Asset): Chain[] => {
 	return ASSET_CHAINS_MAP[asset] || []
 }
 
-export const chainPrefixOf = (chain: Chain): ChainPrefix => {
-	return CHAIN_TO_CHAIN_PREFIX_MAP[chain] as ChainPrefix
+export const endpointOf = (chain: Chain): string => {
+	return ENDPOINT_MAP[chain]
 }
 
 export { formatAddress, edOf, teleportEdOf, transferableBalanceOf }

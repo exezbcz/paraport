@@ -1,14 +1,7 @@
-import type { Prefix } from '@kodadot1/static'
+import type { Asset, Chain } from '@paraport/static'
 import type { Signer } from '@polkadot/api/types'
 import type { BridgeProtocol } from './bridges'
 import type { LogLevel } from './sdk'
-
-export type ChainPrefix = Prefix
-
-export enum Asset {
-	DOT = 'DOT',
-	KSM = 'KSM',
-}
 
 export type SDKConfig<T extends boolean = true> = {
 	bridgeProtocols?: BridgeProtocol[]
@@ -16,13 +9,6 @@ export type SDKConfig<T extends boolean = true> = {
 	chains: T extends true ? Chain[] : Chain[] | undefined
 	getSigner: () => Promise<Signer>
 	logLevel?: T extends true ? LogLevel : LogLevel | undefined
-}
-
-export enum Chain {
-	POLKADOT = 'Polkadot',
-	ASSETHUBKUSAMA = 'AssetHubKusama',
-	KUSAMA = 'Kusama',
-	ASSETHUBPOLKADOT = 'AssetHubPolkadot',
 }
 
 export type Route = {

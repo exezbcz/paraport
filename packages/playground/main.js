@@ -1,4 +1,4 @@
-import { Asset, Chain } from '@paraport/core'
+import { Asset, Chain } from '@paraport/static'
 import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
 
 import '@paraport/ui/style'
@@ -23,7 +23,7 @@ const main = async () => {
     autoteleport: {
   		address: USER_ADDRESS,
   		amount: AMOUNT,
-  		chain: Chain.KUSAMA,
+  		chain: Chain.AssetHubKusama,
   		asset: Asset.KSM,
   	},
    onSubmit: (autoteleport) => {

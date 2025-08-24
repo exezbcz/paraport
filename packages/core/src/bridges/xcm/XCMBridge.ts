@@ -7,11 +7,12 @@ import type {
 	BridgeProtocol,
 	BrigeTransferParams,
 } from '@/types/bridges'
-import type { Asset, Chain, Quote, SDKConfig } from '@/types/common'
+import type { Quote, SDKConfig } from '@/types/common'
 import type { TeleportParams } from '@/types/teleport'
 import type { TransactionCallback } from '@/types/transactions'
 import { getChainsOfAsset } from '@/utils'
 import { signAndSend } from '@/utils/tx'
+import type { Asset, Chain } from '@paraport/static'
 import * as paraspell from '@paraspell/sdk-pjs'
 import { maxBy } from 'lodash'
 

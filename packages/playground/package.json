@@ -5,6 +5,7 @@
     "dev": "vite"
   },
   "dependencies": {
+    "@paraport/static": "workspace:*",
     "@paraport/core": "workspace:*",
     "@paraport/ui": "workspace:*",
     "@polkadot/extension-dapp": "^0.58.3"
