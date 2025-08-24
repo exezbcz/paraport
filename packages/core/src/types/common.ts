@@ -56,7 +56,24 @@ export type Quote<Amount = bigint> = {
 	 */
 	total: Amount
 
+	/**
+	 * The asset type for this transfer (e.g., DOT, KSM).
+	 * Identifies the cryptocurrency or token being transferred.
+	 */
 	asset: Asset
 
-	signatureAmount: number
+	/**
+	 * Details about the execution requirements and timing of the transfer.
+	 */
+	execution: {
+		/**
+		 * The number of signatures required to complete this transfer.
+		 */
+		signatureAmount: number
+
+		/**
+		 * Estimated time for the execution of the transfer in milliseconds.
+		 */
+		timeMs: number
+	}
 }

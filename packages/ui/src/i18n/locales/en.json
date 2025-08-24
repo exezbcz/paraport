@@ -7,7 +7,6 @@
 		"almostDone": "Almost Done",
 		"finalizing": "Finalizing Transfer",
 		"required": "Autoteleport Required",
-		"estimatedSeconds": "~{0} Seconds",
 		"transactionSent": "Transaction Sent",
 		"insufficientFunds": "Insufficient Funds",
 		"notEnoughTokenInChain": "Not enough {0} on {1}",
@@ -39,5 +38,9 @@
 			"title": "What is Autoteleport?",
 			"description": "Autoteleport automatically moves your DOT from Polkadot to AssetHub to complete this transaction. This ensures you have tokens where you need them."
 		}
+	},
+	"time": {
+		"seconds": "{count} second | {count} seconds",
+		"minutes": "{count} minute | {count} minutes"
 	}
 }

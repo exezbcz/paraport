@@ -137,7 +137,6 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		const total = neededAmount + totalFees
 
 		return {
-			signatureAmount: this.signatureAmount,
 			amount: neededAmount,
 			total: total,
 			asset: asset,
@@ -149,6 +148,10 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			fees: {
 				bridge: telportFees,
 				total: totalFees,
+			},
+			execution: {
+				signatureAmount: this.signatureAmount,
+				timeMs: 30000,
 			},
 		}
 	}

@@ -37,6 +37,9 @@
 </template>
 
 <script setup lang="ts">
+import { type Component, type FunctionalComponent, computed, h } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 import useTeleportSteps from '@/composables/useTeleportSteps'
 import {
 	type TeleportStepDetails,
@@ -49,16 +52,15 @@ import {
 	TransactionType,
 } from '@paraport/core'
 
+import GradientText from '@/components/common/GradientText.vue'
+import Time from '@/components/common/Time.vue'
 import Container from '@/components/integrated/Container.vue'
 import LabelComponent from '@/components/integrated/LabelComponent.vue'
+import AlertIcon from '@/components/integrated/icon/AlertIcon.vue'
+import LoaderIcon from '@/components/integrated/icon/LoaderIcon.vue'
+import PingDot from '@/components/integrated/icon/PingDot.vue'
 import Button from '@ui/Button/Button.vue'
-import { type Component, type FunctionalComponent, computed, h } from 'vue'
-import { useI18n } from 'vue-i18n'
-import GradientText from './GradientText.vue'
 import TeleportOverview from './TeleportOverview.vue'
-import AlertIcon from './icon/AlertIcon.vue'
-import LoaderIcon from './icon/LoaderIcon.vue'
-import PingDot from './icon/PingDot.vue'
 
 type StateStrategy = Partial<
 	Record<
@@ -162,11 +164,10 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						passive: true,
 					},
 					right: {
-						label: t('autoteleport.estimatedSeconds', [
-							(step.duration || 0) / 1000,
-						]),
+						is: h(Time, {
+							value: Number(step.duration),
+						}),
 						class: 'text-xs',
-						passive: true,
 					},
 				},
 			}),
@@ -188,11 +189,10 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						passive: true,
 					},
 					right: {
-						label: t('autoteleport.estimatedSeconds', [
-							(step.duration || 0) / 1000,
-						]),
+						is: h(Time, {
+							value: Number(step.duration),
+						}),
 						class: 'text-xs',
-						passive: true,
 					},
 				},
 			}),
