@@ -9,6 +9,7 @@
     <Container v-else>
         <template #action>
             <Button
+                ref="buttonRef"
                 :disabled="isDisabled"
                 class="w-full"
                 @click="submit"
@@ -47,6 +48,7 @@
 
                 <TeleportOverview
                     v-if="session"
+                    :button-ref="buttonRef"
                     :session="session"
                 />
             </template>
@@ -62,7 +64,7 @@ import eventBus from '@/utils/event-bus'
 import { TeleportSessionStatus } from '@paraport/core'
 import Button from '@ui/Button/Button.vue'
 import { ArrowUpRight } from 'lucide-vue-next'
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Container from './Container.vue'
 import TeleportOverview from './TeleportOverview.vue'
@@ -70,6 +72,8 @@ import TeleportState from './TeleportState.vue'
 import SuccessIcon from './icon/SuccessIcon.vue'
 
 const props = defineProps<AppProps>()
+
+const buttonRef = ref(null)
 
 const { t } = useI18n()
 

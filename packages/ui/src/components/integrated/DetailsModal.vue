@@ -1,6 +1,6 @@
 <template>
   <Dialog v-model:open="isOpen">
-    <DialogContent>
+    <DialogContent :position>
       <DialogHeader>
         <DialogTitle>
           {{ t('detailsModal.title') }}
@@ -78,6 +78,7 @@ import DetailsPill from './DetailsPill.vue'
 
 const props = defineProps<{
 	session: TeleportSession
+	position: { left: string; top: string }
 }>()
 
 const isOpen = defineModel<boolean>()

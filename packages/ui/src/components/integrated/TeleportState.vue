@@ -1,7 +1,7 @@
 <template>
     <Container  v-if="state">
         <template #top>
-            <div class="h-full w-full flex gap-3 items-center">
+            <div class="h-full w-full flex gap-3 items-center" ref="topSectionRef">
                 <div class="h-[20px] w-[20px] relative" :class="state.top.icon.class">
                     <component :is="state.top.icon.icon" />
                 </div>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Component, type FunctionalComponent, computed, h } from 'vue'
+import { type Component, type FunctionalComponent, computed, h, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import useTeleportSteps from '@/composables/useTeleportSteps'
@@ -103,6 +103,8 @@ const props = defineProps<{
 	autoteleport: TeleportEventPayload
 }>()
 
+const topSectionRef = ref()
+
 const { t } = useI18n()
 
 const steps = useTeleportSteps(computed(() => props.autoteleport))
@@ -141,6 +143,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 					right: {
 						is: h(TeleportOverview, {
 							session: props.session,
+							buttonRef: topSectionRef,
 						}),
 					},
 				},
