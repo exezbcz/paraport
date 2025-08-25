@@ -1,5 +1,5 @@
 <template>
-  <span class="text-text flex gap-[2px]">
+  <span class="text-text flex gap-[2px] capitalize">
     <span :class="deviderClass">~</span>
     <span>{{ formattedTime }}</span>
   </span>

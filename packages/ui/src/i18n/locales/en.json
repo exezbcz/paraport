@@ -36,7 +36,7 @@
 		"timeEstimate": "Time Estimate",
 		"whatIsAutoteleport": {
 			"title": "What is Autoteleport?",
-			"description": "Autoteleport automatically moves your DOT from Polkadot to AssetHub to complete this transaction. This ensures you have tokens where you need them."
+			"description": "Autoteleport automatically moves your {asset} from {source} to {target} to complete this transaction. This ensures you have tokens where you need them."
 		}
 	},
 	"time": {

@@ -23,7 +23,9 @@
 	},
 	"dependencies": {
 		"@mdi/font": "^7.4.47",
+		"@paraport/static": "workspace:*",
 		"@paraport/core": "workspace:*",
+		"@polkadot/util": "^13.4.3",
 		"@tanstack/vue-table": "^8.21.2",
 		"@vue/runtime-dom": "^3.5.13",
 		"@vueuse/core": "^13.0.0",

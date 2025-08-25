@@ -9,32 +9,44 @@
 
       <hr class="bg-surface-grey h-[1px]"/>
 
-      <div class="flex flex-col">
+      <div class="flex flex-col" v-if="selectedQuote">
         <div class="flex flex-col gap-[17px] text-xs">
             <div class="flex items-center justify-between">
                 <span class="text-secondary"> {{t('detailsModal.route')}} </span>
-                <div> </div>
+                <div class="flex items-center gap-3 text-text">
+                    <div> {{ selectedQuote.route.source }} </div>
+                    <ArrowRight :size="7" />
+                    <div> {{ selectedQuote.route.target }} </div>
+                </div>
             </div>
 
             <div class="flex items-center justify-between">
                 <span class="text-secondary"> {{t('detailsModal.transferAmount')}} </span>
-                <span class="text-text"> {{ String(session.params.amount) }} </span>
+                <Amount class="text-text" :amount="selectedQuote.amount" :chain="selectedQuote.route.source" />
             </div>
 
             <div class="flex items-center justify-between">
                 <span class="text-secondary"> {{t('detailsModal.fees')}} </span>
-                <span class="text-text"> {{ String(session.quotes?.selected?.fees.total) }} </span>
+                <Amount class="text-text" :amount="selectedQuote.fees.total" :chain="selectedQuote.route.source" />
             </div>
 
             <div class="flex items-center justify-between">
                 <span class="text-secondary"> {{t('detailsModal.timeEstimate')}} </span>
-                <span class="text-text"> {{ String(session.quotes?.selected?.fees.total) }} </span>
+                <Time class="text-text" :value="selectedQuote.execution.timeMs" />
             </div>
         </div>
 
         <div class="rounded-lg bg-surface-grey py-4 px-[14px] flex flex-col gap-2 mt-[18px]">
             <p class="text-sm text-text capitalize">{{ t('detailsModal.whatIsAutoteleport.title') }}</p>
-            <p class="text-xs text-secondary">{{ t('detailsModal.whatIsAutoteleport.description') }}</p>
+            <p class="text-xs text-secondary">
+            {{
+              t('detailsModal.whatIsAutoteleport.description', {
+                  asset: selectedQuote?.asset,
+                  source: selectedQuote?.route.source,
+                  target: selectedQuote?.route.target,
+                })
+              }}
+            </p>
         </div>
 
 
@@ -50,6 +62,8 @@
 </template>
 
 <script setup lang="ts">
+import Amount from '@/components/common/Amount.vue'
+import Time from '@/components/common/Time.vue'
 import {
 	Dialog,
 	DialogContent,
@@ -57,14 +71,18 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 import { type TeleportSession } from '@paraport/core'
+import { ArrowRight } from 'lucide-vue-next'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DetailsPill from './DetailsPill.vue'
 
-defineProps<{
+const props = defineProps<{
 	session: TeleportSession
 }>()
 
 const isOpen = defineModel<boolean>()
 
 const { t } = useI18n()
+
+const selectedQuote = computed(() => props.session.quotes.selected)
 </script>
