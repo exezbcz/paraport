@@ -24,6 +24,8 @@ type XCMTeleportParams = {
 	asset: Asset
 }
 
+const FEE_MARGIN_PERCENTAGE = 10
+
 export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
 	private readonly signatureAmount: number = 1
@@ -73,7 +75,9 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			asset,
 		})
 
-		return this.feeService.calculateFee(tx, address)
+		const teleportFee = await this.feeService.calculateFee(tx, address)
+
+		return teleportFee + teleportFee / BigInt(FEE_MARGIN_PERCENTAGE)
 	}
 
 	async getQuote({
