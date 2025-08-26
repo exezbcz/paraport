@@ -14,6 +14,7 @@ const { t } = useI18n()
 const props = defineProps<{
 	value: number
 	deviderClass?: string
+	short?: boolean
 }>()
 
 const formattedTime = computed(() => {
@@ -21,13 +22,17 @@ const formattedTime = computed(() => {
 
 	if (totalSeconds >= 60) {
 		const minutes = Math.round(totalSeconds / 60)
-		return t('time.minutes', minutes, {
+		return t(props.short ? 'time.minutes_short' : 'time.minutes', minutes, {
 			count: minutes,
 		})
 	} else {
-		return t('time.seconds', totalSeconds, {
-			count: totalSeconds,
-		})
+		return t(
+			props.short ? 'time.seconds_short' : 'time.seconds',
+			totalSeconds,
+			{
+				count: totalSeconds,
+			},
+		)
 	}
 })
 </script>

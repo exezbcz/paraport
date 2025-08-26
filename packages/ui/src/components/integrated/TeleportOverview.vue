@@ -2,8 +2,9 @@
     <div class="flex items-center gap-5">
         <div class="flex gap-1 text-xs capitalize">
             <Time
-                :value="30000"
+                :value="Number(session.quotes.selected?.execution.timeMs)"
                 devider-class="!text-secondary"
+				short
             />
             <div class="w-1 h-1 rounded-full bg-surface-grey self-center" />
             <span> {{ session.quotes.selected?.execution.signatureAmount }} signature </span>
