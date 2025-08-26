@@ -4,6 +4,7 @@ import {
 	type TransactionUnsubscribe,
 } from '@/types/transactions'
 import type { Extrinsic } from '@kodadot1/sub-api'
+import { web3FromAddress } from '@polkadot/extension-dapp'
 import type {
 	DispatchError,
 	ExtrinsicStatus,
@@ -76,12 +77,12 @@ export const signAndSend = async ({
 	tx: Extrinsic
 	callback: TransactionCallback
 	address: string
-	signer: Signer
+	signer?: Signer
 }): Promise<TransactionUnsubscribe> => {
 	const subscription = await tx
 		.signAndSend(
 			address,
-			{ signer },
+			{ signer: signer || (await web3FromAddress(address)).signer },
 			txCb({
 				onFinalized: ({ txHash, error }) => {
 					callback({

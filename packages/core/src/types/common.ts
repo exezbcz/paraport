@@ -7,7 +7,7 @@ export type SDKConfig<T extends boolean = true> = {
 	bridgeProtocols?: BridgeProtocol[]
 	rpcUrls?: Record<number | string, string>
 	chains: T extends true ? Chain[] : Chain[] | undefined
-	getSigner: () => Promise<Signer>
+	getSigner?: () => Promise<Signer>
 	logLevel?: T extends true ? LogLevel : LogLevel | undefined
 }
 

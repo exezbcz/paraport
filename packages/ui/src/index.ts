@@ -10,7 +10,7 @@ import './assets/index.css'
 export interface MountOptions {
 	integratedTargetId: string
 	displayMode?: DisplayMode | `${DisplayMode}`
-	getSigner: SDKConfig<false>['getSigner']
+	getSigner?: SDKConfig<false>['getSigner']
 	autoteleport: TeleportParams<string>
 	onSubmit?: (autotelport: boolean) => void
 	onCompleted?: () => void
