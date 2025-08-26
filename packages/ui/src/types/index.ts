@@ -1,5 +1,6 @@
 import type {
 	ParaPortSDK,
+	SDKConfig,
 	TeleportParams,
 	TransactionType,
 } from '@paraport/core'
@@ -39,4 +40,56 @@ export type TeleportStep = {
 
 export type TeleportStepDetails = TeleportStep & {
 	statusLabel: string
+}
+
+/**
+ * Configuration options for initializing the ParaPort SDK UI component.
+ */
+export interface MountOptions {
+	/**
+	 * HTML element ID where the ParaPort UI will be mounted.
+	 * The element must exist in the DOM before initialization.
+	 */
+	integratedTargetId: string
+
+	/**
+	 * Controls how the UI is displayed. Currently supports 'integrated' mode
+	 * which embeds the UI directly in the specified element.
+	 * @default DisplayMode.Integrated
+	 */
+	displayMode?: DisplayMode | `${DisplayMode}`
+
+	/**
+	 * Function to get the signer for transactions. Typically returns a Web3 provider
+	 * that can sign transactions on the source chain.
+	 */
+	getSigner?: SDKConfig<false>['getSigner']
+
+	/**
+	 * Configuration for the teleport operation including source chain,
+	 * destination chain, asset, and amount to transfer.
+	 */
+	autoteleport: TeleportParams<string>
+
+	/**
+	 * Callback fired when user submits the teleport form.
+	 * @param autotelport - Boolean indicating if automatic teleport is enabled
+	 */
+	onSubmit?: (autotelport: boolean) => void
+
+	/**
+	 * Callback fired when the teleport operation completes successfully.
+	 */
+	onCompleted?: () => void
+
+	/**
+	 * Text label for the teleport button/widget.
+	 */
+	label: string
+
+	/**
+	 * Whether the teleport interface is disabled.
+	 * @default false
+	 */
+	disabled?: boolean
 }

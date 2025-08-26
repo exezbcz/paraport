@@ -1,22 +1,10 @@
-import { type AppProps, DisplayMode } from '@/types'
-import type { SDKConfig, TeleportParams } from '@paraport/core'
+import { type AppProps, DisplayMode, type MountOptions } from '@/types'
 import { ParaPortSDK } from '@paraport/core'
 import { createApp, h, ref } from 'vue'
 import App from './App.vue'
 import { i18n } from './i18n'
 import eventBus from './utils/event-bus'
 import './assets/index.css'
-
-export interface MountOptions {
-	integratedTargetId: string
-	displayMode?: DisplayMode | `${DisplayMode}`
-	getSigner?: SDKConfig<false>['getSigner']
-	autoteleport: TeleportParams<string>
-	onSubmit?: (autotelport: boolean) => void
-	onCompleted?: () => void
-	label: string
-	disabled?: boolean
-}
 
 const attachEventListeners = ({
 	onSubmit,

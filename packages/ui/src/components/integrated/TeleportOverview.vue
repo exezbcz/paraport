@@ -27,7 +27,7 @@ import Time from '@components/common/Time.vue'
 import DetailsModal from '@components/integrated/DetailsModal.vue'
 import { type TeleportSession } from '@paraport/core'
 import { useElementBounding, useWindowSize } from '@vueuse/core'
-import { Ref, ref, watchEffect, computed } from 'vue'
+import { Ref, computed, ref, watchEffect } from 'vue'
 import DetailsPill from './DetailsPill.vue'
 
 const props = defineProps<{

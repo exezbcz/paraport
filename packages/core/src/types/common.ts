@@ -2,13 +2,34 @@ import type { Asset, Chain } from '@paraport/static'
 import type { Signer } from '@polkadot/api/types'
 import type { BridgeProtocol } from './bridges'
 import type { LogLevel } from './sdk'
+import type { Stringify } from './stringify'
 
+/**
+ * Configuration options for initializing the SDK
+ * @template T - Boolean type parameter that determines if certain fields are required (true) or optional (false)
+ */
 export type SDKConfig<T extends boolean = true> = {
-	bridgeProtocols?: BridgeProtocol[]
-	rpcUrls?: Record<number | string, string>
-	chains: T extends true ? Chain[] : Chain[] | undefined
-	getSigner?: () => Promise<Signer>
-	logLevel?: T extends true ? LogLevel : LogLevel | undefined
+    /**
+     * List of bridge protocols to be used for transfers
+     * Specifies which cross-chain bridge protocols are available for transactions
+     */
+    bridgeProtocols?: BridgeProtocol[]
+
+    /**
+     * List of chains supported by the SDK
+     */
+    chains: T extends true ? Chain[] : Chain[] | undefined
+
+    /**
+     * Function that returns a Signer instance for transaction signing
+     * Used for authenticating and signing transactions on supported chains
+     */
+    getSigner?: () => Promise<Signer>
+
+    /**
+     * Logging level configuration for SDK operations
+     */
+    logLevel?: T extends true ? Stringify<LogLevel> : Stringify<LogLevel> | undefined
 }
 
 export type Route = {

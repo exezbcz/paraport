@@ -27,9 +27,11 @@ import type { MountOptions } from '@paraport/ui'
 
 const options: MountOptions = {
   integratedTargetId: 'teleport-container',
-  getSigner: async () => { /* Your signer implementation */ },
   autoteleport: {
-    // Your teleport parameters
+ 		address: USER_ADDRESS,
+    amount: AMOUNT,
+    chain: 'AssetHubKusama',
+    asset: 'KSM',
   },
   label: 'Teleport',
   onSubmit: (autoTeleport) => {
