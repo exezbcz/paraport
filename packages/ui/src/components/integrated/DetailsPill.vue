@@ -1,6 +1,7 @@
 <template>
     <Button
         variant="pill-info"
+        :active="active"
         @click="$emit('click')"
     >
         <Info :size="10" />

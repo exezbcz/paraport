@@ -20,7 +20,8 @@ export const buttonVariants = cva(
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
 				link: 'text-primary underline-offset-4 hover:underline',
 				'pill-info':
-					BASE_PILL + ' text-secondary bg-surface-grey hover:bg-surface-hover',
+					BASE_PILL +
+					' text-secondary bg-surface-grey hover:bg-surface-hover [&.active]:bg-primary',
 				'pill-warning':
 					BASE_PILL +
 					' text-caution-text bg-caution-button hover:bg-caution-fill',
