@@ -63,7 +63,7 @@ import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import { type AppProps } from '@/types'
 import eventBus from '@/utils/event-bus'
-import { TeleportSessionStatus } from '@paraport/core'
+import { TeleportSessionStatus, getChainName } from '@paraport/core'
 import Button from '@ui/Button/Button.vue'
 import { useDark } from '@vueuse/core'
 import { ArrowUpRight } from 'lucide-vue-next'
@@ -125,11 +125,11 @@ const label = computed(() => {
 		if (!enabled.value) {
 			return t('autoteleport.notEnoughTokenInChain', [
 				props.autoteleport.asset,
-				props.autoteleport.chain,
+				getChainName(props.autoteleport.chain),
 			])
 		}
 
-		return t('autoteleport.sign', [props.autoteleport.chain])
+		return t('autoteleport.sign', [getChainName(props.autoteleport.chain)])
 	}
 })
 

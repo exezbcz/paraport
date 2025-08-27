@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { formatAmount } from '@/utils/amount'
 import { chainPropListOf } from '@paraport/core'
-import { Chain } from '@paraport/static'
+import { Chain } from '@paraport/core'
 import { computed } from 'vue'
 
 const props = defineProps<{

@@ -14,9 +14,9 @@
             <div class="flex items-center justify-between">
                 <span class="text-secondary"> {{t('detailsModal.route')}} </span>
                 <div class="flex items-center gap-3 text-text">
-                    <div> {{ selectedQuote.route.source }} </div>
+                    <div> {{ sourceChain }} </div>
                     <ArrowRight :size="7" />
-                    <div> {{ selectedQuote.route.target }} </div>
+                    <div> {{ targetChain }} </div>
                 </div>
             </div>
 
@@ -42,8 +42,8 @@
             {{
               t('detailsModal.whatIsAutoteleport.description', {
                   asset: selectedQuote?.asset,
-                  source: selectedQuote?.route.source,
-                  target: selectedQuote?.route.target,
+                  source: sourceChain,
+                  target: targetChain,
                 })
               }}
             </p>
@@ -72,7 +72,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import { type TeleportSession } from '@paraport/core'
+import { type TeleportSession, getChainName } from '@paraport/core'
 import { useDark } from '@vueuse/core'
 import { ArrowRight } from 'lucide-vue-next'
 import { computed } from 'vue'
@@ -91,4 +91,11 @@ const { t } = useI18n()
 
 const selectedQuote = computed(() => props.session.quotes.selected)
 const logoSrc = computed(() => (isDark.value ? logoDark : logoLight))
+
+const sourceChain = computed(() =>
+	selectedQuote.value ? getChainName(selectedQuote.value.route.source) : '',
+)
+const targetChain = computed(() =>
+	selectedQuote.value ? getChainName(selectedQuote.value.route.target) : '',
+)
 </script>
