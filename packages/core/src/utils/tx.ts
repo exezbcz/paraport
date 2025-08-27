@@ -4,13 +4,15 @@ import {
 	type TransactionUnsubscribe,
 } from '@/types/transactions'
 import type { Extrinsic } from '@kodadot1/sub-api'
-import { web3FromAddress } from '@polkadot/extension-dapp'
+import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
 import type {
 	DispatchError,
 	ExtrinsicStatus,
 	Hash,
 } from '@polkadot/types/interfaces'
 import type { ISubmittableResult, Signer } from '@polkadot/types/types'
+
+const WEB3_APP_NAME = 'ParaPort'
 
 type TxCbParams = {
 	onFinalized: (params: {
@@ -79,6 +81,8 @@ export const signAndSend = async ({
 	address: string
 	signer?: Signer
 }): Promise<TransactionUnsubscribe> => {
+	await web3Enable(WEB3_APP_NAME)
+
 	const subscription = await tx
 		.signAndSend(
 			address,
