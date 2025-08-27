@@ -53,7 +53,7 @@
         <div class="flex items-center justify-between mt-[13px]">
             <DetailsPill :label="t('learnMore')" />
 
-            <img src="@/assets/images/paraport_full_logo.svg">
+            <img :src="logoSrc" class="w-[82px]" />
         </div>
 
       </div>
@@ -62,6 +62,8 @@
 </template>
 
 <script setup lang="ts">
+import logoLight from '@/assets/images/paraport_full_logo.svg'
+import logoDark from '@/assets/images/paraport_full_logo_dark.svg'
 import Amount from '@/components/common/Amount.vue'
 import Time from '@/components/common/Time.vue'
 import {
@@ -71,6 +73,7 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 import { type TeleportSession } from '@paraport/core'
+import { useDark } from '@vueuse/core'
 import { ArrowRight } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -83,7 +86,9 @@ const props = defineProps<{
 
 const isOpen = defineModel<boolean>()
 
+const isDark = useDark()
 const { t } = useI18n()
 
 const selectedQuote = computed(() => props.session.quotes.selected)
+const logoSrc = computed(() => (isDark.value ? logoDark : logoLight))
 </script>
