@@ -118,7 +118,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		const sourceChain = highestBalanceChain.chain
 
 		// 4. calculate tx fees
-		const telportFees = await this.getTeleportFees({
+		const teleportFees = await this.getTeleportFees({
 			amount,
 			source: sourceChain,
 			target: targetChain,
@@ -126,11 +126,11 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			asset,
 		})
 
-		const totalFees = telportFees
+		const totalFees = teleportFees
 		const totalAmount = amount + totalFees
 
 		if (
-			currentChainBalance.transferable + highestBalanceChain.transferable <
+			currentChainBalance.transferable + highestBalanceChain.xcmTransferable <
 			totalAmount
 		) {
 			return null
@@ -150,7 +150,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 				protocol: this.protocol,
 			},
 			fees: {
-				bridge: telportFees,
+				bridge: teleportFees,
 				total: totalFees,
 			},
 			execution: {
