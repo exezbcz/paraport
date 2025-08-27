@@ -15,7 +15,7 @@
                 @click="submit"
             >
                 <div class="inline-flex gap-3 items-center justify-center">
-                    <img v-if="showAutoTeleport" src="@/assets/images/paraport_logo.svg">
+                    <img v-if="showAutoTeleport" :src="logoSrc" class="w-[20px]" alt="Paraport Logo">
                     <span class="text-[16px] capitalize font-medium">{{ label }}</span>
                 </div>
             </Button>
@@ -57,12 +57,15 @@
 </template>
 
 <script setup lang="ts">
+import logoLight from '@/assets/images/paraport_logo.svg'
+import logoDark from '@/assets/images/paraport_logo_dark.svg'
 import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import { type AppProps } from '@/types'
 import eventBus from '@/utils/event-bus'
 import { TeleportSessionStatus } from '@paraport/core'
 import Button from '@ui/Button/Button.vue'
+import { useDark } from '@vueuse/core'
 import { ArrowUpRight } from 'lucide-vue-next'
 import { computed, defineProps, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -76,6 +79,10 @@ const props = defineProps<AppProps>()
 const buttonRef = ref(null)
 
 const { t } = useI18n()
+
+const isDark = useDark()
+
+const logoSrc = computed(() => (isDark.value ? logoDark : logoLight))
 
 const {
 	enabled,
