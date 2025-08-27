@@ -1,5 +1,4 @@
-import { NAMES } from "./names";
-import { Asset, type ChainProperties, type Config, Option } from "./types";
+import { Asset, type ChainProperties, type Config } from "./types";
 import { Chain } from "./types";
 
 export const toChainProperty = (
@@ -47,14 +46,6 @@ export const CHAINS: Config<ChainProperties> = {
 		Asset.HDX,
 		"https://hydradx.subscan.io",
 	),
-};
-
-export const chainNames: Record<Chain, string> = {
-	[Chain.Polkadot]: "Polkadot",
-	[Chain.AssetHubPolkadot]: "Polkadot AssetHub",
-	[Chain.Kusama]: "Kusama",
-	[Chain.AssetHubKusama]: "Kusama AssetHub",
-	[Chain.Hydration]: "Hydration",
 };
 
 // DEV: note that ED is different from the on-chain ED to prevent weird edge cases of XCM
