@@ -42,6 +42,8 @@ export type TeleportStepDetails = TeleportStep & {
 	statusLabel: string
 }
 
+type ClientSDKConfig = SDKConfig<false>
+
 /**
  * Configuration options for initializing the ParaPort SDK UI component.
  */
@@ -63,7 +65,7 @@ export interface MountOptions {
 	 * Function to get the signer for transactions. Typically returns a Web3 provider
 	 * that can sign transactions on the source chain.
 	 */
-	getSigner?: SDKConfig<false>['getSigner']
+	getSigner?: ClientSDKConfig['getSigner']
 
 	/**
 	 * Configuration for the teleport operation including source chain,
@@ -92,4 +94,10 @@ export interface MountOptions {
 	 * @default false
 	 */
 	disabled?: boolean
+
+	/**
+	 * Log level for the SDK.
+	 * @default 'INFO'
+	 */
+	logLevel?: ClientSDKConfig['logLevel']
 }

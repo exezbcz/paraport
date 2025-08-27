@@ -20,6 +20,7 @@ const main = async () => {
   		chain: Chain.AssetHubKusama,
   		asset: Asset.KSM,
   	},
+    logLevel: 'DEBUG',
    onSubmit: (autoteleport) => {
        console.log('is auto-teleporting', autoteleport)
    },

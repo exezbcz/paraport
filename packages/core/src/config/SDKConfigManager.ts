@@ -16,7 +16,7 @@ export class SDKConfigManager {
 		return {
 			...config,
 			bridgeProtocols: ['XCM'],
-			logLevel: LogLevel.ERROR,
+			logLevel: config.logLevel ?? LogLevel.INFO,
 			chains: [
 				Chain.Polkadot,
 				Chain.AssetHubPolkadot,

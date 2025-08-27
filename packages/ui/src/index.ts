@@ -35,6 +35,7 @@ export function init({
 
 	const sdk = new ParaPortSDK({
 		getSigner: options.getSigner,
+		logLevel: options.logLevel,
 	})
 
 	const label = ref(options.label)
