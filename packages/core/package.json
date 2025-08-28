@@ -1,6 +1,13 @@
 {
 	"name": "@paraport/core",
-	"version": "0.0.1",
+	"version": "0.0.0-alpha.0",
+	"description": "Core functionality for ParaPort SDK",
+	"keywords": ["paraport", "polkadot", "sdk", "blockchain"],
+	"license": "MIT",
+	"author": "KodaDot",
+	"publishConfig": {
+		"access": "public"
+	},
 	"type": "module",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -11,7 +18,7 @@
 			"import": "./dist/index.js"
 		}
 	},
-	"files": ["dist"],
+	"files": ["dist", "README.md", "LICENSE"],
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch --mode development",
