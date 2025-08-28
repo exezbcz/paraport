@@ -21,14 +21,14 @@ const main = async () => {
   		asset: Asset.KSM,
   	},
     logLevel: 'DEBUG',
-   onSubmit: (autoteleport) => {
-       console.log('is auto-teleporting', autoteleport)
-   },
-   onCompleted: () => {
-       console.log('auto-teleport completed')
-   },
+    onSubmit: (autoteleport) => {
+        console.log('📦 Submit button pressed')
+        console.log('🚀 Autoteleport: ', autoteleport)
+    },
+    onCompleted: () => {
+        console.log('✅ Auto-teleport successfully completed!')
+    },
   })
-
 }
 
 main()
