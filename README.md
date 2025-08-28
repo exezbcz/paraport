@@ -1,6 +1,6 @@
 # ParaPort SDK
 
-AutoTeleport SDK is a powerful toolkit for seamless cross-chain teleportation in the Polkadot/Substrate ecosystem. It provides a user-friendly interface for handling cross-chain token transfers with built-in error handling and transaction monitoring.
+AutoTeleport SDK is a powerful toolkit for seamless cross-chain teleportation in the Polkadot/Substrate ecosystem. It provides a user-friendly interface for handling cross-chain token transfers.
 
 ## 📦 Package Structure
 
