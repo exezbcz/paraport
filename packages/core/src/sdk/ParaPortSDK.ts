@@ -167,6 +167,8 @@ export default class ParaPortSDK extends Initializable {
 
 		const params = convertToBigInt(p, ['amount'])
 
+		this.logger.debug('initSession', params)
+
 		const { quotes, funds } = await this.calculateTeleport(params)
 
 		const unsubscribe = await this.subscribeBalanceChanges(params, async () => {
