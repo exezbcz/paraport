@@ -5,7 +5,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@paraport/ui": "workspace:*"
+    "@paraport/sdk": "workspace:*"
   },
   "devDependencies": {
     "vite": "^6.0.7"

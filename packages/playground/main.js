@@ -1,5 +1,5 @@
-import '@paraport/ui/style'
-import * as paraport from '@paraport/ui'
+import '@paraport/sdk/style'
+import * as paraport from '@paraport/sdk'
 
 const USER_ADDRESS = 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY'
 const AMOUNT = '600000000000'

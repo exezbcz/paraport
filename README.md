@@ -7,14 +7,14 @@ AutoTeleport SDK is a powerful toolkit for seamless cross-chain teleportation in
 This monorepo contains the following packages:
 
 - `@paraport/core`: Core functionality for cross-chain teleportation
-- `@paraport/ui`: Vue-based UI components for integration
+- `@paraport/sdk`: Vue-based SDK components for integration
 - `@paraport/static`: Static assets and utilities
 - `playground`: Development and testing environment
 
 ## 🚀 Installation
 
 ```bash
-pnpm install @paraport/core @paraport/ui
+pnpm install @paraport/core @paraport/sdk
 ```
 
 ## 💡 Usage
@@ -22,8 +22,8 @@ pnpm install @paraport/core @paraport/ui
 ### Basic Integration
 
 ```typescript
-import { init } from '@paraport/ui'
-import type { MountOptions } from '@paraport/ui'
+import { init } from '@paraport/sdk'
+import type { MountOptions } from '@paraport/sdk'
 
 const options: MountOptions = {
   integratedTargetId: 'teleport-container',

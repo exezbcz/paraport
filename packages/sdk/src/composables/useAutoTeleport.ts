@@ -103,7 +103,7 @@ export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 	})
 
 	return {
-		enabled,
+		enabled, // todo remove
 		needsAutoTeleport,
 		hasEnoughInCurrentChain,
 		exec,

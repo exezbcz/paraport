@@ -47,7 +47,7 @@
                 </p>
 
                 <TeleportOverview
-                    v-if="session"
+                    v-if="session && buttonRef"
                     :button-ref="buttonRef"
                     :session="session"
                 />

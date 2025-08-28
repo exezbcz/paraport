@@ -1,5 +1,5 @@
 {
-	"name": "@paraport/ui",
+	"name": "@paraport/sdk",
 	"version": "0.1.0-alpha.0",
 	"description": "UI components for ParaPort SDK",
 	"keywords": ["paraport", "polkadot", "sdk", "vue", "ui-components"],
