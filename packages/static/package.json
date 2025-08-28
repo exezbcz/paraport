@@ -1,23 +1,25 @@
 {
 	"name": "@paraport/static",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Static configuration and constants for ParaPort SDK",
 	"keywords": ["paraport", "polkadot", "sdk", "blockchain"],
 	"author": "KodaDot",
+	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
 	},
-	"type": "module",	
-	"main": "./dist/index.js",
+	"type": "module",
+	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		}
 	},
-	"files": ["dist"],
+	"files": ["dist", "README.md", "LICENSE"],
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch --mode development",
