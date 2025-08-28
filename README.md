@@ -81,6 +81,3 @@ Core dependencies include:
 - `@polkadot/api`: Polkadot/Substrate API
 - `@paraspell/sdk-pjs`: ParaSpell SDK for cross-chain operations
 - Vue.js for UI components
-
-## 📄 License
-
