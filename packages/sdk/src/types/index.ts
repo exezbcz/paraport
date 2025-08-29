@@ -47,9 +47,9 @@ type ClientSDKConfig = SDKConfig<false>
 export interface TeleportEvents {
 	/**
 	 * Callback fired when user submits the teleport form.
-	 * @param autotelport - Boolean indicating if automatic teleport is enabled
+	 * @param params - Object containing the autotelport status and completion status.
 	 */
-	onSubmit?: (autotelport: boolean) => void
+	onSubmit?: (params: { autoteleport: boolean; completed: boolean }) => void
 
 	/**
 	 * Callback fired when the teleport operation completes successfully.

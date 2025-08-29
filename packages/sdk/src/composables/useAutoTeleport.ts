@@ -86,6 +86,11 @@ export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 	const isReady = computed(
 		() => session.value?.status === TeleportSessionStatus.Ready,
 	)
+
+	const isCompleted = computed(
+		() => session.value?.status === TeleportSessionStatus.Completed,
+	)
+
 	const isAvailable = computed(() => true) // TODO check if chain has autoteleport support
 	const canAutoTeleport = computed(
 		() => isAvailable.value && Boolean(session.value?.funds.available),
@@ -110,6 +115,7 @@ export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 		retry,
 		isReady,
 		isAvailable,
+		isCompleted,
 		canAutoTeleport,
 		hasNoFundsAtAll,
 		insufficientFunds,

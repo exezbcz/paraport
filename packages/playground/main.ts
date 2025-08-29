@@ -7,7 +7,7 @@ const AMOUNT = '600000000000'
 const main = async () => {
   paraport.init({
     integratedTargetId: 'root',
-    label: 'Confirm',
+    label: 'Mint',
     autoteleport: {
   		address: USER_ADDRESS,
   		amount: AMOUNT,
@@ -18,9 +18,10 @@ const main = async () => {
     onReady: () => {
       console.log('🚀 ParaPort ready!')
     },
-    onSubmit: (autoteleport) => {
+    onSubmit: ({ autoteleport, completed }) => {
         console.log('📦 Submit button pressed')
         console.log('💥 Autoteleport: ', autoteleport)
+        console.log('✅ Completed: ', completed)
     },
     onCompleted: () => {
         console.log('✅ Auto-teleport successfully completed!')

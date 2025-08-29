@@ -20,8 +20,8 @@
                 </div>
             </Button>
         </template>
-        <template #bottom v-if="showAutoTeleport || session?.status === TeleportSessionStatus.Completed">
-            <template v-if="session?.status === TeleportSessionStatus.Completed">
+        <template #bottom v-if="showAutoTeleport || isCompleted || insufficientFunds">
+            <template v-if="isCompleted">
                 <div class="flex items-center gap-2">
                     <SuccessIcon />
 
@@ -50,7 +50,7 @@
                     <span>{{ t('addFunds') }}</span>
                 </Button>
             </template>
-            <template v-else>
+            <template v-else-if="showAutoTeleport">
                 <p class="text-secondary capitalize text-xs">
                     {{ t('autoteleport.required' )}}
                 </p>
@@ -101,6 +101,7 @@ const {
 	retry,
 	session,
 	isAvailable,
+	isCompleted,
 	isReady,
 	canAutoTeleport,
 	hasNoFundsAtAll,
@@ -117,8 +118,8 @@ const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 })
 
 const label = computed(() => {
-	if (hasEnoughInCurrentChain.value || props.disabled) {
-		return props.label
+	if (hasEnoughInCurrentChain.value || props.disabled || isCompleted.value) {
+		return t('proceedWithAction', [props.label])
 	}
 
 	if (insufficientFunds.value) {
@@ -135,6 +136,10 @@ const label = computed(() => {
 })
 
 const isDisabled = computed(() => {
+	if (isCompleted.value) {
+		return false
+	}
+
 	if (props.disabled || !isReady.value || insufficientFunds.value) {
 		return true
 	}
@@ -147,9 +152,12 @@ const isDisabled = computed(() => {
 })
 
 const submit = async () => {
-	eventBus.emit('teleport:submit', needsAutoTeleport.value)
+	eventBus.emit('teleport:submit', {
+		autoteleport: needsAutoTeleport.value,
+		completed: isCompleted.value,
+	})
 
-	if (needsAutoTeleport.value) {
+	if (needsAutoTeleport.value && !isCompleted.value) {
 		await exec()
 	}
 }

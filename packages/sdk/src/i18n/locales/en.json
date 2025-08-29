@@ -21,7 +21,6 @@
 			"waiting": "Approve in your wallet"
 		}
 	},
-	"teleport": "Teleport",
 	"retry": "Retry",
 	"details": "Details",
 	"viewTx": "View Tx",
@@ -44,6 +43,7 @@
 		"minutes": "{count} minute | {count} minutes",
 		"minutes_short": "{count} Min | {count} Mins"
 	},
+	"proceedWithAction": "Proceed with {0}",
 	"signature": "Signature | Signatures",
 	"addFunds": "Add Funds"
 }
