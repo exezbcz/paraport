@@ -44,10 +44,28 @@ export type TeleportStepDetails = TeleportStep & {
 
 type ClientSDKConfig = SDKConfig<false>
 
+export interface TeleportEvents {
+	/**
+	 * Callback fired when user submits the teleport form.
+	 * @param autotelport - Boolean indicating if automatic teleport is enabled
+	 */
+	onSubmit?: (autotelport: boolean) => void
+
+	/**
+	 * Callback fired when the teleport operation completes successfully.
+	 */
+	onCompleted?: () => void
+
+	/**
+	 * Callback fired when the UI is ready for interaction.
+	 */
+	onReady?: () => void
+}
+
 /**
  * Configuration options for initializing the ParaPort SDK UI component.
  */
-export interface MountOptions {
+export interface MountOptions extends TeleportEvents {
 	/**
 	 * HTML element ID where the ParaPort UI will be mounted.
 	 * The element must exist in the DOM before initialization.
@@ -72,17 +90,6 @@ export interface MountOptions {
 	 * destination chain, asset, and amount to transfer.
 	 */
 	autoteleport: TeleportParams<string>
-
-	/**
-	 * Callback fired when user submits the teleport form.
-	 * @param autotelport - Boolean indicating if automatic teleport is enabled
-	 */
-	onSubmit?: (autotelport: boolean) => void
-
-	/**
-	 * Callback fired when the teleport operation completes successfully.
-	 */
-	onCompleted?: () => void
 
 	/**
 	 * Text label for the teleport button/widget.

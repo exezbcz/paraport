@@ -1,4 +1,9 @@
-import { type AppProps, DisplayMode, type MountOptions } from '@/types'
+import {
+	type AppProps,
+	DisplayMode,
+	type MountOptions,
+	type TeleportEvents,
+} from '@/types'
 import { ParaPortSDK } from '@paraport/core'
 import { createApp, h, ref } from 'vue'
 import App from './App.vue'
@@ -9,7 +14,12 @@ import './assets/index.css'
 const attachEventListeners = ({
 	onSubmit,
 	onCompleted,
-}: Pick<MountOptions, 'onCompleted' | 'onSubmit'>) => {
+	onReady,
+}: TeleportEvents) => {
+	if (onReady) {
+		eventBus.on('session:ready', () => onReady())
+	}
+
 	if (onSubmit) {
 		eventBus.on('teleport:submit', (e) => onSubmit(e))
 	}
@@ -24,6 +34,7 @@ export function init({
 	autoteleport,
 	onSubmit,
 	onCompleted,
+	onReady,
 	displayMode = DisplayMode.Integrated,
 	...options
 }: MountOptions) {
@@ -54,6 +65,7 @@ export function init({
 			attachEventListeners({
 				onCompleted,
 				onSubmit,
+				onReady,
 			})
 		},
 		render: () => h(App, appProps),

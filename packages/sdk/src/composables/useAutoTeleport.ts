@@ -40,6 +40,11 @@ export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 		for (const event of SESSION_EVENTS) {
 			sdk.onSession(event, (payload) => {
 				console.log(`[UI] ${event}`, payload)
+
+				if (payload.status === TeleportSessionStatus.Ready && !session.value) {
+					eventBus.emit('session:ready')
+				}
+
 				session.value = payload
 			})
 		}
