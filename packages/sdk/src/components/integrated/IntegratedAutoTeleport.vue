@@ -139,7 +139,7 @@ const isDisabled = computed(() => {
 		return true
 	}
 
-	if (hasEnoughInCurrentChain.value) {
+	if (hasEnoughInCurrentChain.value || allowAutoTeleport.value) {
 		return false
 	}
 
