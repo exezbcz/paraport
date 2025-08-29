@@ -2,7 +2,7 @@
 	"autoteleport": {
 		"checking": "Checking Funds",
 		"successfullyMoved": "{0} Successfully moved",
-		"sign": "Transfer to {0}",
+		"sign": "Move tokens to {0}",
 		"moving": "Moving {0} to {1}",
 		"almostDone": "Almost Done",
 		"finalizing": "Finalizing Transfer",
@@ -10,7 +10,6 @@
 		"transactionSent": "Transaction Sent",
 		"insufficientAssetBalance": "Insufficient {0} Balance",
 		"notEnoughFunds": "Not Enough Funds",
-		"title": "Sign Transactions",
 		"status": {
 			"broadcastingTx": "Broadcasting tx",
 			"completed": "Completed",
