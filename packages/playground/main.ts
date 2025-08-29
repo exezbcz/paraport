@@ -15,9 +15,12 @@ const main = async () => {
   		asset: 'KSM',
   	},
     logLevel: 'DEBUG',
+    onReady: () => {
+      console.log('🚀 ParaPort ready!')
+    },
     onSubmit: (autoteleport) => {
         console.log('📦 Submit button pressed')
-        console.log('🚀 Autoteleport: ', autoteleport)
+        console.log('💥 Autoteleport: ', autoteleport)
     },
     onCompleted: () => {
         console.log('✅ Auto-teleport successfully completed!')
