@@ -272,11 +272,16 @@ export default class ParaPortSDK extends Initializable {
 	private validateTeleportParams(params: TeleportParams<string>) {
 		const validAsset = Object.values(Asset).includes(params.asset)
 		const validChain = Object.values(Chain).includes(params.chain)
+		const validChainAsset = getChainsOfAsset(params.asset).includes(
+			params.chain,
+		)
+
 		const validAmount = BigInt(params.amount) > BigInt(0)
 
 		const validAddress = Boolean(params.address) // TODO: validate address
 
-		const valid = validAddress && validAsset && validAmount && validChain
+		const valid =
+			validAddress && validAsset && validAmount && validChain && validChainAsset
 
 		if (!valid) {
 			throw new Error('Invalid params')
