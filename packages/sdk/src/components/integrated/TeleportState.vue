@@ -169,6 +169,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 					right: {
 						is: h(Time, {
 							value: Number(step.duration),
+							countdown: true,
 						}),
 						class: 'text-xs',
 					},
@@ -194,6 +195,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 					right: {
 						is: h(Time, {
 							value: Number(step.duration),
+							countdown: true,
 						}),
 						class: 'text-xs',
 					},
