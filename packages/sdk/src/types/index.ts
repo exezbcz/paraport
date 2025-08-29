@@ -60,6 +60,11 @@ export interface TeleportEvents {
 	 * Callback fired when the UI is ready for interaction.
 	 */
 	onReady?: () => void
+
+	/**
+	 * Callback fired when the user clicks adds funds.
+	 */
+	onAddFunds?: () => void
 }
 
 /**

@@ -31,6 +31,7 @@ export const buttonVariants = cva(
 				'pill-success':
 					BASE_PILL +
 					' text-success-text bg-success-fill hover:bg-success-action-hover',
+				'pill-blue': BASE_PILL + ' text-accent-blue bg-accent-background',
 			},
 			size: {
 				default: 'h-12 px-4 py-2',

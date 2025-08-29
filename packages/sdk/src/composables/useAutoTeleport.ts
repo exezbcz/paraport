@@ -7,7 +7,7 @@ import {
 	TeleportSessionStatus,
 } from '@paraport/core'
 import { TeleportEventType, type TeleportSession } from '@paraport/core'
-import { computed, onBeforeMount, ref, watchEffect } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 
 const TELEPORT_EVENTS = [
 	TeleportEventType.TELEPORT_COMPLETED,
@@ -101,14 +101,7 @@ export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 		() => !needsAutoTeleport.value && isReady.value,
 	)
 
-	watchEffect(() => {
-		if (session.value) {
-			enabled.value = needsAutoTeleport.value
-		}
-	})
-
 	return {
-		enabled, // todo remove
 		needsAutoTeleport,
 		hasEnoughInCurrentChain,
 		exec,

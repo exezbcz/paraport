@@ -15,6 +15,7 @@ const attachEventListeners = ({
 	onSubmit,
 	onCompleted,
 	onReady,
+	onAddFunds,
 }: TeleportEvents) => {
 	if (onReady) {
 		eventBus.on('session:ready', () => onReady())
@@ -27,6 +28,10 @@ const attachEventListeners = ({
 	if (onCompleted) {
 		eventBus.on('teleport:completed', () => onCompleted())
 	}
+
+	if (onAddFunds) {
+		eventBus.on('session:add-funds', () => onAddFunds())
+	}
 }
 
 export function init({
@@ -35,6 +40,7 @@ export function init({
 	onSubmit,
 	onCompleted,
 	onReady,
+	onAddFunds,
 	displayMode = DisplayMode.Integrated,
 	...options
 }: MountOptions) {
@@ -66,6 +72,7 @@ export function init({
 				onCompleted,
 				onSubmit,
 				onReady,
+				onAddFunds,
 			})
 		},
 		render: () => h(App, appProps),

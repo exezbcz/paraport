@@ -41,6 +41,15 @@
                     <ArrowUpRight :size="10" />
                 </Button>
             </template>
+            <template v-else-if="insufficientFunds">
+                <p class="text-secondary capitalize text-xs">
+                    {{ t('autoteleport.insufficientAssetBalance', [ props.autoteleport?.asset ]) }}
+                </p>
+
+                <Button variant="pill-blue" @click="onAddFunds">
+                    <span>{{ t('addFunds') }}</span>
+                </Button>
+            </template>
             <template v-else>
                 <p class="text-secondary capitalize text-xs">
                     {{ t('autoteleport.required' )}}
@@ -85,7 +94,6 @@ const isDark = useDark()
 const logoSrc = computed(() => (isDark.value ? logoDark : logoLight))
 
 const {
-	enabled,
 	needsAutoTeleport,
 	hasEnoughInCurrentChain,
 	exec,
@@ -114,7 +122,7 @@ const label = computed(() => {
 	}
 
 	if (insufficientFunds.value) {
-		return t('autoteleport.insufficientFunds')
+		return t('autoteleport.notEnoughFunds')
 	}
 
 	if (!isReady.value) {
@@ -122,13 +130,6 @@ const label = computed(() => {
 	}
 
 	if (allowAutoTeleport.value) {
-		if (!enabled.value) {
-			return t('autoteleport.notEnoughTokenInChain', [
-				props.autoteleport.asset,
-				getChainName(props.autoteleport.chain),
-			])
-		}
-
 		return t('autoteleport.sign', [getChainName(props.autoteleport.chain)])
 	}
 })
@@ -142,10 +143,6 @@ const isDisabled = computed(() => {
 		return false
 	}
 
-	if (needsAutoTeleport.value) {
-		return !enabled.value
-	}
-
 	return true
 })
 
@@ -155,5 +152,9 @@ const submit = async () => {
 	if (needsAutoTeleport.value) {
 		await exec()
 	}
+}
+
+const onAddFunds = async () => {
+	eventBus.emit('session:add-funds')
 }
 </script>
