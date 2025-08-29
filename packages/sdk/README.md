@@ -46,6 +46,8 @@ const { update, destroy } = init(options)
 | label | string | Button display text |
 | onSubmit | Function | Callback on form submission |
 | onCompleted | Function | Callback on successful teleport |
+| onReady | Function | Callback when UI is ready for interaction |
+| onAddFunds | Function | Callback when user clicks to add funds |
 
 ## Development
 
