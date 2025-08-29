@@ -25,6 +25,9 @@ const main = async () => {
     onCompleted: () => {
         console.log('✅ Auto-teleport successfully completed!')
     },
+    onAddFunds: () => {
+        console.log('💰 Add funds button pressed')
+    },
   })
 }
 
