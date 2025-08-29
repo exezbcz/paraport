@@ -44,5 +44,6 @@
 		"seconds_short": "{count} Sec | {count} Secs",
 		"minutes": "{count} minute | {count} minutes",
 		"minutes_short": "{count} Min | {count} Mins"
-	}
+	},
+	"signature": "Signature | Signatures"
 }

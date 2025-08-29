@@ -1,13 +1,15 @@
 <template>
-    <div class="flex items-center gap-5">
+    <div class="flex items-center" :class="isContainerNarrow ? 'gap-3' : 'gap-5'">
         <div class="flex gap-1 text-xs capitalize">
             <Time
                 :value="Number(session.quotes.selected?.execution.timeMs)"
                 devider-class="!text-secondary"
 				short
             />
-            <div class="w-1 h-1 rounded-full bg-surface-grey self-center" />
-            <span> {{ session.quotes.selected?.execution.signatureAmount }} signature </span>
+			<template v-if="!isContainerNarrow">
+				<div class="w-1 h-1 rounded-full bg-surface-grey self-center" />
+				<span> {{ session.quotes.selected?.execution.signatureAmount }} {{ t('signature') }} </span>
+			</template>
         </div>
 
         <DetailsPill
@@ -27,9 +29,19 @@
 import Time from '@components/common/Time.vue'
 import DetailsModal from '@components/integrated/DetailsModal.vue'
 import { type TeleportSession } from '@paraport/core'
-import { useElementBounding, useWindowSize } from '@vueuse/core'
+import { useElementBounding, useElementSize, useWindowSize } from '@vueuse/core'
 import { Ref, computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import DetailsPill from './DetailsPill.vue'
+
+const MODAL_HEIGHT = 397
+const MODAL_WIDTH = 320
+
+const VIEWPORT_MARGIN = 10
+const BUTTON_SPACING = 10
+const MIN_TOP_SPACING = 10
+
+const NARROW_WIDTH = 380
 
 const props = defineProps<{
 	session: TeleportSession
@@ -38,12 +50,10 @@ const props = defineProps<{
 
 const isModalActive = ref(false)
 
-const MODAL_HEIGHT = 397
-const MODAL_WIDTH = 320
+const { t } = useI18n()
+const { width } = useElementSize(props.buttonRef)
 
-const VIEWPORT_MARGIN = 10
-const BUTTON_SPACING = 10
-const MIN_TOP_SPACING = 10
+const isContainerNarrow = computed(() => width.value < NARROW_WIDTH)
 
 const buttonBounds = useElementBounding(props.buttonRef)
 
