@@ -1,17 +1,4 @@
-import type {
-	ParaPortSDK,
-	SDKConfig,
-	TeleportParams,
-	TransactionType,
-} from '@paraport/core'
-
-export type AppProps = {
-	sdk: ParaPortSDK
-	autoteleport: TeleportParams<string>
-	label: string
-	disabled?: boolean
-	displayMode?: DisplayMode
-}
+import type { SDKConfig, TeleportParams, TransactionType } from '@paraport/core'
 
 export enum DisplayMode {
 	Integrated = 'integrated',

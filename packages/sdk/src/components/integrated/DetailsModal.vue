@@ -53,7 +53,7 @@
         <div class="flex items-center justify-between mt-[13px]">
             <DetailsPill :label="t('learnMore')" />
 
-            <img :src="logoSrc" class="w-[82px]" />
+            <FullLogo class="w-[82px]" />
         </div>
 
       </div>
@@ -62,9 +62,8 @@
 </template>
 
 <script setup lang="ts">
-import logoLight from '@/assets/images/paraport_full_logo.svg'
-import logoDark from '@/assets/images/paraport_full_logo_dark.svg'
 import Amount from '@/components/common/Amount.vue'
+import FullLogo from '@/components/common/FullLogo.vue'
 import Time from '@/components/common/Time.vue'
 import {
 	Dialog,

@@ -1,6 +1,7 @@
 {
 	"autoteleport": {
-		"checking": "Checking Funds",
+		"checking": "Analyzing Your Balances",
+		"findingOptimalRoute": "Finding Optimal Route",
 		"successfullyMoved": "{0} Successfully moved",
 		"sign": "Move tokens to {0}",
 		"moving": "Moving {0} to {1}",

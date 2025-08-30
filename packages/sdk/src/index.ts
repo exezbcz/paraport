@@ -1,15 +1,12 @@
-import {
-	type AppProps,
-	DisplayMode,
-	type MountOptions,
-	type TeleportEvents,
-} from '@/types'
+import { DisplayMode, type MountOptions, type TeleportEvents } from '@/types'
 import { ParaPortSDK } from '@paraport/core'
-import { createApp, h, ref } from 'vue'
+import { createApp, h } from 'vue'
 import App from './App.vue'
-import { i18n } from './i18n'
+import { installi18n } from './i18n'
 import eventBus from './utils/event-bus'
 import './assets/index.css'
+import { installPinia } from './plugins/pinia'
+import { useSdkStore } from './stores'
 
 const attachEventListeners = ({
 	onSubmit,
@@ -50,24 +47,25 @@ export function init({
 		throw new Error(`Target element not found: ${integratedTargetId}`)
 	}
 
+	if (!autoteleport) {
+		throw new Error('Teleport Params is required')
+	}
+
 	const sdk = new ParaPortSDK({
 		getSigner: options.getSigner,
 		logLevel: options.logLevel,
 	})
 
-	const label = ref(options.label)
-	const disabled = ref(options.disabled)
-
-	const appProps: AppProps = {
-		sdk,
-		autoteleport,
-		label: label.value,
-		disabled: disabled.value,
-		displayMode: displayMode as DisplayMode,
-	}
-
 	const app = createApp({
 		setup() {
+			const store = useSdkStore()
+
+			store.setSdk(sdk)
+			store.setTeleportParams(autoteleport)
+			store.setLabel(options.label || '')
+			store.setDisabled(options.disabled || false)
+			store.setDisplayMode(displayMode as DisplayMode)
+
 			attachEventListeners({
 				onCompleted,
 				onSubmit,
@@ -75,15 +73,20 @@ export function init({
 				onAddFunds,
 			})
 		},
-		render: () => h(App, appProps),
+		render: () => h(App),
 	})
 
-	app.use(i18n).mount(targetElement)
+	// install plugins
+	installPinia(app)
+	installi18n(app)
+
+	app.mount(targetElement)
 
 	return {
 		update: (options: Pick<MountOptions, 'label' | 'disabled'>) => {
-			if (options.label !== undefined) label.value = options.label
-			if (options.disabled !== undefined) disabled.value = options.disabled
+			const store = useSdkStore()
+			if (options.label !== undefined) store.setLabel(options.label)
+			if (options.disabled !== undefined) store.setDisabled(options.disabled)
 		},
 		destroy: () => app.unmount(),
 	}

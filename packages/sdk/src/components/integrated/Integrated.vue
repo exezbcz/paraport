@@ -1,10 +1,12 @@
 <template>
-    <TeleportState
+    <IntegratedProgress
         v-if="session?.status === TeleportSessionStatus.Processing && autoteleport"
         :session="session"
         :autoteleport="autoteleport"
         @retry="retry"
     />
+
+    <IntegratedLoading v-else-if="!isReady" />
 
     <Container v-else>
         <template #action>
@@ -70,20 +72,26 @@ import logoLight from '@/assets/images/paraport_logo.svg'
 import logoDark from '@/assets/images/paraport_logo_dark.svg'
 import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
-import { type AppProps } from '@/types'
+import { useSdkStore } from '@/stores'
 import eventBus from '@/utils/event-bus'
 import { TeleportSessionStatus, getChainName } from '@paraport/core'
 import Button from '@ui/Button/Button.vue'
 import { useDark } from '@vueuse/core'
 import { ArrowUpRight } from 'lucide-vue-next'
-import { computed, defineProps, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Container from './Container.vue'
+import IntegratedLoading from './IntegratedLoading.vue'
+import IntegratedProgress from './IntegratedProgress.vue'
 import TeleportOverview from './TeleportOverview.vue'
-import TeleportState from './TeleportState.vue'
 import SuccessIcon from './icon/SuccessIcon.vue'
 
-const props = defineProps<AppProps>()
+const {
+	label: sdkLabel,
+	disabled: sdkDisabled,
+	params,
+} = storeToRefs(useSdkStore())
 
 const buttonRef = ref(null)
 
@@ -106,7 +114,7 @@ const {
 	canAutoTeleport,
 	hasNoFundsAtAll,
 	insufficientFunds,
-} = useAutoTeleport(props.sdk, props.autoteleport)
+} = useAutoTeleport()
 
 const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 	needsAutoTeleport,
@@ -114,24 +122,20 @@ const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 	isReady,
 	canAutoTeleport,
 	hasNoFundsAtAll,
-	disabled: computed(() => props.disabled),
+	disabled: sdkDisabled,
 })
 
 const label = computed(() => {
-	if (hasEnoughInCurrentChain.value || props.disabled || isCompleted.value) {
-		return t('proceedWithAction', [props.label])
+	if (hasEnoughInCurrentChain.value || sdkDisabled.value || isCompleted.value) {
+		return t('proceedWithAction', [sdkLabel.value])
 	}
 
 	if (insufficientFunds.value) {
 		return t('autoteleport.notEnoughFunds')
 	}
 
-	if (!isReady.value) {
-		return t('autoteleport.checking')
-	}
-
 	if (allowAutoTeleport.value) {
-		return t('autoteleport.sign', [getChainName(props.autoteleport.chain)])
+		return t('autoteleport.sign', [getChainName(params.value.chain)])
 	}
 })
 
@@ -140,7 +144,7 @@ const isDisabled = computed(() => {
 		return false
 	}
 
-	if (props.disabled || !isReady.value || insufficientFunds.value) {
+	if (sdkDisabled.value || insufficientFunds.value) {
 		return true
 	}
 

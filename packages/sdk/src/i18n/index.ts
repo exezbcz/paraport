@@ -1,3 +1,4 @@
+import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 interface TranslationMessages {
@@ -24,9 +25,13 @@ export function getMessages(): LocaleMessages {
 	return messages
 }
 
-export const i18n = createI18n({
-	locale: 'en',
-	fallbackLocale: 'en',
-	legacy: false,
-	messages: getMessages(),
-})
+export const installi18n = (app: App) => {
+	const i18n = createI18n({
+		locale: 'en',
+		fallbackLocale: 'en',
+		legacy: false,
+		messages: getMessages(),
+	})
+
+	app.use(i18n)
+}

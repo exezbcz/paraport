@@ -1,19 +1,15 @@
 <template>
-    <IntegratedAutoTeleport
-        v-if="displayMode === DisplayMode.Integrated"
-        :sdk="sdk"
-        :autoteleport="autoteleport"
-        :label="label"
-        :disabled="disabled"
-    />
+    <IntegratedParaport v-if="displayMode === DisplayMode.Integrated" />
 </template>
 
 <script setup lang="ts">
-import IntegratedAutoTeleport from '@/components/integrated/IntegratedAutoTeleport.vue'
+import IntegratedParaport from '@/components/integrated/Integrated.vue'
 import useSystemDarkMode from '@/composables/useSystemDarkMode'
-import { type AppProps, DisplayMode } from '@/types'
+import { useSdkStore } from '@/stores'
+import { DisplayMode } from '@/types'
+import { storeToRefs } from 'pinia'
 
-defineProps<AppProps>()
+const { displayMode } = storeToRefs(useSdkStore())
 
 useSystemDarkMode()
 </script>

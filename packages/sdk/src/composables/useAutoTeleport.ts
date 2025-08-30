@@ -1,12 +1,12 @@
+import { useSdkStore } from '@/stores'
 import eventBus from '@/utils/event-bus'
 import {
 	AutoTeleportSessionEventType,
-	type ParaPortSDK,
 	type TeleportEventPayload,
-	type TeleportParams,
 	TeleportSessionStatus,
 } from '@paraport/core'
 import { TeleportEventType, type TeleportSession } from '@paraport/core'
+import { storeToRefs } from 'pinia'
 import { computed, onBeforeMount, ref } from 'vue'
 
 const TELEPORT_EVENTS = [
@@ -21,24 +21,24 @@ const SESSION_EVENTS = [
 	AutoTeleportSessionEventType.SESSION_DELETED,
 ]
 
-export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
+export default () => {
 	const session = ref<TeleportSession>()
 	const autoteleport = ref<TeleportEventPayload>()
-
 	const loading = ref(true)
-	const enabled = ref(false)
 
 	const selectedQuote = computed(() => session.value?.quotes.selected)
 
+	const { sdk, params } = storeToRefs(useSdkStore())
+
 	const exec = async () => {
 		if (session.value && selectedQuote.value) {
-			await sdk.executeSession(session.value.id)
+			await sdk.value.executeSession(session.value.id)
 		}
 	}
 
 	const attachListeners = () => {
 		for (const event of SESSION_EVENTS) {
-			sdk.onSession(event, (payload) => {
+			sdk.value.onSession(event, (payload) => {
 				console.log(`[UI] ${event}`, payload)
 
 				if (payload.status === TeleportSessionStatus.Ready && !session.value) {
@@ -50,7 +50,7 @@ export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 		}
 
 		for (const event of TELEPORT_EVENTS) {
-			sdk.onTeleport(event, (payload) => {
+			sdk.value.onTeleport(event, (payload) => {
 				console.log(`[UI] ${event}`, payload)
 				autoteleport.value = payload
 
@@ -64,17 +64,17 @@ export default (sdk: ParaPortSDK, params: TeleportParams<string>) => {
 	const retry = async () => {
 		if (!session.value) return
 
-		sdk.retrySession(session.value.id)
+		sdk.value.retrySession(session.value.id)
 	}
 
 	onBeforeMount(async () => {
-		if (!sdk.isInitialized()) {
-			await sdk.initialize()
+		if (!sdk.value.isInitialized()) {
+			await sdk.value.initialize()
 		}
 
 		attachListeners()
 
-		session.value = await sdk.initSession(params)
+		session.value = await sdk.value.initSession(params.value)
 
 		loading.value = false
 
