@@ -41,3 +41,7 @@ export const endpointOf = (chain: Chain): string => {
 export const getChainName = (chain: Chain): string => {
 	return CHAIN_NAMES[chain]
 }
+
+export const blockExplorerOf = (chain: Chain): string => {
+	return chainPropListOf(chain).blockExplorer
+}
