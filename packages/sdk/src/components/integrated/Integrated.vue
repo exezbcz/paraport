@@ -35,6 +35,7 @@
                 <Button
                     variant="pill-success"
                     class="!gap-0"
+                    @click="viewTx"
                 >
                     <span>
                         {{ t('viewTx') }}
@@ -77,7 +78,11 @@ import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import { useSdkStore } from '@/stores'
 import eventBus from '@/utils/event-bus'
-import { TeleportSessionStatus, getChainName } from '@paraport/core'
+import {
+	TeleportSessionStatus,
+	blockExplorerOf,
+	getChainName,
+} from '@paraport/core'
 import Button from '@ui/Button/Button.vue'
 import { useDark } from '@vueuse/core'
 import { ArrowUpRight } from 'lucide-vue-next'
@@ -168,5 +173,14 @@ const submit = async () => {
 
 const onAddFunds = async () => {
 	eventBus.emit('session:add-funds')
+}
+
+const viewTx = () => {
+	const chain = autoteleport.value?.details.route.source
+	const txHash = autoteleport.value?.transactions[0].txHash
+
+	if (!txHash || !chain) return
+
+	window.open(`${blockExplorerOf(chain)}/extrinsic/${txHash}`, '_blank')
 }
 </script>
