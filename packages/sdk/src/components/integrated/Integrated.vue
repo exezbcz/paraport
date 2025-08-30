@@ -45,7 +45,7 @@
             </template>
             <template v-else-if="insufficientFunds">
                 <p class="text-secondary capitalize text-xs">
-                    {{ t('autoteleport.insufficientAssetBalance', [ props.autoteleport?.asset ]) }}
+                    {{ t('autoteleport.insufficientAssetBalance', [ params.asset ]) }}
                 </p>
 
                 <Button variant="pill-blue" @click="onAddFunds">
