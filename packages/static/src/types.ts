@@ -20,6 +20,6 @@ export type ChainProperties = {
 	ss58Format: number;
 	tokenDecimals: number;
 	tokenSymbol: string;
-	blockExplorer?: string;
+	blockExplorer: string;
 	genesisHash?: string;
 };
