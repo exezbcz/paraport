@@ -52,14 +52,14 @@ import {
 	TransactionType,
 } from '@paraport/core'
 
-import GradientText from '@/components/common/GradientText.vue'
-import Time from '@/components/common/Time.vue'
 import Container from '@/components/integrated/shared/Container.vue'
 import LabelComponent from '@/components/integrated/shared/LabelComponent.vue'
 import TeleportOverview from '@/components/integrated/shared/TeleportOverview.vue'
 import AlertIcon from '@/components/integrated/shared/icon/AlertIcon.vue'
 import LoaderIcon from '@/components/integrated/shared/icon/LoaderIcon.vue'
 import PingDot from '@/components/integrated/shared/icon/PingDot.vue'
+import GradientText from '@/components/shared/GradientText.vue'
+import Time from '@/components/shared/Time.vue'
 import Button from '@ui/Button/Button.vue'
 
 type StateStrategy = Partial<

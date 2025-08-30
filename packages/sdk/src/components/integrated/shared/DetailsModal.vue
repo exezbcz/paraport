@@ -62,9 +62,9 @@
 </template>
 
 <script setup lang="ts">
-import Amount from '@/components/common/Amount.vue'
-import FullLogo from '@/components/common/FullLogo.vue'
-import Time from '@/components/common/Time.vue'
+import Amount from '@/components/shared/Amount.vue'
+import FullLogo from '@/components/shared/FullLogo.vue'
+import Time from '@/components/shared/Time.vue'
 import {
 	Dialog,
 	DialogContent,
