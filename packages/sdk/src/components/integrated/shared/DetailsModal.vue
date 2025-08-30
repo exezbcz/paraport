@@ -72,7 +72,6 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 import { type TeleportSession, getChainName } from '@paraport/core'
-import { useDark } from '@vueuse/core'
 import { ArrowRight } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -85,11 +84,9 @@ const props = defineProps<{
 
 const isOpen = defineModel<boolean>()
 
-const isDark = useDark()
 const { t } = useI18n()
 
 const selectedQuote = computed(() => props.session.quotes.selected)
-const logoSrc = computed(() => (isDark.value ? logoDark : logoLight))
 
 const sourceChain = computed(() =>
 	selectedQuote.value ? getChainName(selectedQuote.value.route.source) : '',

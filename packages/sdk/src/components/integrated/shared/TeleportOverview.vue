@@ -27,7 +27,7 @@
 </template>
 <script setup lang="ts">
 import Time from '@components/common/Time.vue'
-import DetailsModal from '@components/integrated/DetailsModal.vue'
+import DetailsModal from '@components/integrated/shared/DetailsModal.vue'
 import { type TeleportSession } from '@paraport/core'
 import { useElementBounding, useElementSize, useWindowSize } from '@vueuse/core'
 import { Ref, computed, ref } from 'vue'

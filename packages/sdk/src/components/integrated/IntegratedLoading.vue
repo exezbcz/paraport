@@ -22,9 +22,9 @@
 
 <script setup lang="ts">
 import FullLogo from '@/components/common/FullLogo.vue'
-import { useI18n } from 'vue-i18n'
-import Container from './Container.vue'
+import Container from '@/components/integrated/shared/Container.vue'
 import { LoaderCircleIcon } from 'lucide-vue-next'
+import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 </script>

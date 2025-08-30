@@ -54,13 +54,13 @@ import {
 
 import GradientText from '@/components/common/GradientText.vue'
 import Time from '@/components/common/Time.vue'
-import Container from '@/components/integrated/Container.vue'
-import LabelComponent from '@/components/integrated/LabelComponent.vue'
-import AlertIcon from '@/components/integrated/icon/AlertIcon.vue'
-import LoaderIcon from '@/components/integrated/icon/LoaderIcon.vue'
-import PingDot from '@/components/integrated/icon/PingDot.vue'
+import Container from '@/components/integrated/shared/Container.vue'
+import LabelComponent from '@/components/integrated/shared/LabelComponent.vue'
+import TeleportOverview from '@/components/integrated/shared/TeleportOverview.vue'
+import AlertIcon from '@/components/integrated/shared/icon/AlertIcon.vue'
+import LoaderIcon from '@/components/integrated/shared/icon/LoaderIcon.vue'
+import PingDot from '@/components/integrated/shared/icon/PingDot.vue'
 import Button from '@ui/Button/Button.vue'
-import TeleportOverview from './TeleportOverview.vue'
 
 type StateStrategy = Partial<
 	Record<

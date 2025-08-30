@@ -70,6 +70,9 @@
 <script setup lang="ts">
 import logoLight from '@/assets/images/paraport_logo.svg'
 import logoDark from '@/assets/images/paraport_logo_dark.svg'
+import Container from '@/components/integrated/shared/Container.vue'
+import TeleportOverview from '@/components/integrated/shared/TeleportOverview.vue'
+import SuccessIcon from '@/components/integrated/shared/icon/SuccessIcon.vue'
 import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import { useSdkStore } from '@/stores'
@@ -81,11 +84,8 @@ import { ArrowUpRight } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Container from './Container.vue'
 import IntegratedLoading from './IntegratedLoading.vue'
 import IntegratedProgress from './IntegratedProgress.vue'
-import TeleportOverview from './TeleportOverview.vue'
-import SuccessIcon from './icon/SuccessIcon.vue'
 
 const {
 	label: sdkLabel,
