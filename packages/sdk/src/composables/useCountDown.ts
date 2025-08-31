@@ -16,14 +16,14 @@ export const getFormattedDuration = ({
 	short?: boolean
 }): string => {
 	if (minutes > 0) {
-		return t(short ? 'time.minutes_short' : 'time.minutes', minutes, {
+		return t(short ? 'time.minutes_short' : 'time.minutes', {
 			count: minutes,
 		})
 	}
 
 	if (seconds <= 0) return 'few seconds'
 
-	return t(short ? 'time.seconds_short' : 'time.seconds', seconds, {
+	return t(short ? 'time.seconds_short' : 'time.seconds', {
 		count: seconds,
 	})
 }
