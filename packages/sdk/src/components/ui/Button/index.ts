@@ -19,19 +19,11 @@ export const buttonVariants = cva(
 					'bg-secondary text-secondary-foreground hover:bg-secondary/80',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
 				link: 'text-primary underline-offset-4 hover:underline',
-				'pill-info':
-					BASE_PILL +
-					' text-secondary bg-surface-grey hover:bg-surface-hover [&.active]:bg-primary',
-				'pill-warning':
-					BASE_PILL +
-					' text-caution-text bg-caution-button hover:bg-caution-fill',
-				'pill-danger':
-					BASE_PILL +
-					' text-error-text bg-error-fill hover:bg-error-action-hover',
-				'pill-success':
-					BASE_PILL +
-					' text-success-text bg-success-fill hover:bg-success-action-hover',
-				'pill-blue': BASE_PILL + ' text-accent-blue bg-accent-background',
+				'pill-info': `${BASE_PILL} text-secondary bg-surface-grey hover:bg-surface-hover [&.active]:bg-primary`,
+				'pill-warning': `${BASE_PILL} text-caution-text bg-caution-button hover:bg-caution-fill`,
+				'pill-danger': `${BASE_PILL} text-error-text bg-error-fill hover:bg-error-action-hover`,
+				'pill-success': `${BASE_PILL} text-success-text bg-success-fill hover:bg-success-action-hover`,
+				'pill-blue': `${BASE_PILL} text-accent-blue bg-accent-background`,
 			},
 			size: {
 				default: 'h-12 px-4 py-2',

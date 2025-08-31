@@ -13,7 +13,7 @@ export function formatAmount(
 			withUnit,
 			forceUnit: '-',
 		})
-	} catch (e: any) {
+	} catch (e) {
 		return ''
 	}
 }

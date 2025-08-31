@@ -47,10 +47,10 @@ import {
 	TeleportStepType,
 } from '@/types'
 import {
-    getChainName,
 	type TeleportEventPayload,
 	type TeleportSession,
 	TransactionType,
+	getChainName,
 } from '@paraport/core'
 
 import Container from '@/components/integrated/shared/Container.vue'

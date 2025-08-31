@@ -15,7 +15,6 @@
 			"broadcastingTx": "Broadcasting tx",
 			"completed": "Completed",
 			"error": "Transaction couldn't complete",
-			"finishAbove": "Finish steps above first",
 			"loading": "Transaction in Progress",
 			"noSignatureRequired": "Signature not needed",
 			"uploading": "Uploading data to IPFS",

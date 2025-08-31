@@ -13,8 +13,7 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 
 	const getTeleportStepText = ({
 		status,
-		isActive,
-	}: Omit<TeleportStepDetails, 'statusLabel'>): string => {
+	}: { status: TeleportStepStatus }): string => {
 		if (status === TeleportStepStatus.Completed) {
 			return t('autoteleport.status.completed')
 		}
@@ -27,9 +26,7 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 			return t('autoteleport.status.loading')
 		}
 
-		return !isActive
-			? t('autoteleport.status.finishAbove')
-			: t('autoteleport.status.waiting')
+		return t('autoteleport.status.waiting')
 	}
 
 	const getStepStatus = (transaction: TransactionDetails) => {
@@ -104,7 +101,7 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 			{
 				status: balanceCheckDetails.value.status,
 				statusLabel: balanceCheckDetails.value.message,
-				type: 'balance-check',
+				type: 'balance-check' as const,
 				duration: 5000,
 			},
 		]
@@ -116,15 +113,11 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 				index > 0 &&
 				teleportSteps[index - 1].status === TeleportStepStatus.Completed
 
-			const sDetails = {
+			return {
 				...step,
 				isActive: isFirstActive || isPreviousCompleted,
-				id: crypto.randomUUID(),
-			}
-
-			return {
-				...sDetails,
-				statusLabel: sDetails.statusLabel || getTeleportStepText(sDetails),
+				id: crypto.randomUUID() as string,
+				statusLabel: step.statusLabel || getTeleportStepText(step),
 			}
 		})
 	})
