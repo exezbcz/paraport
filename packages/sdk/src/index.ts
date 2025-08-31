@@ -15,7 +15,7 @@ const attachEventListeners = ({
 	onAddFunds,
 }: TeleportEvents) => {
 	if (onReady) {
-		eventBus.on('session:ready', () => onReady())
+		eventBus.on('session:ready', onReady)
 	}
 
 	if (onSubmit) {
@@ -54,7 +54,7 @@ export function init({
 	const sdk = new ParaPortSDK({
 		getSigner: options.getSigner,
 		logLevel: options.logLevel,
-		chains: undefined
+		chains: undefined,
 	})
 
 	const app = createApp({

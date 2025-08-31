@@ -42,7 +42,7 @@ export default () => {
 				console.log(`[UI] ${event}`, payload)
 
 				if (payload.status === TeleportSessionStatus.Ready && !session.value) {
-					eventBus.emit('session:ready')
+					eventBus.emit('session:ready', payload)
 				}
 
 				session.value = payload

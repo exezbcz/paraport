@@ -1,7 +1,9 @@
+import type { TeleportSessionPayload } from '@paraport/core'
+
 import mitt from 'mitt'
 
 const eventBus = mitt<{
-	'session:ready': undefined
+	'session:ready': TeleportSessionPayload
 	'session:add-funds': undefined
 	'teleport:submit': {
 		autoteleport: boolean
