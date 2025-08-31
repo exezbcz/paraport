@@ -47,6 +47,7 @@ import {
 	TeleportStepType,
 } from '@/types'
 import {
+    getChainName,
 	type TeleportEventPayload,
 	type TeleportSession,
 	TransactionType,
@@ -155,7 +156,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						is: h(GradientText, {
 							text: t('autoteleport.moving', [
 								payload.details.asset,
-								payload.details.route.target,
+								getChainName(payload.details.route.target),
 							]),
 						}),
 					},
