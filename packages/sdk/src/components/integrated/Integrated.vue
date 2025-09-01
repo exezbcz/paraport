@@ -6,7 +6,7 @@
         @retry="retry"
     />
 
-    <IntegratedLoading v-else-if="!isReady" />
+    <IntegratedLoading v-else-if="!isReady && !isCompleted" />
 
     <Container v-else>
         <template #action>
