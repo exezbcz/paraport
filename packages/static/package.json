@@ -3,7 +3,7 @@
 	"version": "0.0.2-alpha.1",
 	"description": "Static configuration and constants for ParaPort SDK",
 	"keywords": ["paraport", "polkadot", "sdk", "blockchain"],
-	"author": "KodaDot",
+	"author": "Paraport",
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
@@ -21,15 +21,13 @@
 	},
 	"files": ["dist", "README.md", "LICENSE"],
 	"scripts": {
+		"prebuild": "cd ../../scripts/endpoint-generator && pnpm run generate",
 		"build": "vite build",
 		"dev": "vite build --watch --mode development",
-		"prepare": "node scripts/generate-endpoints.mjs",
 		"lint": "biome check --write ."
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@polkadot/api": "11.2.1",
-		"@polkadot/apps-config": "0.153.1",
 		"@types/node": "^22.14.1",
 		"typescript": "^5.7.3",
 		"vite": "^6.0.7",

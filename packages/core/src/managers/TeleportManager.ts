@@ -262,7 +262,7 @@ export class TeleportManager extends BaseManager<
 	private async checkForFunds(teleport: TeleportDetails) {
 		await this.balanceService.waitForFunds({
 			address: teleport.details.address,
-			chains: [teleport.details.route.target],
+			chains: [teleport.details.route.destination],
 			asset: teleport.details.asset,
 			amount: teleport.details.amount,
 		})
@@ -288,7 +288,7 @@ export class TeleportManager extends BaseManager<
 		quote: Quote,
 		teleportId: string,
 	) {
-		const source = quote.route.source
+		const source = quote.route.origin
 
 		this.transactionManager.createTransaction({
 			id: this.getTeleportTransactionId(teleportId),
@@ -296,8 +296,8 @@ export class TeleportManager extends BaseManager<
 			order: 0,
 			details: {
 				amount: quote.total,
-				from: quote.route.source,
-				to: quote.route.target,
+				from: quote.route.origin,
+				to: quote.route.destination,
 				address: params.address,
 				asset: quote.asset,
 			},
@@ -343,8 +343,8 @@ export class TeleportManager extends BaseManager<
 		const unsubscribe = await bridge.transfer(
 			{
 				amount: teleport.details.amount,
-				from: teleport.details.route.source,
-				to: teleport.details.route.target,
+				from: teleport.details.route.origin,
+				to: teleport.details.route.destination,
 				address: teleport.details.address,
 				asset: teleport.details.asset,
 			},

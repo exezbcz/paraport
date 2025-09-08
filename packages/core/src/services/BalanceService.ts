@@ -1,24 +1,17 @@
 import type { Logger } from '@/services/LoggerService'
 import type SubstrateApi from '@/services/SubstrateApi'
-import {
-	chainPropListOf,
-	formatAddress,
-	transferableBalanceOf,
-	xcmSafeBalanceOf,
-} from '@/utils'
+import { formatAddress, transferableBalanceOf } from '@/utils'
 import { balanceOf } from '@kodadot1/sub-api'
 import type { Asset, Chain } from '@paraport/static'
 import type { AccountInfo } from '@polkadot/types/interfaces'
 import pRetry from 'p-retry'
 
-type Balance = {
+export type Balance = {
 	chain: Chain
 	address: string
 	asset: Asset
 	amount: bigint
 	transferable: bigint
-	// figer out how xcm delivery fees are calculated and use that instead
-	xcmTransferable: bigint
 }
 
 type GetBalancesParams = {
@@ -60,10 +53,9 @@ export default class BalanceService {
 		return {
 			chain,
 			asset,
-			address: formatAddress(address, chainPropListOf(chain).ss58Format),
+			address: formatAddress(address, chain),
 			amount,
 			transferable: transferableBalanceOf(amount, chain),
-			xcmTransferable: xcmSafeBalanceOf(amount, chain),
 		} as Balance
 	}
 

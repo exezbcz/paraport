@@ -4,7 +4,7 @@
 		"enabled": true
 	},
 	"files": {
-		"ignore": ["node_modules", "dist", ".git", "coverage", "vitest.config.ts"]
+		"ignore": ["node_modules", "dist", ".git", "coverage", "vitest.config.ts", "vite.config.ts", "**/__tests__/**"]
 	},
 	"overrides": [
 		{
@@ -26,6 +26,9 @@
 			"complexity": {
 				"noUselessConstructor": "off",
 				"noStaticOnlyClass": "off"
+			},
+			"correctness": {
+				"noUnusedImports": "error"
 			}
 		}
 	},

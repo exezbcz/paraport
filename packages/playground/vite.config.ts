@@ -1,13 +1,11 @@
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
+  plugins: [react(), vue()],
   optimizeDeps: {
-    exclude: ['@paraport/sdk']
-  },
-  define: {
-    'process.env': JSON.stringify({
-      GRAPHQL_API_URL: 'https://data.snowbridge.network/graphql'
-    })
+    exclude: ['@paraport/sdk', '@paraport/react', '@paraport/vue']
   },
   server: {
     watch: {

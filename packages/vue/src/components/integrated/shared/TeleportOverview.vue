@@ -8,7 +8,7 @@
             />
 			<template v-if="!isContainerNarrow">
 				<div class="w-1 h-1 rounded-full bg-surface-grey self-center" />
-				<span> {{ session.quotes.selected?.execution.signatureAmount }} {{ t('signature') }} </span>
+				<span> {{ session.quotes.selected?.execution.requiredSignatureCount }} {{ t('signature') }} </span>
 			</template>
         </div>
 

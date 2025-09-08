@@ -1,19 +1,15 @@
 import '@paraport/sdk/style'
 import * as paraport from '@paraport/sdk'
-
-const USER_ADDRESS = 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY'
-const AMOUNT = '600000000000'
+import { USER_ADDRESS, AMOUNT } from '../constants'
 
 const main = async () => {
   paraport.init({
     integratedTargetId: 'root',
     label: 'Mint',
-    autoteleport: {
-  		address: USER_ADDRESS,
-  		amount: AMOUNT,
-  		chain: 'AssetHubKusama',
-  		asset: 'KSM',
-  	},
+   	address: USER_ADDRESS,
+		amount: AMOUNT,
+		chain: 'AssetHubKusama',
+		asset: 'KSM',
     logLevel: 'DEBUG',
     onReady: (session) => {
       console.log('🚀 ParaPort ready!', session)

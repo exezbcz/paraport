@@ -157,7 +157,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 						is: h(GradientText, {
 							text: t('autoteleport.moving', [
 								payload.details.asset,
-								getChainName(payload.details.route.target),
+								getChainName(payload.details.route.destination),
 							]),
 						}),
 					},

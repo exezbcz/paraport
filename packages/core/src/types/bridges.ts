@@ -9,7 +9,7 @@ import type { Asset, Chain } from '@paraport/static'
 
 export type BridgeProtocol = 'XCM'
 
-export type BrigeTransferParams = {
+export type BridgeTransferParams = {
 	amount: bigint
 	from: Chain
 	to: Chain
@@ -21,7 +21,7 @@ export interface BridgeAdapter extends IInitializable {
 	protocol: BridgeProtocol
 	getQuote(params: TeleportParams): Promise<Quote | null>
 	transfer(
-		params: BrigeTransferParams,
+		params: BridgeTransferParams,
 		callback: TransactionCallback,
 	): Promise<TransactionUnsubscribe>
 	// getStatus(txHash: string): Promise<TransactionStatus>

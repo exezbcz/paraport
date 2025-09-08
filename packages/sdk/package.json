@@ -1,9 +1,9 @@
 {
 	"name": "@paraport/sdk",
 	"version": "0.1.0-alpha.4",
-	"description": "UI components for ParaPort SDK",
-	"keywords": ["paraport", "polkadot", "sdk", "vue", "ui-components"],
-	"author": "KodaDot",
+	"description": "ParaPort Embedded UI",
+	"keywords": ["paraport", "polkadot", "sdk"],
+	"author": "Paraport",
 	"license": "MIT",
 	"type": "module",
 	"files": ["dist", "README.md"],
@@ -24,38 +24,30 @@
 	},
 	"scripts": {
 		"dev": "vite build --watch --mode development",
-		"build": "vue-tsc && vite build",
-		"preview": "vite preview",
+		"build": "vite build",
 		"lint": "biome check --write ."
 	},
 	"dependencies": {
+		"@paraport/vue": "workspace:*",
 		"@paraport/core": "workspace:*",
-		"@polkadot/util": "^13.4.3",
-		"@tanstack/vue-table": "^8.21.2",
-		"@vue/runtime-dom": "^3.5.13",
-		"@vueuse/core": "^13.0.0",
-		"class-variance-authority": "^0.7.1",
-		"clsx": "^2.1.1",
-		"lucide-vue-next": "^0.477.0",
-		"mitt": "^3.0.1",
-		"pinia": "^3.0.1",
-		"reka-ui": "^2.0.2",
-		"tailwind-merge": "^3.0.2",
-		"tailwindcss-animate": "^1.0.7",
-		"vue": "^3.5.13",
-		"vue-i18n": "^10.0.5"
+		"vue": "^3.5.13"
+	},
+	"peerDependencies": {
+		"@polkadot/api": "^15.x",
+		"@polkadot/extension-dapp": "^0.58.x",
+		"@polkadot/types": "^15.x",
+		"@polkadot/util": "^13.x",
+		"@polkadot/util-crypto": "^13.x"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@types/sass": "^1.45.0",
-		"@vitejs/plugin-vue": "^5.2.1",
-		"autoprefixer": "^10.4.20",
-		"postcss": "^8.5.2",
-		"sass": "^1.84.0",
-		"tailwindcss": "^3.4.17",
+		"@polkadot/api": "15.9.2",
+		"@polkadot/extension-dapp": "^0.58.3",
+		"@polkadot/types": "15.9.2",
+		"@polkadot/util": "^13.3.1",
+		"@polkadot/util-crypto": "^13.3.1",
 		"typescript": "^5.7.3",
 		"vite": "^6.0.7",
-		"vite-plugin-dts": "^4.5.0",
-		"vue-tsc": "^2.2.0"
+		"vite-plugin-dts": "^4.5.0"
 	}
 }

@@ -1,11 +1,20 @@
 # @paraport/sdk
 
-Vue components for seamless integration of ParaPort cross-chain teleportation functionality.
+UI layer for seamless integration of ParaPort cross-chain teleportation functionality.
 
 ## Installation
 
 ```bash
 pnpm add @paraport/sdk
+```
+
+### Install Peer Dependencies
+
+ParaPort SDK is designed to work with PolkadotJS API. Install the required peer dependencies:
+
+```bash
+# PolkadotJS peer dependencies
+pnpm add @polkadot/api @polkadot/extension-dapp @polkadot/types @polkadot/util @polkadot/util-crypto
 ```
 
 ## Component Usage
@@ -19,13 +28,11 @@ import * as paraport from '@paraport/sdk'
 const main = async () => {
   paraport.init({
     integratedTargetId: 'root',
+    address: USER_ADDRESS,
+    amount: '500000000000', // 0.5 KSM
+    chain: 'AssetHubKusama',
+    asset: 'KSM',
     label: 'Mint',
-    autoteleport: {
-      address: USER_ADDRESS,
-      amount: '500000000000', // 0.5 KSM
-      chain: 'AssetHubKusama',
-      asset: 'KSM',
-    },
     logLevel: 'DEBUG',
     onReady: (session) => {
       console.log('🚀 ParaPort ready!', session)
@@ -54,7 +61,10 @@ main()
 | Property | Type | Description |
 |----------|------|-------------|
 | integratedTargetId | string | DOM element ID for component mounting |
-| autoteleport | Object | Teleport configuration object |
+| address | string | User's address |
+| amount | string | Amount to be teleported |
+| chain | string | Chain to be teleported to |
+| asset | string | Asset to be teleported |
 | label | string | Button display text |
 | logLevel | string | Log level for debugging (e.g., 'DEBUG') |
 | onSubmit | Function | Callback on form submission with { autoteleport, completed } parameters |
@@ -62,9 +72,6 @@ main()
 | onReady | Function | Callback when UI is ready for interaction |
 | onAddFunds | Function | Callback when user clicks to add funds |
 
-## Development
-
-Refer to the main [monorepo documentation](../README.md) for setup instructions and contribution guidelines.
 
 ## License
 

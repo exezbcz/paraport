@@ -1,5 +1,5 @@
 import type { BaseDetails, BaseDetailsEvent } from '@/base/BaseManager'
-import type { BrigeTransferParams } from '@/types/bridges'
+import type { BridgeTransferParams } from '@/types/bridges'
 import type { Chain } from '@paraport/static'
 import type { ObjectValues } from './utils'
 
@@ -37,7 +37,7 @@ export interface TransactionDetails
 		BaseDetailsEvent<{ status: TransactionStatus; error?: string }>
 	> {
 	chain: Chain
-	details: BrigeTransferParams
+	details: BridgeTransferParams
 	teleportId: string
 	type: TransactionType
 	order: number

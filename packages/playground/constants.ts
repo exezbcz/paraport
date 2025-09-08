@@ -1,0 +1,2 @@
+export const USER_ADDRESS = 'Gn84LKb5HSxc3SACayxCzKQcWESRMcT1VUCqeZURfGj6ASi'
+export const AMOUNT = '500000000000'

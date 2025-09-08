@@ -2,6 +2,7 @@ import type { Asset, Chain } from '@paraport/static'
 import type { Signer } from '@polkadot/api/types'
 import type { BridgeProtocol } from './bridges'
 import type { LogLevel } from './sdk'
+import type { TeleportMode } from './teleport'
 
 /**
  * Configuration options for initializing the SDK
@@ -32,8 +33,20 @@ export type SDKConfig<T extends boolean = true> = {
 }
 
 export type Route = {
-	source: Chain
-	target: Chain
+	/**
+	 * The source chain from which the transfer originates.
+	 * This is the chain where the assets will be transferred from.
+	 */
+	origin: Chain
+	/**
+	 * The target chain where the transfer will be received.
+	 * This is the chain where the assets will end up after the transfer.
+	 */
+	destination: Chain
+	/**
+	 * The bridge protocol used for executing the transfer between chains.
+	 * Defines the technical mechanism that enables the cross-chain communication.
+	 */
 	protocol: BridgeProtocol
 }
 
@@ -89,11 +102,17 @@ export type Quote<Amount = bigint> = {
 		/**
 		 * The number of signatures required to complete this transfer.
 		 */
-		signatureAmount: number
+		requiredSignatureCount: number
 
 		/**
 		 * Estimated time for the execution of the transfer in milliseconds.
 		 */
 		timeMs: number
 	}
+
+	/**
+	 * The teleport mode used for this quote calculation.
+	 * Can be 'expected', 'exact', or 'only'.
+	 */
+	teleportMode: TeleportMode
 }

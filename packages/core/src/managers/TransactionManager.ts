@@ -1,6 +1,6 @@
 import { type BaseDetailsEvent, BaseManager } from '@/base/BaseManager'
 import type { GenericEmitter } from '@/base/GenericEmitter'
-import type { BrigeTransferParams } from '@/types/bridges'
+import type { BridgeTransferParams } from '@/types/bridges'
 import {
 	type TransactionDetails,
 	type TransactionEventType,
@@ -36,7 +36,7 @@ export class TransactionManager extends BaseManager<
 		chain: Chain
 		teleportId: string
 		type: TransactionType
-		details: BrigeTransferParams
+		details: BridgeTransferParams
 		order: number
 	}): TransactionDetails {
 		const transaction: TransactionDetails = {

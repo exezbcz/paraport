@@ -1,6 +1,6 @@
 import { SUBSTRATE_ADDRESS } from '@/__tests__/utils/constants'
 import type { SDKConfig } from '@/types/common'
-import type { TeleportParams } from '@/types/teleport'
+import { TeleportModes, type TeleportParams } from '@/types/teleport'
 import { Assets, Chains } from '@paraport/static'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import ParaPortSDK from '../ParaPortSDK'
@@ -43,6 +43,7 @@ describe('ParaPortSDK', () => {
 			amount: '1000000000000',
 			asset: Assets.KSM,
 			chain: Chains.AssetHubKusama,
+			teleportMode: TeleportModes.Expected
 		}
 
 		it('should not throw for valid params', () => {
@@ -74,6 +75,14 @@ describe('ParaPortSDK', () => {
 				// @ts-ignore - accessing private method for testing
 				sdk.validateTeleportParams(invalidParams)
 			}).toThrow('Invalid asset')
+		})
+
+		it('should throw for invalid teleportMode', () => {
+			const invalidParams = { ...validParams, teleportMode: 'INVALID' as any }
+			expect(() => {
+				// @ts-ignore - accessing private method for testing
+				sdk.validateTeleportParams(invalidParams)
+			}).toThrow('Invalid teleport mode')
 		})
 	})
 })
