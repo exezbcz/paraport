@@ -1,6 +1,6 @@
 <template>
     <IntegratedProgress
-        v-if="session?.status === TeleportSessionStatus.Processing && autoteleport"
+        v-if="session?.status === TeleportSessionStatuses.Processing && autoteleport"
         :session="session"
         :autoteleport="autoteleport"
         @retry="retry"
@@ -79,7 +79,7 @@ import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
 import { useSdkStore } from '@/stores'
 import eventBus from '@/utils/event-bus'
 import {
-	TeleportSessionStatus,
+	TeleportSessionStatuses,
 	blockExplorerOf,
 	getChainName,
 } from '@paraport/core'

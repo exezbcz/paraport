@@ -1,8 +1,12 @@
-import { type TeleportStepDetails, TeleportStepStatus } from '@/types'
 import {
-	TeleportStatus,
-	TransactionStatus,
-	TransactionType,
+	type TeleportStepDetails,
+	type TeleportStepStatus,
+	TeleportStepStatuses,
+} from '@/types'
+import {
+	TeleportStatuses,
+	TransactionStatuses,
+	TransactionTypes,
 } from '@paraport/core'
 import type { TeleportEventPayload, TransactionDetails } from '@paraport/core'
 import { type Ref, computed } from 'vue'
@@ -14,15 +18,15 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 	const getTeleportStepText = ({
 		status,
 	}: { status: TeleportStepStatus }): string => {
-		if (status === TeleportStepStatus.Completed) {
+		if (status === TeleportStepStatuses.Completed) {
 			return t('autoteleport.status.completed')
 		}
 
-		if (status === TeleportStepStatus.Failed) {
+		if (status === TeleportStepStatuses.Failed) {
 			return t('autoteleport.status.error')
 		}
 
-		if (status === TeleportStepStatus.Loading) {
+		if (status === TeleportStepStatuses.Loading) {
 			return t('autoteleport.status.loading')
 		}
 
@@ -31,25 +35,25 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 
 	const getStepStatus = (transaction: TransactionDetails) => {
 		if (
-			transaction.status === TransactionStatus.Finalized &&
+			transaction.status === TransactionStatuses.Finalized &&
 			transaction.succeeded
 		) {
-			return TeleportStepStatus.Completed
+			return TeleportStepStatuses.Completed
 		}
 
-		if (transaction.status === TransactionStatus.Cancelled) {
-			return TeleportStepStatus.Cancelled
+		if (transaction.status === TransactionStatuses.Cancelled) {
+			return TeleportStepStatuses.Cancelled
 		}
 
 		if (transaction.error) {
-			return TeleportStepStatus.Failed
+			return TeleportStepStatuses.Failed
 		}
 
-		if (transaction.status !== TransactionStatus.Unknown) {
-			return TeleportStepStatus.Loading
+		if (transaction.status !== TransactionStatuses.Unknown) {
+			return TeleportStepStatuses.Loading
 		}
 
-		return TeleportStepStatus.Waiting
+		return TeleportStepStatuses.Waiting
 	}
 
 	const balanceCheckDetails = computed<{
@@ -57,23 +61,23 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 		message?: string
 	}>(() => {
 		if (!teleport.value) {
-			return { status: TeleportStepStatus.Waiting }
+			return { status: TeleportStepStatuses.Waiting }
 		}
 
 		const status = teleport.value.status
 
 		if (teleport.value?.checked) {
-			return { status: TeleportStepStatus.Completed }
+			return { status: TeleportStepStatuses.Completed }
 		}
 
-		if (status === TeleportStatus.Waiting) {
+		if (status === TeleportStatuses.Waiting) {
 			return {
-				status: TeleportStepStatus.Loading,
+				status: TeleportStepStatuses.Loading,
 				message: t('autoteleport.status.noSignatureRequired'),
 			}
 		}
 
-		return { status: TeleportStepStatus.Waiting }
+		return { status: TeleportStepStatuses.Waiting }
 	})
 
 	const steps = computed<TeleportStepDetails[]>(() => {
@@ -84,7 +88,7 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 		}
 
 		const teleportTransaction = items.find(
-			(item) => item.type === TransactionType.Teleport,
+			(item) => item.type === TransactionTypes.Teleport,
 		)
 
 		if (!teleportTransaction) {
@@ -95,7 +99,7 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 			{
 				status: getStepStatus(teleportTransaction),
 				txHash: teleportTransaction.txHash,
-				type: TransactionType.Teleport,
+				type: TransactionTypes.Teleport,
 				duration: 30000,
 			},
 			{
@@ -108,10 +112,10 @@ export default (teleport: Ref<TeleportEventPayload | undefined>) => {
 
 		return teleportSteps.map((step, index) => {
 			const isFirstActive =
-				index === 0 && step.status !== TeleportStepStatus.Completed
+				index === 0 && step.status !== TeleportStepStatuses.Completed
 			const isPreviousCompleted =
 				index > 0 &&
-				teleportSteps[index - 1].status === TeleportStepStatus.Completed
+				teleportSteps[index - 1].status === TeleportStepStatuses.Completed
 
 			return {
 				...step,

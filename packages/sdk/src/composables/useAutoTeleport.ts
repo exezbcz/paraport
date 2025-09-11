@@ -1,24 +1,24 @@
 import { useSdkStore } from '@/stores'
 import eventBus from '@/utils/event-bus'
 import {
-	AutoTeleportSessionEventType,
+	AutoTeleportSessionEventTypes,
 	type TeleportEventPayload,
-	TeleportSessionStatus,
+	TeleportSessionStatuses,
 } from '@paraport/core'
-import { TeleportEventType, type TeleportSession } from '@paraport/core'
+import { TeleportEventTypes, type TeleportSession } from '@paraport/core'
 import { storeToRefs } from 'pinia'
 import { computed, onBeforeMount, ref } from 'vue'
 
 const TELEPORT_EVENTS = [
-	TeleportEventType.TELEPORT_COMPLETED,
-	TeleportEventType.TELEPORT_STARTED,
-	TeleportEventType.TELEPORT_UPDATED,
+	TeleportEventTypes.TELEPORT_COMPLETED,
+	TeleportEventTypes.TELEPORT_STARTED,
+	TeleportEventTypes.TELEPORT_UPDATED,
 ]
 
 const SESSION_EVENTS = [
-	AutoTeleportSessionEventType.SESSION_CREATED,
-	AutoTeleportSessionEventType.SESSION_UPDATED,
-	AutoTeleportSessionEventType.SESSION_DELETED,
+	AutoTeleportSessionEventTypes.SESSION_CREATED,
+	AutoTeleportSessionEventTypes.SESSION_UPDATED,
+	AutoTeleportSessionEventTypes.SESSION_DELETED,
 ]
 
 export default () => {
@@ -41,7 +41,10 @@ export default () => {
 			sdk.value.onSession(event, (payload) => {
 				console.log(`[UI] ${event}`, payload)
 
-				if (payload.status === TeleportSessionStatus.Ready && !session.value) {
+				if (
+					payload.status === TeleportSessionStatuses.Ready &&
+					!session.value
+				) {
 					eventBus.emit('session:ready', payload)
 				}
 
@@ -54,7 +57,7 @@ export default () => {
 				console.log(`[UI] ${event}`, payload)
 				autoteleport.value = payload
 
-				if (event === TeleportEventType.TELEPORT_COMPLETED) {
+				if (event === TeleportEventTypes.TELEPORT_COMPLETED) {
 					eventBus.emit('teleport:completed')
 				}
 			})
@@ -84,11 +87,11 @@ export default () => {
 	})
 
 	const isReady = computed(
-		() => session.value?.status === TeleportSessionStatus.Ready,
+		() => session.value?.status === TeleportSessionStatuses.Ready,
 	)
 
 	const isCompleted = computed(
-		() => session.value?.status === TeleportSessionStatus.Completed,
+		() => session.value?.status === TeleportSessionStatuses.Completed,
 	)
 
 	const isAvailable = computed(() => true) // TODO check if chain has autoteleport support

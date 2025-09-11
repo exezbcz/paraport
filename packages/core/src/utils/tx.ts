@@ -1,6 +1,7 @@
 import {
 	type TransactionCallback,
-	TransactionStatus,
+	type TransactionStatus,
+	TransactionStatuses,
 	type TransactionUnsubscribe,
 } from '@/types/transactions'
 import type { Extrinsic } from '@kodadot1/sub-api'
@@ -52,22 +53,22 @@ export const resolveStatus = (
 	extrinsicStatus: ExtrinsicStatus,
 ): TransactionStatus => {
 	if (extrinsicStatus.isBroadcast) {
-		return TransactionStatus.Broadcast
+		return TransactionStatuses.Broadcast
 	}
 
 	if (extrinsicStatus.isReady) {
-		return TransactionStatus.Casting
+		return TransactionStatuses.Casting
 	}
 
 	if (extrinsicStatus.isInBlock) {
-		return TransactionStatus.Block
+		return TransactionStatuses.Block
 	}
 
 	if (extrinsicStatus.isFinalized) {
-		return TransactionStatus.Finalized
+		return TransactionStatuses.Finalized
 	}
 
-	return TransactionStatus.Unknown
+	return TransactionStatuses.Unknown
 }
 
 export const signAndSend = async ({
@@ -90,20 +91,23 @@ export const signAndSend = async ({
 			txCb({
 				onFinalized: ({ txHash, error }) => {
 					callback({
-						status: TransactionStatus.Finalized,
+						status: TransactionStatuses.Finalized,
 						txHash: txHash.toString(),
 						error: error?.toString(),
 					})
 				},
 				onError: ({ error, txHash }) => {
 					callback({
-						status: TransactionStatus.Block,
+						status: TransactionStatuses.Block,
 						error: error.toString(),
 						txHash: txHash.toString(),
 					})
 				},
 				onResult: ({ result, status }) => {
-					if (status !== TransactionStatus.Finalized && !result.dispatchError) {
+					if (
+						status !== TransactionStatuses.Finalized &&
+						!result.dispatchError
+					) {
 						callback({
 							status,
 							txHash: result.txHash.toString(),
@@ -114,7 +118,7 @@ export const signAndSend = async ({
 		)
 		.catch(() => {
 			callback({
-				status: TransactionStatus.Cancelled,
+				status: TransactionStatuses.Cancelled,
 			})
 		})
 

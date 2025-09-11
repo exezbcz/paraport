@@ -14,12 +14,12 @@ import {
 	type AutoTeleportSessionEventType,
 	type TeleportSession,
 	type TeleportSessionPayload,
-	TeleportSessionStatus,
+	TeleportSessionStatuses,
 } from '@/types/sdk'
 import {
 	type TeleportEventPayload,
-	TeleportEventType,
-	type TeleportEventTypeString,
+	type TeleportEventType,
+	TeleportEventTypes,
 	type TeleportParams,
 } from '@/types/teleport'
 import { getChainsOfAsset } from '@/utils'
@@ -47,7 +47,7 @@ export default class ParaPortSDK extends Initializable {
 		this.sessionManager = new SessionManager(new GenericEmitter())
 
 		this.teleportManager = new TeleportManager(
-			new GenericEmitter<TeleportEventPayload, TeleportEventTypeString>(),
+			new GenericEmitter<TeleportEventPayload, TeleportEventType>(),
 			this.bridgeRegistry,
 			this.subApi,
 			this.logger,
@@ -84,14 +84,14 @@ export default class ParaPortSDK extends Initializable {
 	}
 
 	onSession(
-		event: AutoTeleportSessionEventType | `${AutoTeleportSessionEventType}`,
+		event: AutoTeleportSessionEventType,
 		callback: (item: TeleportSessionPayload) => void,
 	): void {
 		this.sessionManager.subscribe(event, callback)
 	}
 
 	onTeleport(
-		event: TeleportEventType | `${TeleportEventType}`,
+		event: TeleportEventType,
 		callback: (item: TeleportEventPayload) => void,
 	): void {
 		this.teleportManager.subscribe(event, callback)
@@ -181,7 +181,7 @@ export default class ParaPortSDK extends Initializable {
 		})
 
 		const sessionId = this.sessionManager.createSession(params, {
-			status: TeleportSessionStatus.Ready,
+			status: TeleportSessionStatuses.Ready,
 			quotes,
 			funds,
 			unsubscribe,
@@ -243,27 +243,27 @@ export default class ParaPortSDK extends Initializable {
 		if (!this.teleportManager) return
 
 		this.teleportManager.subscribe(
-			TeleportEventType.TELEPORT_STARTED,
+			TeleportEventTypes.TELEPORT_STARTED,
 			(payload) => {
 				const session = this.sessionManager.getSessionByTeleportId(payload.id)
 
 				if (!session) return
 
 				this.sessionManager.updateSession(session.id, {
-					status: TeleportSessionStatus.Processing,
+					status: TeleportSessionStatuses.Processing,
 				})
 			},
 		)
 
 		this.teleportManager.subscribe(
-			TeleportEventType.TELEPORT_COMPLETED,
+			TeleportEventTypes.TELEPORT_COMPLETED,
 			(payload) => {
 				const session = this.sessionManager.getSessionByTeleportId(payload.id)
 
 				if (!session) return
 
 				this.sessionManager.updateSession(session.id, {
-					status: TeleportSessionStatus.Completed,
+					status: TeleportSessionStatuses.Completed,
 				})
 			},
 		)

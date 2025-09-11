@@ -1,5 +1,5 @@
 import type { Config } from "./types";
-import { Chain } from "./types";
+import { Chains } from "./types";
 
 type WS_URL = `wss://${string}` | `ws://${string}`;
 type HTTP_URL = `https://${string}` | `http://${string}`;
@@ -49,17 +49,17 @@ const HYDRATION_ENDPOINTS: WS_URL[] = [
 
 // Someone from HydraDX team told me that Polkadot API takes Array of endpoints
 export const ALTERNATIVE_ENDPOINT_MAP: Config<ENDPOINT_URL[]> = {
-	[Chain.Polkadot]: POLKADOT_ENDPOINTS,
-	[Chain.AssetHubPolkadot]: AHP_ENDPOINTS,
-	[Chain.Kusama]: KUSAMA_ENDPOINTS,
-	[Chain.AssetHubKusama]: AHK_ENDPOINTS,
-	[Chain.Hydration]: HYDRATION_ENDPOINTS,
+	[Chains.Polkadot]: POLKADOT_ENDPOINTS,
+	[Chains.AssetHubPolkadot]: AHP_ENDPOINTS,
+	[Chains.Kusama]: KUSAMA_ENDPOINTS,
+	[Chains.AssetHubKusama]: AHK_ENDPOINTS,
+	[Chains.Hydration]: HYDRATION_ENDPOINTS,
 };
 
 export const ENDPOINT_MAP: Config<ENDPOINT_URL> = {
-	[Chain.Polkadot]: POLKADOT_ENDPOINTS[0],
-	[Chain.AssetHubPolkadot]: AHP_ENDPOINTS[0],
-	[Chain.Kusama]: KUSAMA_ENDPOINTS[0],
-	[Chain.AssetHubKusama]: AHK_ENDPOINTS[0],
-	[Chain.Hydration]: "wss://rpc.hydradx.cloud",
+	[Chains.Polkadot]: POLKADOT_ENDPOINTS[0],
+	[Chains.AssetHubPolkadot]: AHP_ENDPOINTS[0],
+	[Chains.Kusama]: KUSAMA_ENDPOINTS[0],
+	[Chains.AssetHubKusama]: AHK_ENDPOINTS[0],
+	[Chains.Hydration]: "wss://rpc.hydradx.cloud",
 };

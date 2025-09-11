@@ -1,10 +1,12 @@
 import { BaseManager } from '@/base/BaseManager'
 import {
-	AutoTeleportSessionEventType,
+	type AutoTeleportSessionEventType,
+	AutoTeleportSessionEventTypes,
 	type TeleportSession,
 	type TeleportSessionEvent,
 	type TeleportSessionPayload,
-	TeleportSessionStatus,
+	type TeleportSessionStatus,
+	TeleportSessionStatuses,
 } from '@/types/sdk'
 import type { TeleportParams } from '@/types/teleport'
 
@@ -12,7 +14,7 @@ export default class SessionManager extends BaseManager<
 	TeleportSession,
 	TeleportSessionStatus,
 	TeleportSessionEvent,
-	`${AutoTeleportSessionEventType}`,
+	AutoTeleportSessionEventType,
 	TeleportSessionPayload
 > {
 	createSession(
@@ -23,7 +25,7 @@ export default class SessionManager extends BaseManager<
 
 		const session: TeleportSession = {
 			id: sessionId,
-			status: TeleportSessionStatus.Pending,
+			status: TeleportSessionStatuses.Pending,
 			params,
 			quotes: {
 				available: [],
@@ -45,7 +47,7 @@ export default class SessionManager extends BaseManager<
 		this.setItem(sessionId, session, false)
 
 		this.eventEmitter.emit({
-			type: AutoTeleportSessionEventType.SESSION_CREATED,
+			type: AutoTeleportSessionEventTypes.SESSION_CREATED,
 			payload: session,
 		})
 
@@ -68,7 +70,7 @@ export default class SessionManager extends BaseManager<
 	}
 
 	getUpdateEventType() {
-		return AutoTeleportSessionEventType.SESSION_UPDATED
+		return AutoTeleportSessionEventTypes.SESSION_UPDATED
 	}
 
 	getSessionByTeleportId(teleportId: string): TeleportSession | undefined {

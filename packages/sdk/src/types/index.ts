@@ -1,17 +1,23 @@
 import type { SDKConfig, TeleportParams, TransactionType } from '@paraport/core'
+import type { TeleportSessionPayload } from '@paraport/core'
 
-export enum DisplayMode {
-	Integrated = 'integrated',
-	// Modal = 'modal',
-}
+export const DisplayModes = {
+	Integrated: 'integrated',
+	// Modal: 'modal',
+} as const
 
-export enum TeleportStepStatus {
-	Failed = 'failed',
-	Cancelled = 'cancelled',
-	Completed = 'completed',
-	Waiting = 'waiting',
-	Loading = 'loading',
-}
+export type DisplayMode = (typeof DisplayModes)[keyof typeof DisplayModes]
+
+export const TeleportStepStatuses = {
+	Failed: 'failed',
+	Cancelled: 'cancelled',
+	Completed: 'completed',
+	Waiting: 'waiting',
+	Loading: 'loading',
+} as const
+
+export type TeleportStepStatus =
+	(typeof TeleportStepStatuses)[keyof typeof TeleportStepStatuses]
 
 export type TeleportStepType = TransactionType | 'balance-check'
 
@@ -46,7 +52,7 @@ export interface TeleportEvents {
 	/**
 	 * Callback fired when the UI is ready for interaction.
 	 */
-	onReady?: () => void
+	onReady?: (sesison: TeleportSessionPayload) => void
 
 	/**
 	 * Callback fired when the user clicks adds funds.
@@ -69,7 +75,7 @@ export interface MountOptions extends TeleportEvents {
 	 * which embeds the UI directly in the specified element.
 	 * @default DisplayMode.Integrated
 	 */
-	displayMode?: DisplayMode | `${DisplayMode}`
+	displayMode?: DisplayMode
 
 	/**
 	 * Function to get the signer for transactions. Typically returns a Web3 provider

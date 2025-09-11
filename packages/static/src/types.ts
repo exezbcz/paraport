@@ -1,16 +1,23 @@
-export enum Chain {
-	Polkadot = "Polkadot",
-	AssetHubKusama = "AssetHubKusama",
-	Kusama = "Kusama",
-	AssetHubPolkadot = "AssetHubPolkadot",
-	Hydration = "Hydration",
-}
+export const Chains = {
+	Polkadot: "Polkadot",
+	AssetHubKusama: "AssetHubKusama",
+	Kusama: "Kusama",
+	AssetHubPolkadot: "AssetHubPolkadot",
+	Hydration: "Hydration",
+} as const;
 
-export enum Asset {
-	DOT = "DOT",
-	KSM = "KSM",
-	HDX = "HDX",
-}
+// TODO: move to util
+type ObjectValues<T> = T[keyof T];
+
+export type Chain = ObjectValues<typeof Chains>;
+
+export const Assets = {
+	DOT: "DOT",
+	KSM: "KSM",
+	HDX: "HDX",
+} as const;
+
+export type Asset = ObjectValues<typeof Assets>;
 
 export type Prefix = "dot" | "ksm" | "ahk" | "ahp";
 

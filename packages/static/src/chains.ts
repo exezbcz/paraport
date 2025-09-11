@@ -1,5 +1,5 @@
-import { Asset, type ChainProperties, type Config } from "./types";
-import { Chain } from "./types";
+import { type Asset, Assets, type ChainProperties, type Config } from "./types";
+import { type Chain, Chains } from "./types";
 
 export const toChainProperty = (
 	ss58Format: number,
@@ -16,56 +16,56 @@ export const toChainProperty = (
 };
 
 export const CHAINS: Config<ChainProperties> = {
-	[Chain.Polkadot]: toChainProperty(
+	[Chains.Polkadot]: toChainProperty(
 		0,
 		10,
-		Asset.DOT,
+		Assets.DOT,
 		"https://polkadot.subscan.io/",
 	),
-	[Chain.AssetHubPolkadot]: toChainProperty(
+	[Chains.AssetHubPolkadot]: toChainProperty(
 		0,
 		10,
-		Asset.DOT,
+		Assets.DOT,
 		"https://assethub-polkadot.subscan.io/",
 	),
-	[Chain.Kusama]: toChainProperty(
+	[Chains.Kusama]: toChainProperty(
 		2,
 		12,
-		Asset.KSM,
+		Assets.KSM,
 		"https://kusama.subscan.io/",
 	),
-	[Chain.AssetHubKusama]: toChainProperty(
+	[Chains.AssetHubKusama]: toChainProperty(
 		2,
 		12,
-		Asset.KSM,
+		Assets.KSM,
 		"https://assethub-kusama.subscan.io/",
 	),
-	[Chain.Hydration]: toChainProperty(
+	[Chains.Hydration]: toChainProperty(
 		2,
 		12,
-		Asset.HDX,
+		Assets.HDX,
 		"https://hydradx.subscan.io",
 	),
 };
 
 // DEV: note that ED is different from the on-chain ED to prevent weird edge cases of XCM
 export const teleportExistentialDeposit: Record<Chain, number> = {
-	[Chain.Polkadot]: 15000000000,
-	[Chain.AssetHubPolkadot]: 5000000000,
-	[Chain.Kusama]: 666666666,
-	[Chain.AssetHubKusama]: 666666666,
-	[Chain.Hydration]: 666666666,
+	[Chains.Polkadot]: 15000000000,
+	[Chains.AssetHubPolkadot]: 5000000000,
+	[Chains.Kusama]: 666666666,
+	[Chains.AssetHubKusama]: 666666666,
+	[Chains.Hydration]: 666666666,
 };
 
 export const existentialDeposit: Record<Chain, number> = {
-	[Chain.Polkadot]: 1e10,
-	[Chain.AssetHubPolkadot]: 1e8,
-	[Chain.Kusama]: 333333333,
-	[Chain.AssetHubKusama]: 333333333,
-	[Chain.Hydration]: 333333333,
+	[Chains.Polkadot]: 1e10,
+	[Chains.AssetHubPolkadot]: 1e8,
+	[Chains.Kusama]: 333333333,
+	[Chains.AssetHubKusama]: 333333333,
+	[Chains.Hydration]: 333333333,
 };
 
 export const ASSET_CHAINS_MAP: Partial<Record<Asset, Chain[]>> = {
-	[Asset.DOT]: [Chain.Polkadot, Chain.AssetHubPolkadot, Chain.Hydration],
-	[Asset.KSM]: [Chain.Kusama, Chain.AssetHubKusama, Chain.Hydration],
+	[Assets.DOT]: [Chains.Polkadot, Chains.AssetHubPolkadot, Chains.Hydration],
+	[Assets.KSM]: [Chains.Kusama, Chains.AssetHubKusama],
 };

@@ -3,9 +3,10 @@ import type { GenericEmitter } from '@/base/GenericEmitter'
 import type { BrigeTransferParams } from '@/types/bridges'
 import {
 	type TransactionDetails,
-	TransactionEventType,
-	type TransactionEventTypeString,
-	TransactionStatus,
+	type TransactionEventType,
+	TransactionEventTypes,
+	type TransactionStatus,
+	TransactionStatuses,
 	type TransactionType,
 } from '@/types/transactions'
 import type { Chain } from '@paraport/static'
@@ -14,14 +15,11 @@ export class TransactionManager extends BaseManager<
 	TransactionDetails,
 	TransactionStatus,
 	BaseDetailsEvent,
-	TransactionEventTypeString,
+	TransactionEventType,
 	TransactionDetails // event payload
 > {
 	constructor(
-		eventEmitter: GenericEmitter<
-			TransactionDetails,
-			TransactionEventTypeString
-		>,
+		eventEmitter: GenericEmitter<TransactionDetails, TransactionEventType>,
 	) {
 		super(eventEmitter)
 	}
@@ -44,7 +42,7 @@ export class TransactionManager extends BaseManager<
 		const transaction: TransactionDetails = {
 			id,
 			teleportId,
-			status: TransactionStatus.Unknown,
+			status: TransactionStatuses.Unknown,
 			chain: chain,
 			details: details,
 			events: [],
@@ -58,8 +56,8 @@ export class TransactionManager extends BaseManager<
 		return transaction
 	}
 
-	protected getUpdateEventType(): TransactionEventTypeString {
-		return TransactionEventType.TRANSACTION_UPDATED
+	protected getUpdateEventType(): TransactionEventType {
+		return TransactionEventTypes.TRANSACTION_UPDATED
 	}
 
 	getTelportTransactions(
@@ -75,7 +73,7 @@ export class TransactionManager extends BaseManager<
 
 	isTransactionFailed(transaction: TransactionDetails): boolean {
 		return (
-			transaction.status === TransactionStatus.Cancelled ||
+			transaction.status === TransactionStatuses.Cancelled ||
 			Boolean(transaction.error)
 		)
 	}
@@ -83,7 +81,7 @@ export class TransactionManager extends BaseManager<
 	resetTransaction(transaction: TransactionDetails): void {
 		transaction.unsubscribe?.()
 
-		this.updateStatus(transaction.id, TransactionStatus.Unknown, {
+		this.updateStatus(transaction.id, TransactionStatuses.Unknown, {
 			error: undefined,
 			succeeded: undefined,
 			txHash: undefined,

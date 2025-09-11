@@ -1,31 +1,35 @@
 import type { BaseDetails, BaseDetailsEvent } from '@/base/BaseManager'
 import type { BrigeTransferParams } from '@/types/bridges'
 import type { Chain } from '@paraport/static'
+import type { ObjectValues } from './utils'
 
-export enum TransactionEventType {
-	TRANSACTION_STARTED = 'transaction:started',
-	TRANSACTION_UPDATED = 'transaction:updated',
-	TRANSACTION_PROCESSING = 'transaction:processing',
-	TRANSACTION_COMPLETED = 'transaction:completed',
-	TRANSACTION_FAILED = 'transaction:failed',
-}
+export const TransactionEventTypes = {
+	TRANSACTION_STARTED: 'transaction:started',
+	TRANSACTION_UPDATED: 'transaction:updated',
+	TRANSACTION_PROCESSING: 'transaction:processing',
+	TRANSACTION_COMPLETED: 'transaction:completed',
+	TRANSACTION_FAILED: 'transaction:failed',
+} as const
 
-// type TransactionUpdatePayload = TransactionDetails;
-export type TransactionEventTypeString = `${TransactionEventType}`
+export type TransactionEventType = ObjectValues<typeof TransactionEventTypes>
 
-export enum TransactionStatus {
-	Broadcast = 'broadcast',
-	Casting = 'casting',
-	Sign = 'sign',
-	Block = 'block',
-	Finalized = 'finalized',
-	Unknown = '',
-	Cancelled = 'cancelled',
-}
+export const TransactionStatuses = {
+	Broadcast: 'broadcast',
+	Casting: 'casting',
+	Sign: 'sign',
+	Block: 'block',
+	Finalized: 'finalized',
+	Unknown: '',
+	Cancelled: 'cancelled',
+} as const
 
-export enum TransactionType {
-	Teleport = 'teleport',
-}
+export type TransactionStatus = ObjectValues<typeof TransactionStatuses>
+
+export const TransactionTypes = {
+	Teleport: 'teleport',
+} as const
+
+export type TransactionType = ObjectValues<typeof TransactionTypes>
 
 export interface TransactionDetails
 	extends BaseDetails<
@@ -45,24 +49,25 @@ export interface TransactionDetails
 export type TransactionCallback = (
 	params:
 		| {
-				status: TransactionStatus.Finalized
+				status: typeof TransactionStatuses.Finalized
 				txHash: string
 				error?: string
 		  }
 		| {
-				status: TransactionStatus.Block
+				status: typeof TransactionStatuses.Block
 				txHash: string
 				error?: string
 		  }
 		| {
-				status: TransactionStatus.Block
+				status: typeof TransactionStatuses.Block
 				txHash: string
 				error?: string
 		  }
 		| {
 				status: Exclude<
 					TransactionStatus,
-					TransactionStatus.Finalized | TransactionStatus.Block
+					| typeof TransactionStatuses.Finalized
+					| typeof TransactionStatuses.Block
 				>
 				error?: string
 				txHash?: string

@@ -1,4 +1,4 @@
-import { DisplayMode } from '@/types'
+import { type DisplayMode, DisplayModes } from '@/types'
 import type { ParaPortSDK, TeleportParams } from '@paraport/core'
 import { defineStore } from 'pinia'
 import { type Ref, ref } from 'vue'
@@ -8,7 +8,7 @@ export const useSdkStore = defineStore('sdk', () => {
 	const params = ref() as Ref<TeleportParams<string>>
 	const label = ref<string>('')
 	const disabled = ref<boolean>(false)
-	const displayMode = ref<DisplayMode>(DisplayMode.Integrated)
+	const displayMode = ref<DisplayMode>(DisplayModes.Integrated)
 
 	const setSdk = (newSdk: ParaPortSDK) => {
 		sdk.value = newSdk

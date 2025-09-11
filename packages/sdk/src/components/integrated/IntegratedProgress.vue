@@ -43,13 +43,14 @@ import { useI18n } from 'vue-i18n'
 import useTeleportSteps from '@/composables/useTeleportSteps'
 import {
 	type TeleportStepDetails,
-	TeleportStepStatus,
+	type TeleportStepStatus,
+	TeleportStepStatuses,
 	TeleportStepType,
 } from '@/types'
 import {
 	type TeleportEventPayload,
 	type TeleportSession,
-	TransactionType,
+	TransactionTypes,
 	getChainName,
 } from '@paraport/core'
 
@@ -116,20 +117,20 @@ const activeStep = computed(() => {
 })
 
 const iconStatusMap: Partial<Record<TeleportStepStatus, ComputedIcon>> = {
-	[TeleportStepStatus.Waiting]: { icon: PingDot },
-	[TeleportStepStatus.Loading]: { icon: LoaderIcon },
-	[TeleportStepStatus.Failed]: { icon: h(AlertIcon, { variant: 'error' }) },
-	[TeleportStepStatus.Cancelled]: {
+	[TeleportStepStatuses.Waiting]: { icon: PingDot },
+	[TeleportStepStatuses.Loading]: { icon: LoaderIcon },
+	[TeleportStepStatuses.Failed]: { icon: h(AlertIcon, { variant: 'error' }) },
+	[TeleportStepStatuses.Cancelled]: {
 		icon: h(AlertIcon, { variant: 'warning' }),
 	},
 }
 
 const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 	{
-		[TransactionType.Teleport]: {
-			[TeleportStepStatus.Waiting]: ({ step, t }) => ({
+		[TransactionTypes.Teleport]: {
+			[TeleportStepStatuses.Waiting]: ({ step, t }) => ({
 				top: {
-					icon: iconStatusMap[TeleportStepStatus.Waiting] as ComputedIcon,
+					icon: iconStatusMap[TeleportStepStatuses.Waiting] as ComputedIcon,
 					title: {
 						label: step.statusLabel,
 						active: true,
@@ -149,9 +150,9 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 					},
 				},
 			}),
-			[TeleportStepStatus.Loading]: ({ step, payload, t }) => ({
+			[TeleportStepStatuses.Loading]: ({ step, payload, t }) => ({
 				top: {
-					icon: iconStatusMap[TeleportStepStatus.Loading] as ComputedIcon,
+					icon: iconStatusMap[TeleportStepStatuses.Loading] as ComputedIcon,
 					title: {
 						is: h(GradientText, {
 							text: t('autoteleport.moving', [
@@ -206,7 +207,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 	}
 
 const generalStatusStrategyMap: StateStrategy = {
-	[TeleportStepStatus.Failed]: ({ step, t }) => {
+	[TeleportStepStatuses.Failed]: ({ step, t }) => {
 		return {
 			top: {
 				icon: iconStatusMap.failed!,
@@ -235,7 +236,7 @@ const generalStatusStrategyMap: StateStrategy = {
 			},
 		}
 	},
-	[TeleportStepStatus.Cancelled]: () => {
+	[TeleportStepStatuses.Cancelled]: () => {
 		return {
 			top: {
 				icon: iconStatusMap.cancelled!,

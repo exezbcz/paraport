@@ -2,6 +2,7 @@ import type { BaseDetails, BaseDetailsEvent } from '@/base/BaseManager'
 import type { Route } from '@/types/common'
 import type { TransactionDetails } from '@/types/transactions'
 import type { Asset, Chain } from '@paraport/static'
+import type { ObjectValues } from './utils'
 
 export type TeleportEvent = BaseDetailsEvent
 
@@ -26,21 +27,23 @@ export interface TeleportDetails
 	checked: boolean
 }
 
-export enum TeleportStatus {
-	Pending = 'pending',
-	Transferring = 'transferring',
-	Waiting = 'waiting',
-	Completed = 'completed',
-	Failed = 'failed',
-}
+export const TeleportStatuses = {
+	Pending: 'pending',
+	Transferring: 'transferring',
+	Waiting: 'waiting',
+	Completed: 'completed',
+	Failed: 'failed',
+} as const
 
-export enum TeleportEventType {
-	TELEPORT_STARTED = 'teleport:started',
-	TELEPORT_UPDATED = 'teleport:updated',
-	TELEPORT_COMPLETED = 'teleport:completed',
-}
+export type TeleportStatus = ObjectValues<typeof TeleportStatuses>
 
-export type TeleportEventTypeString = `${TeleportEventType}`
+export const TeleportEventTypes = {
+	TELEPORT_STARTED: 'teleport:started',
+	TELEPORT_UPDATED: 'teleport:updated',
+	TELEPORT_COMPLETED: 'teleport:completed',
+} as const
+
+export type TeleportEventType = ObjectValues<typeof TeleportEventTypes>
 
 export type TeleportEventPayload = TeleportDetails & {
 	transactions: TransactionDetails[]

@@ -2,7 +2,6 @@ import type { Asset, Chain } from '@paraport/static'
 import type { Signer } from '@polkadot/api/types'
 import type { BridgeProtocol } from './bridges'
 import type { LogLevel } from './sdk'
-import type { Stringify } from './stringify'
 
 /**
  * Configuration options for initializing the SDK
@@ -29,9 +28,7 @@ export type SDKConfig<T extends boolean = true> = {
 	/**
 	 * Logging level configuration for SDK operations
 	 */
-	logLevel?: T extends true
-		? Stringify<LogLevel>
-		: Stringify<LogLevel> | undefined
+	logLevel?: LogLevel | undefined
 }
 
 export type Route = {

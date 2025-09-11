@@ -1,4 +1,9 @@
-import { DisplayMode, type MountOptions, type TeleportEvents } from '@/types'
+import {
+	type DisplayMode,
+	DisplayModes,
+	type MountOptions,
+	type TeleportEvents,
+} from '@/types'
 import { ParaPortSDK } from '@paraport/core'
 import { createApp, h } from 'vue'
 import App from './App.vue'
@@ -38,7 +43,7 @@ export function init({
 	onCompleted,
 	onReady,
 	onAddFunds,
-	displayMode = DisplayMode.Integrated,
+	displayMode = DisplayModes.Integrated,
 	...options
 }: MountOptions) {
 	const targetElement = document.querySelector(`#${integratedTargetId}`)

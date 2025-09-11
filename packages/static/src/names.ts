@@ -1,9 +1,9 @@
-import { Chain } from "./types";
+import { type Chain, Chains } from "./types";
 
 export const CHAIN_NAMES: Record<Chain, string> = {
-	[Chain.Polkadot]: "Polkadot",
-	[Chain.AssetHubPolkadot]: "PolkadotHub",
-	[Chain.Kusama]: "Kusama",
-	[Chain.AssetHubKusama]: "KusamaHub",
-	[Chain.Hydration]: "Hydration",
+	[Chains.Polkadot]: "Polkadot",
+	[Chains.AssetHubPolkadot]: "PolkadotHub",
+	[Chains.Kusama]: "Kusama",
+	[Chains.AssetHubKusama]: "KusamaHub",
+	[Chains.Hydration]: "Hydration",
 };

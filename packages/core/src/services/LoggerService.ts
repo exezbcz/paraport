@@ -1,30 +1,30 @@
-import { LogLevel, type LoggerConfig } from '@/types/sdk'
+import { type LogLevel, LogLevels, type LoggerConfig } from '@/types/sdk'
 
 export class Logger {
 	private config: LoggerConfig
 
 	constructor(config?: Partial<LoggerConfig>) {
 		this.config = {
-			minLevel: LogLevel.INFO,
+			minLevel: LogLevels.INFO,
 			prefix: '[ParaPortSDK]',
 			...config,
 		}
 	}
 
 	debug(message: string, data?: unknown): void {
-		this.log(LogLevel.DEBUG, message, data)
+		this.log(LogLevels.DEBUG, message, data)
 	}
 
 	info(message: string, data?: unknown): void {
-		this.log(LogLevel.INFO, message, data)
+		this.log(LogLevels.INFO, message, data)
 	}
 
 	warn(message: string, data?: unknown): void {
-		this.log(LogLevel.WARN, message, data)
+		this.log(LogLevels.WARN, message, data)
 	}
 
 	error(message: string, error?: unknown): void {
-		this.log(LogLevel.ERROR, message, error)
+		this.log(LogLevels.ERROR, message, error)
 	}
 
 	private log(level: LogLevel, message: string, data?: unknown): void {
@@ -33,16 +33,16 @@ export class Logger {
 			const formattedMsg = `${level} ${prefix}${message}`
 
 			switch (level) {
-				case LogLevel.ERROR:
+				case LogLevels.ERROR:
 					console.error(formattedMsg, data || '')
 					break
-				case LogLevel.WARN:
+				case LogLevels.WARN:
 					console.warn(formattedMsg, data || '')
 					break
-				case LogLevel.INFO:
+				case LogLevels.INFO:
 					console.info(formattedMsg, data || '')
 					break
-				case LogLevel.DEBUG:
+				case LogLevels.DEBUG:
 					console.debug(formattedMsg, data || '')
 					break
 			}
@@ -51,10 +51,10 @@ export class Logger {
 
 	private shouldLog(level: LogLevel): boolean {
 		const levels = [
-			LogLevel.DEBUG,
-			LogLevel.INFO,
-			LogLevel.WARN,
-			LogLevel.ERROR,
+			LogLevels.DEBUG,
+			LogLevels.INFO,
+			LogLevels.WARN,
+			LogLevels.ERROR,
 		]
 		return levels.indexOf(level) >= levels.indexOf(this.config.minLevel)
 	}
