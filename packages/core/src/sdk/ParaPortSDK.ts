@@ -24,7 +24,7 @@ import {
 } from '@/types/teleport'
 import { getChainsOfAsset } from '@/utils'
 import { convertToBigInt } from '@/utils/number'
-import { Asset, Chain } from '@paraport/static'
+import { Assets, Chains } from '@paraport/static'
 
 export default class ParaPortSDK extends Initializable {
 	private readonly teleportManager: TeleportManager
@@ -270,8 +270,8 @@ export default class ParaPortSDK extends Initializable {
 	}
 
 	private validateTeleportParams(params: TeleportParams<string>) {
-		const validAsset = Object.values(Asset).includes(params.asset)
-		const validChain = Object.values(Chain).includes(params.chain)
+		const validAsset = Object.values(Assets).includes(params.asset)
+		const validChain = Object.values(Chains).includes(params.chain)
 		const validChainAsset = getChainsOfAsset(params.asset).includes(
 			params.chain,
 		)
