@@ -15,6 +15,7 @@ export default defineConfig({
 			output: {
 				preserveModules: true,
 				preserveModulesRoot: "src",
+				exports: "named",
 			},
 		},
 	},
