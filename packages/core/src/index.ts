@@ -9,4 +9,4 @@ export * from './types/transactions'
 export * from './types/sdk'
 
 export { chainPropListOf, getChainName, blockExplorerOf } from './utils'
-export { Chain } from '@paraport/static'
+export type { Chain } from '@paraport/static'

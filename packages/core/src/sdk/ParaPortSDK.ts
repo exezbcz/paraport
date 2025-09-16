@@ -22,7 +22,7 @@ import {
 	TeleportEventTypes,
 	type TeleportParams,
 } from '@/types/teleport'
-import { getChainsOfAsset } from '@/utils'
+import { getChainsOfAsset, isValidAddress } from '@/utils'
 import { convertToBigInt } from '@/utils/number'
 import { Assets, Chains } from '@paraport/static'
 
@@ -278,7 +278,7 @@ export default class ParaPortSDK extends Initializable {
 
 		const validAmount = BigInt(params.amount) > BigInt(0)
 
-		const validAddress = Boolean(params.address) // TODO: validate address
+		const validAddress = isValidAddress(params.address)
 
 		const valid =
 			validAddress && validAsset && validAmount && validChain && validChainAsset
