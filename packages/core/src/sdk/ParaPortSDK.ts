@@ -3,6 +3,9 @@ import { Initializable } from '@/base/Initializable'
 import BridgeRegistry from '@/bridges/BridgeRegistry'
 import XCMBridge from '@/bridges/xcm/XCMBridge'
 import { SDKConfigManager } from '@/config/SDKConfigManager'
+import InvalidSessionError from '@/errors/InvalidSessionError'
+import InvalidTeleportParamsError from '@/errors/InvalidTeleportParamsError'
+import SDKInitializationError from '@/errors/SDKInitializationError'
 import SessionManager from '@/managers/SessionManager'
 import { TeleportManager } from '@/managers/TeleportManager'
 import BalanceService from '@/services/BalanceService'
@@ -56,7 +59,7 @@ export default class ParaPortSDK extends Initializable {
 
 	async initialize() {
 		if (this.isInitialized()) {
-			throw new Error('SDK already initialized')
+			throw new SDKInitializationError('SDK already initialized')
 		}
 
 		try {
@@ -77,9 +80,14 @@ export default class ParaPortSDK extends Initializable {
 			this.logger.info('SDK initialized successfully')
 		} catch (error: unknown) {
 			if (error instanceof Error) {
-				throw new Error(`Failed to initialize SDK: ${error.message}`)
+				throw new SDKInitializationError(
+					`Failed to initialize SDK: ${error.message}`,
+					{ cause: error },
+				)
 			}
-			throw new Error('Failed to initialize SDK: Unknown error')
+			throw new SDKInitializationError(
+				'Failed to initialize SDK: Unknown error',
+			)
 		}
 	}
 
@@ -199,14 +207,20 @@ export default class ParaPortSDK extends Initializable {
 	public async executeSession(sessionId: string): Promise<string> {
 		this.ensureInitialized()
 
-		if (!this.teleportManager) {
-			throw new Error('No teleport manager found.')
-		}
-
 		const session = this.sessionManager.getItem(sessionId)
 
-		if (!session?.quotes.selected || !session?.funds.needed) {
-			throw new Error('Invalid session or no quote selected')
+		if (!session) {
+			throw new InvalidSessionError('Session not found')
+		}
+
+		if (!session.quotes.selected) {
+			throw new InvalidSessionError('No quote selected for the session')
+		}
+
+		if (!session.funds.needed) {
+			throw new InvalidSessionError(
+				'Session has sufficient funds, no teleport needed',
+			)
 		}
 
 		session.unsubscribe()
@@ -233,7 +247,9 @@ export default class ParaPortSDK extends Initializable {
 		const session = this.sessionManager.getItem(sessionId)
 
 		if (!session?.teleportId) {
-			throw new Error('Session has no teleport ID')
+			throw new InvalidSessionError(
+				`Session ${sessionId} has no teleport ID. The session may not have been executed yet or the teleport creation failed.`,
+			)
 		}
 
 		this.teleportManager.retryTeleport(session.teleportId)
@@ -280,11 +296,18 @@ export default class ParaPortSDK extends Initializable {
 
 		const validAddress = isValidAddress(params.address)
 
-		const valid =
-			validAddress && validAsset && validAmount && validChain && validChainAsset
+		const validationErrors = [
+			!validAddress && 'Invalid address format',
+			!validAsset && 'Invalid asset',
+			!validAmount && 'Amount must be greater than 0',
+			!validChain && 'Invalid chain',
+			!validChainAsset && 'Asset not supported on the specified chain',
+		].filter(Boolean)
 
-		if (!valid) {
-			throw new Error('Invalid params')
+		if (validationErrors.length > 0) {
+			throw new InvalidTeleportParamsError(
+				`Invalid teleport parameters: ${validationErrors.join(', ')}`,
+			)
 		}
 	}
 }
