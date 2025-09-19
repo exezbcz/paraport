@@ -13,11 +13,14 @@ export default defineConfig({
 		rollupOptions: {
 			external: [],
 			output: {
-				preserveModules: true,
-				preserveModulesRoot: 'src',
 				exports: 'named',
 			},
 		},
 	},
-	plugins: [dts()],
+	plugins: [
+		dts({
+			rollupTypes: true,
+			compilerOptions: { preserveWatchOutput: true },
+		}),
+	],
 })
