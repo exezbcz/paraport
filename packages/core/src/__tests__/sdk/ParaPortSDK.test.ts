@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import ParaPortSDK from '../../sdk/ParaPortSDK'
 import type { SDKConfig } from '../../types/common'
 import { TeleportParams } from '../../types/teleport'
+import { SUBSTRATE_ADDRESS } from '../utils/constants'
 
 vi.mock('@polkadot/util-crypto', () => ({
   decodeAddress: vi.fn((address: string) => {
@@ -38,7 +39,7 @@ describe('ParaPortSDK', () => {
 
 	describe('validateTeleportParams', () => {
 	  const validParams: TeleportParams<string> = {
-	    address: 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY', // Example Substrate address
+	    address: SUBSTRATE_ADDRESS,
 	    amount: '1000000000000',
 	    asset: Assets.KSM,
 	    chain: Chains.AssetHubKusama

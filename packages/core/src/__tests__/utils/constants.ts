@@ -1,0 +1,1 @@
+export const SUBSTRATE_ADDRESS = 'CykZSc3szpVd95PmmJ45wE4ez7Vj3xkhRFS9H4U1WdrkaFY'
