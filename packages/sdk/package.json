@@ -29,7 +29,6 @@
 		"lint": "biome check --write ."
 	},
 	"dependencies": {
-		"@mdi/font": "^7.4.47",
 		"@paraport/core": "workspace:*",
 		"@polkadot/util": "^13.4.3",
 		"@tanstack/vue-table": "^8.21.2",

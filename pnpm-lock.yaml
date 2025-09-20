@@ -85,9 +85,6 @@ importers:
 
   packages/sdk:
     dependencies:
-      '@mdi/font':
-        specifier: ^7.4.47
-        version: 7.4.47
       '@paraport/core':
         specifier: workspace:*
         version: link:../core
