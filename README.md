@@ -14,7 +14,7 @@ This monorepo contains the following packages:
 ## 🚀 Installation
 
 ```bash
-pnpm install @paraport/core @paraport/sdk
+pnpm install @paraport/sdk
 ```
 
 ## 💡 Usage
