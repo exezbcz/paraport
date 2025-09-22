@@ -1,5 +1,7 @@
 <template>
-    <IntegratedParaport v-if="displayMode === DisplayModes.Integrated" />
+    <div class="paraport">
+        <IntegratedParaport v-if="displayMode === DisplayModes.Integrated" />
+    </div>
 </template>
 
 <script setup lang="ts">
