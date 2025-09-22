@@ -4,7 +4,7 @@
 		"enabled": true
 	},
 	"files": {
-		"ignore": ["node_modules", "dist", ".git"]
+		"ignore": ["node_modules", "dist", ".git", "coverage", "vitest.config.ts"]
 	},
 	"overrides": [
 		{
