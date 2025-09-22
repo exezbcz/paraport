@@ -87,8 +87,9 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		amount,
 	}: TeleportParams): Promise<Quote | null> {
 		// 1. get chains where the token is available
-		const chains = getChainsOfAsset(asset)
-		// TODO: filter by selected chains
+		const chains = getChainsOfAsset(asset).filter((chain) =>
+			this.config.chains.includes(chain),
+		)
 
 		// 2. get address balances on all chains where the token is available
 		const balances = await this.balanceService.getBalances({
