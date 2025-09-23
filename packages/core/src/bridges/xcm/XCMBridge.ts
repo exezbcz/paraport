@@ -139,6 +139,10 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 
 		const neededAmount = amount - currentChainBalance.transferable
 
+		if (neededAmount <= 0) {
+			return null
+		}
+
 		const total = neededAmount + totalFees
 
 		return {
