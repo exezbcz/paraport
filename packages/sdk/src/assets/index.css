@@ -1,0 +1,104 @@
+.paraport > * {
+	font-family: "Manrope", sans-serif;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+	:root {
+		--foreground: 0 0% 3.9%;
+		--card: 0 0% 100%;
+		--card-foreground: 0 0% 3.9%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 0 0% 3.9%;
+		--primary: 0 0% 9%;
+		--primary-foreground: 0 0% 98%;
+		/* --secondary: 0, 0%, 56%; */
+		--secondary-foreground: 0 0% 9%;
+		--muted: 0 0% 96.1%;
+		--muted-foreground: 0 0% 45.1%;
+		--accent: 0 0% 96.1%;
+		--accent-foreground: 0 0% 9%;
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 0 0% 89.8%;
+		--input: 0 0% 89.8%;
+		--ring: 0 0% 3.9%;
+		--chart-1: 12 76% 61%;
+		--chart-2: 173 58% 39%;
+		--chart-3: 197 37% 24%;
+		--chart-4: 43 74% 66%;
+		--chart-5: 27 87% 67%;
+		--radius: 0.5rem;
+
+		/* Custom  */
+		--text: #000000;
+		--secondary-text: #8f8f8f;
+		--background: #ffffff;
+		--surface-grey: #f2f2f2;
+		--surface-hover: #ebebeb;
+		--error-text: #ee3534;
+		--error-fill: #ffe4e4;
+		--error-action-hover: #fdd9d7;
+		--caution-text: #d68000;
+		--caution-fill: #fff1c5;
+		--caution-button: #fff6e0;
+		--success-text: #28a948;
+		--success-fill: #e9fbe8;
+		--success-action-hover: #d9f8d4;
+		--accent-blue: #3c82f6;
+		--accent-background: #dbe9fe;
+	}
+	.dark {
+		--foreground: 0 0% 98%;
+		--card: 0 0% 3.9%;
+		--card-foreground: 0 0% 98%;
+		--popover: 0 0% 3.9%;
+		--popover-foreground: 0 0% 98%;
+		--primary: 0 0% 98%;
+		--primary-foreground: 0 0% 9%;
+		/* --secondary: 0 0% 14.9%; */
+		--secondary-foreground: 0 0% 98%;
+		--muted: 0 0% 14.9%;
+		--muted-foreground: 0 0% 63.9%;
+		--accent: 0 0% 14.9%;
+		--accent-foreground: 0 0% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 0 0% 14.9%;
+		--input: 0 0% 14.9%;
+		--ring: 0 0% 83.1%;
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
+
+		/* Custom  */
+		--text: #ffffff;
+		--secondary-text: #8f8f8f;
+		--background: #000000;
+		--surface-grey: #1a1a1a;
+		--surface-hover: #1f1f1f;
+		--error-text: #e5484d;
+		--error-fill: #2a1314;
+		--error-action-hover: #3c1618;
+		--caution-text: #f5a623;
+		--caution-fill: #291800;
+		--caution-button: #331b00;
+		--success-text: #45a557;
+		--success-fill: #0b2212;
+		--success-action-hover: #0b2212;
+		--accent-blue: #0072f5;
+		--accent-background: #0f1c2e;
+	}
+}
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}

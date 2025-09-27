@@ -1,0 +1,14 @@
+{
+  "name": "@paraport/playground",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@paraport/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7",
+    "typescript": "^5.7.3"
+  }
+}
