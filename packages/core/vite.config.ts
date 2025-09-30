@@ -10,7 +10,7 @@ export default defineConfig({
 			formats: ['es'],
 			fileName: 'index',
 		},
-		sourcemap: true,
+		sourcemap: process.env.NODE_ENV !== 'production',
 		watch: {
 			clearScreen: false,
 			include: ['src/**/*'],
