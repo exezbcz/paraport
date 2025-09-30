@@ -7,11 +7,32 @@ import {
 	prodParasPolkadot,
 	prodParasPolkadotCommon,
 } from '@polkadot/apps-config'
+import ora from 'ora'
+import chalk from 'chalk'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const TIMEOUT = 20000
 const OUTPUT_FILE_NAME = 'endpoints.json'
+
+let testedCount = 0
+let totalEndpoints = 0
+let spinner
+
+const getProgressMessage = () => {
+  return `Testing endpoints... [${testedCount}/${totalEndpoints}]`
+}
+
+const restartSpinner = (text = null) => {
+  const message = text || getProgressMessage()
+  spinner = ora(message).start()
+  return spinner
+}
+
+const increaseTestedCount = () => {
+  testedCount++
+  spinner.text = getProgressMessage()
+}
 
 const findChainById = (config, name) => {
 	const hub = config.find((key) => key.info === name)
@@ -31,6 +52,8 @@ async function testEndpoint(url, network) {
 			),
 		])
 
+		increaseTestedCount()
+
 		return {
 			network,
 			url,
@@ -38,7 +61,10 @@ async function testEndpoint(url, network) {
 			success: true,
 		}
 	} catch (error) {
-		console.error(`Failed to connect to ${url}: ${error.message}`)
+		increaseTestedCount()
+		spinner.warn(`${network}: Failed to connect to ${chalk.dim(url)}: ${error.message}`)
+		restartSpinner()
+
 		return { network, url, success: false }
 	} finally {
 		if (api) api.disconnect()
@@ -53,7 +79,8 @@ async function findFastestEndpoint(providers, network) {
 	const successful = results.filter((r) => r.success)
 
 	if (successful.length === 0) {
-		console.error(`No successful connections for ${network}`)
+		spinner.warn(`No successful connections for ${chalk.bold(network)}`)
+		restartSpinner()
 		return { network, url: null, success: false, fallback: true }
 	}
 
@@ -74,6 +101,12 @@ const networkMap = {
 	},
 }
 
+totalEndpoints = Object.values(networkMap).reduce(
+  (sum, { providers }) => sum + providers.length, 0
+)
+
+spinner = ora(getProgressMessage()).start()
+
 Promise.all(
 	Object.entries(networkMap).map(([network, { providers }]) =>
 		findFastestEndpoint(providers, network).then((result) => [network, result]),
@@ -83,8 +116,9 @@ Promise.all(
 		const endpointsData = {}
 
 		for (const [key, result] of results) {
-			if (!result) {
-				console.warn(`No working endpoint found for ${key}, using empty value`)
+			if (!result?.url) {
+				spinner.warn(`No working endpoint found for ${chalk.bold(key)}, using empty value`)
+				restartSpinner('Processing results...')
 			}
 
 			endpointsData[key] = {
@@ -95,7 +129,7 @@ Promise.all(
 			}
 		}
 
-		const dir = path.join(__dirname, '../')
+		const dir = path.join(__dirname, '../../packages/static/')
 
 		fs.mkdirSync(dir, { recursive: true })
 		fs.writeFileSync(
@@ -103,13 +137,20 @@ Promise.all(
 			JSON.stringify(endpointsData, null, 2),
 		)
 
-		console.log(`Endpoints data has been written to ${dir}`)
+		console.log('\n')
+		spinner.succeed(`${chalk.green('Endpoints data written successfully')}`)
+		console.log('\n' + chalk.bold('Fastest providers:'))
 
 		for (const [network, data] of Object.entries(endpointsData)) {
-			console.log(`Fastest ${network} provider:`, data.endpoint)
+			const endpoint = data.endpoint || 'None found'
+			const responseTime = data.responseTime
+				? chalk.gray(`(${data.responseTime}ms)`)
+				: ''
+
+			console.log(`${chalk.cyan('•')} ${chalk.bold(network)}: ${endpoint} ${responseTime}`)
 		}
 	})
 	.catch((error) => {
-		console.error('Error:', error.message)
+		spinner.fail(`${chalk.red('Error:')} ${error.message}`)
 	})
 	.finally(() => process.exit(0))
