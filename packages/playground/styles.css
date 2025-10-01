@@ -13,8 +13,53 @@
 }
 
 #root {
-    width: 100%;
-    max-width: 400px;
-    height: 200px;
-    border: 1px dashed purple;
+  width: 350px
+}
+
+.navigation-links {
+  text-align: center;
+  padding: 2rem;
+}
+
+.navigation-links h1 {
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 2.5rem;
+}
+
+.link-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.nav-link {
+  padding: 1rem 2rem;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #0056b3;
+}
+
+.back-link {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+}
+
+.back-link a {
+  color: #666;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.back-link a:hover {
+  color: #333;
+  text-decoration: underline;
 }
