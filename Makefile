@@ -50,3 +50,15 @@ build-sdk:
 build-react:
 	@echo "🏗️ Building React package..."
 	cd packages/react && pnpm build
+
+build-vue:
+	@echo "🏗️ Building Vue package..."
+	cd packages/vue && pnpm build
+
+generate-endpoints:
+	@echo "🔧 Generating endpoints..."
+	cd scripts/endpoint-generator && pnpm run generate
+
+dev-playground:
+	@echo "🚀 Starting playground..."
+	cd packages/playground && pnpm run dev

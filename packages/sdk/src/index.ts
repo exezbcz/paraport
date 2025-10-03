@@ -1,17 +1,8 @@
-import {
-	type DisplayMode,
-	DisplayModes,
-	type MountOptions,
-	type TeleportEvents,
-} from '@/types'
+import '@paraport/vue/style'
 import { ParaPortSDK } from '@paraport/core'
+import { ParaportComponent, installi18n, installPinia, useSdkStore, eventBus, DisplayModes } from '@paraport/vue'
+import type { MountOptions, TeleportEvents, DisplayMode } from '@paraport/vue'
 import { createApp, h } from 'vue'
-import App from './App.vue'
-import { installi18n } from './i18n'
-import eventBus from './utils/event-bus'
-import './assets/index.css'
-import { installPinia } from './plugins/pinia'
-import { useSdkStore } from './stores'
 
 const attachEventListeners = ({
 	onSubmit,
@@ -79,7 +70,7 @@ export function init({
 				onAddFunds,
 			})
 		},
-		render: () => h(App),
+		render: () => h(ParaportComponent),
 	})
 
 	// install plugins

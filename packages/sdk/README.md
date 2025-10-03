@@ -1,6 +1,6 @@
 # @paraport/sdk
 
-Vue components for seamless integration of ParaPort cross-chain teleportation functionality.
+UI layer for seamless integration of ParaPort cross-chain teleportation functionality.
 
 ## Installation
 
@@ -62,9 +62,6 @@ main()
 | onReady | Function | Callback when UI is ready for interaction |
 | onAddFunds | Function | Callback when user clicks to add funds |
 
-## Development
-
-Refer to the main [monorepo documentation](../README.md) for setup instructions and contribution guidelines.
 
 ## License
 
