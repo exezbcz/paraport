@@ -4,12 +4,15 @@
   "type": "module",
   "scripts": {
     "setup": "pnpm install --ignore-workspace --strict-peer-dependencies=false",
-    "generate": "node index.mjs"
+    "generate": "node src/index.mjs"
   },
   "devDependencies": {
+    "@kodadot1/static": "^0.0.7",
     "@polkadot/api": "15.9.2",
     "@polkadot/apps-config": "0.154.1",
+    "@supercharge/promise-pool": "^3.2.0",
     "chalk": "^5.4.1",
-    "ora": "^8.2.0"
+    "ora": "^8.2.0",
+    "p-timeout": "^6.1.4"
   }
 }

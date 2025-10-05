@@ -8,18 +8,27 @@ importers:
 
   .:
     devDependencies:
+      '@kodadot1/static':
+        specifier: ^0.0.7
+        version: 0.0.7
       '@polkadot/api':
         specifier: 15.9.2
         version: 15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@polkadot/apps-config':
         specifier: 0.154.1
         version: 0.154.1(@polkadot/keyring@13.4.4(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4))(bufferutil@4.0.9)(postcss@8.4.49)(react-dom@19.1.0(react@18.3.1))(react-is@16.13.1)(react@18.3.1)(utf-8-validate@5.0.10)
+      '@supercharge/promise-pool':
+        specifier: ^3.2.0
+        version: 3.2.0
       chalk:
         specifier: ^5.4.1
         version: 5.4.1
       ora:
         specifier: ^8.2.0
         version: 8.2.0
+      p-timeout:
+        specifier: ^6.1.4
+        version: 6.1.4
 
 packages:
 
@@ -307,6 +316,9 @@ packages:
     resolution: {integrity: sha512-T6+xVs8uV3jsl+6q7hEwwaNf8wEVoUJnepRBuEanKaUJX1sWyvRULAFjWVceU8eS4+8gT9ORC6KGKlyZnQp4kg==}
     peerDependencies:
       '@polkadot/types': ^12.2.0
+
+  '@kodadot1/static@0.0.7':
+    resolution: {integrity: sha512-pb7uaDXGJdwCkvf8pZ/6mUrg7TNpEkWdbiKc2bPcQoJOfq7FZHrAEF+30lQrHB+woOT76kodFEoLioLwDt8cqg==}
 
   '@laminar/type-definitions@0.3.1':
     resolution: {integrity: sha512-QWC2qtvbPIxal+gMfUocZmwK0UsD7Sb0RUm4Hallkp+OXXL+3uBLwztYDLS5LtocOn0tfR//sgpnfsEIEb71Lw==}
@@ -1215,6 +1227,10 @@ packages:
   '@substrate/ss58-registry@1.51.0':
     resolution: {integrity: sha512-TWDurLiPxndFgKjVavCniytBIw+t4ViOi7TYp9h/D0NMmkEc9klFTo+827eyEJ0lELpqO207Ey7uGxUa+BS1jQ==}
 
+  '@supercharge/promise-pool@3.2.0':
+    resolution: {integrity: sha512-pj0cAALblTZBPtMltWOlZTQSLT07jIaFNeM8TWoJD1cQMgDB9mcMlVMoetiB35OzNJpqQ2b+QEtwiR9f20mADg==}
+    engines: {node: '>=8'}
+
   '@types/bn.js@4.11.6':
     resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
 
@@ -1792,6 +1808,10 @@ packages:
   ora@8.2.0:
     resolution: {integrity: sha512-weP+BZ8MVNnlCm8c0Qdc1WSWq4Qn7I+9CJGm7Qali6g44e/PUzbjNqJX5NJ9ljlNMosfJvg1fKEGILklK9cwnw==}
     engines: {node: '>=18'}
+
+  p-timeout@6.1.4:
+    resolution: {integrity: sha512-MyIV3ZA/PmyBN/ud8vV9XzwTrNtR4jFrObymZYnZqMmW0zA8Z17vnT0rBgFE/TlohB+YCHqXMgZzb3Csp49vqg==}
+    engines: {node: '>=14.16'}
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
@@ -2378,6 +2398,8 @@ snapshots:
   '@kiltprotocol/type-definitions@1.11502.0(@polkadot/types@15.9.2)':
     dependencies:
       '@polkadot/types': 15.9.2
+
+  '@kodadot1/static@0.0.7': {}
 
   '@laminar/type-definitions@0.3.1':
     dependencies:
@@ -4054,6 +4076,8 @@ snapshots:
 
   '@substrate/ss58-registry@1.51.0': {}
 
+  '@supercharge/promise-pool@3.2.0': {}
+
   '@types/bn.js@4.11.6':
     dependencies:
       '@types/node': 22.15.2
@@ -4616,6 +4640,8 @@ snapshots:
       stdin-discarder: 0.2.2
       string-width: 7.2.0
       strip-ansi: 7.1.0
+
+  p-timeout@6.1.4: {}
 
   package-json-from-dist@1.0.1: {}
 
