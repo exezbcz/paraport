@@ -6,12 +6,10 @@ const main = async () => {
   paraport.init({
     integratedTargetId: 'root',
     label: 'Mint',
-    autoteleport: {
-  		address: USER_ADDRESS,
-  		amount: AMOUNT,
-  		chain: 'AssetHubKusama',
-  		asset: 'KSM',
-  	},
+   	address: USER_ADDRESS,
+		amount: AMOUNT,
+		chain: 'AssetHubKusama',
+		asset: 'KSM',
     logLevel: 'DEBUG',
     onReady: (session) => {
       console.log('🚀 ParaPort ready!', session)

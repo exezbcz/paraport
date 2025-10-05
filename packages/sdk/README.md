@@ -19,13 +19,11 @@ import * as paraport from '@paraport/sdk'
 const main = async () => {
   paraport.init({
     integratedTargetId: 'root',
+    address: USER_ADDRESS,
+    amount: '500000000000', // 0.5 KSM
+    chain: 'AssetHubKusama',
+    asset: 'KSM',
     label: 'Mint',
-    autoteleport: {
-      address: USER_ADDRESS,
-      amount: '500000000000', // 0.5 KSM
-      chain: 'AssetHubKusama',
-      asset: 'KSM',
-    },
     logLevel: 'DEBUG',
     onReady: (session) => {
       console.log('🚀 ParaPort ready!', session)
@@ -54,7 +52,10 @@ main()
 | Property | Type | Description |
 |----------|------|-------------|
 | integratedTargetId | string | DOM element ID for component mounting |
-| autoteleport | Object | Teleport configuration object |
+| address | string | User's address |
+| amount | string | Amount to be teleported |
+| chain | string | Chain to be teleported to |
+| asset | string | Asset to be teleported |
 | label | string | Button display text |
 | logLevel | string | Log level for debugging (e.g., 'DEBUG') |
 | onSubmit | Function | Callback on form submission with { autoteleport, completed } parameters |

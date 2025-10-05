@@ -1,35 +1,14 @@
 import '@paraport/vue/style'
-import { ParaPortSDK } from '@paraport/core'
-import { ParaportComponent, installi18n, installPinia, useSdkStore, eventBus, DisplayModes } from '@paraport/vue'
-import type { MountOptions, TeleportEvents, DisplayMode } from '@paraport/vue'
+import { ParaportComponent, installi18n, installPinia, useSdkStore, DisplayModes } from '@paraport/vue'
+import type { MountOptions } from './types'
 import { createApp, h } from 'vue'
-
-const attachEventListeners = ({
-	onSubmit,
-	onCompleted,
-	onReady,
-	onAddFunds,
-}: TeleportEvents) => {
-	if (onReady) {
-		eventBus.on('session:ready', onReady)
-	}
-
-	if (onSubmit) {
-		eventBus.on('teleport:submit', (e) => onSubmit(e))
-	}
-
-	if (onCompleted) {
-		eventBus.on('teleport:completed', () => onCompleted())
-	}
-
-	if (onAddFunds) {
-		eventBus.on('session:add-funds', () => onAddFunds())
-	}
-}
 
 export function init({
 	integratedTargetId,
-	autoteleport,
+	amount,
+	chain,
+	address,
+	asset,
 	onSubmit,
 	onCompleted,
 	onReady,
@@ -43,34 +22,21 @@ export function init({
 		throw new Error(`Target element not found: ${integratedTargetId}`)
 	}
 
-	if (!autoteleport) {
-		throw new Error('Teleport Params is required')
-	}
-
-	const sdk = new ParaPortSDK({
-		getSigner: options.getSigner,
-		logLevel: options.logLevel,
-		chains: undefined,
-	})
-
 	const app = createApp({
-		setup() {
-			const store = useSdkStore()
-
-			store.setSdk(sdk)
-			store.setTeleportParams(autoteleport)
-			store.setLabel(options.label || '')
-			store.setDisabled(options.disabled || false)
-			store.setDisplayMode(displayMode as DisplayMode)
-
-			attachEventListeners({
-				onCompleted,
-				onSubmit,
-				onReady,
-				onAddFunds,
-			})
-		},
-		render: () => h(ParaportComponent),
+		render: () => h(ParaportComponent, {
+        chain,
+        amount,
+        address,
+        asset,
+        displayMode,
+        logLevel: options.logLevel,
+        label: options.label,
+        disabled: options.disabled,
+        onReady,
+        onAddFunds,
+        onCompleted,
+        onSubmit
+		}),
 	})
 
 	// install plugins
