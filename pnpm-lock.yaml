@@ -84,12 +84,18 @@ importers:
       '@paraport/vue':
         specifier: workspace:*
         version: link:../vue
+      '@vitejs/plugin-vue':
+        specifier: ^5.2.1
+        version: 5.2.3(vite@6.3.3(@types/node@22.15.2)(jiti@1.21.7)(sass@1.87.0)(yaml@2.7.1))(vue@3.5.13(typescript@5.7.3))
       react:
         specifier: ^19.0.0
         version: 19.1.0
       react-dom:
         specifier: ^19.0.0
         version: 19.1.0(react@19.1.0)
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.7.3)
     devDependencies:
       '@types/react':
         specifier: ^19.0.10
