@@ -2,17 +2,9 @@ import { useEffect, useRef } from 'react'
 import './index.css'
 import { init } from '@paraport/sdk'
 
-type InitParams = Parameters<typeof init>[0]
-type autoteleport = InitParams['autoteleport']
+type ParaportParams = Omit<Parameters<typeof init>[0], 'integratedTargetId'>
 
-type AutoTeleportProps = {
-  address: autoteleport['address']
-  amount: autoteleport['amount']
-  chain: autoteleport['chain']
-  asset: autoteleport['asset']
-} & Pick<InitParams, 'onSubmit' | 'onCompleted' | 'onReady' | 'onAddFunds' | 'disabled' | 'displayMode' | 'getSigner' | 'logLevel' | 'label'>
-
-function App({
+function Paraport({
   address,
   amount,
   chain,
@@ -26,35 +18,34 @@ function App({
   disabled,
   getSigner,
   logLevel,
-}: AutoTeleportProps) {
+}: ParaportParams) {
   const sdkInstanceRef = useRef<ReturnType<typeof init> | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!containerRef.current || sdkInstanceRef.current) return
 
-    const integratedTargetId = `paraport-container-${Math.random().toString(36).substring(2, 9)}`
+    const integratedTargetId = `paraport-${crypto.randomUUID().split('-')[0]}`
     containerRef.current.id = integratedTargetId
 
-    const teleportParams = {
-      address,
-      amount,
-      chain,
-      asset
-    }
-
     const instance = init({
+      // Required
       integratedTargetId,
-      autoteleport: teleportParams,
-      onSubmit,
-      onCompleted,
-      onReady,
-      onAddFunds,
+      amount,
+      address,
+      chain,
+      asset,
+      // Optional
       displayMode,
       label,
       disabled,
       getSigner,
-      logLevel
+      logLevel,
+      // Events
+      onSubmit,
+      onCompleted,
+      onReady,
+      onAddFunds,
     })
 
     sdkInstanceRef.current = instance
@@ -82,4 +73,4 @@ function App({
   )
 }
 
-export default App
+export default Paraport
