@@ -15,7 +15,8 @@ const app = createApp({
         asset: 'KSM',
         onReady: this.onReady,
         onAddFunds: this.onAddFunds,
-        onCompleted: this.onCompleted
+        onCompleted: this.onCompleted,
+        onSubmit: this.onSubmit
       }
     )
   },
@@ -26,14 +27,19 @@ const app = createApp({
     }
   },
   methods: {
-    onReady() {
-      console.log('Ready')
+    onReady(session) {
+      console.log('🚀 ParaPort ready!', session)
     },
     onAddFunds() {
-      console.log('Add Funds')
+      console.log('💰 Add funds button pressed')
     },
     onCompleted() {
-      console.log('Completed')
+      console.log('✅ Auto-teleport successfully completed!')
+    },
+    onSubmit({ autoteleport, completed }) {
+      console.log('📦 Submit button pressed')
+      console.log('💥 Autoteleport: ', autoteleport)
+      console.log('✅ Completed: ', completed)
     }
   }
 })
