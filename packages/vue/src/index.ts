@@ -1,29 +1,27 @@
 import './assets/index.css'
-export { default as ParaportComponent } from './App.vue'
+export { default as Paraport } from './Paraport.vue'
 
 // types
 export type { DisplayMode, ParaportParams, ParaportEvents } from '@/types'
 export { DisplayModes } from '@/types'
 
 // plugins and store
-export { installPinia } from '@/plugins/pinia'
-export { installi18n } from '@/i18n'
 export { useSdkStore } from '@/stores'
 
 import { installi18n } from '@/i18n'
 import { installPinia } from '@/plugins/pinia'
 import type { App } from 'vue'
-import ParaportApp from './App.vue'
+import Paraport from './Paraport.vue'
 
 export function install(app: App) {
-	app.component('Paraport', ParaportApp)
+	app.component('Paraport', Paraport)
 
 	installPinia(app)
 	installi18n(app)
 }
 
-export const Paraport = {
+export const ParaportPlugin = {
 	install,
 }
 
-export default Paraport
+export default ParaportPlugin

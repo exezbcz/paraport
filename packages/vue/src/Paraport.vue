@@ -41,7 +41,7 @@ store.setTeleportParams({
 })
 store.setLabel(props.label || '')
 store.setDisabled(props.disabled || false)
-store.setDisplayMode(props.displayMode as DisplayMode)
+store.setDisplayMode(props.displayMode || DisplayModes.Integrated as DisplayMode)
 
 eventBus.on('session:ready', () => emits('completed'))
 eventBus.on('session:add-funds', () => emits('addFunds'))

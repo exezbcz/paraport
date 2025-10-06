@@ -1,5 +1,5 @@
 import '@paraport/vue/style'
-import { ParaportComponent, installi18n, installPinia, useSdkStore, DisplayModes } from '@paraport/vue'
+import { Paraport, ParaportPlugin, DisplayModes, useSdkStore } from '@paraport/vue'
 import type { MountOptions } from './types'
 import { createApp, h } from 'vue'
 
@@ -23,7 +23,7 @@ export function init({
 	}
 
 	const app = createApp({
-		render: () => h(ParaportComponent, {
+		render: () => h(Paraport, {
         chain,
         amount,
         address,
@@ -39,10 +39,7 @@ export function init({
 		}),
 	})
 
-	// install plugins
-	installPinia(app)
-	installi18n(app)
-
+	app.use(ParaportPlugin)
 	app.mount(targetElement)
 
 	return {
