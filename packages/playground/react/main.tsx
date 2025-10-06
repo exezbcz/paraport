@@ -9,24 +9,29 @@ const main = async () => {
   if (rootElement) {
     const root = createRoot(rootElement)
     root.render(
-      <>
+      <React.StrictMode>
         <Paraport
           label="Mint"
           address={USER_ADDRESS}
           amount={AMOUNT}
           chain="AssetHubKusama"
           asset="KSM"
-          onReady={() => {
-            console.log('Ready')
+          onReady={(session) => {
+            console.log('🚀 ParaPort ready!', session)
+          }}
+          onSubmit={({ autoteleport, completed }) => {
+            console.log('📦 Submit button pressed')
+            console.log('💥 Autoteleport: ', autoteleport)
+            console.log('✅ Completed: ', completed)
           }}
           onAddFunds={() => {
-            console.log('Add Funds')
+            console.log('💰 Add funds button pressed')
           }}
           onCompleted={() => {
-            console.log('Completed')
+            console.log('✅ Auto-teleport successfully completed!')
           }}
         />
-      </>
+      </React.StrictMode>
     )
   }
 }
