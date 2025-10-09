@@ -1,11 +1,6 @@
 import type { Logger } from '@/services/LoggerService'
 import type SubstrateApi from '@/services/SubstrateApi'
-import {
-	chainPropListOf,
-	formatAddress,
-	transferableBalanceOf,
-	xcmSafeBalanceOf,
-} from '@/utils'
+import { formatAddress, transferableBalanceOf } from '@/utils'
 import { balanceOf } from '@kodadot1/sub-api'
 import type { Asset, Chain } from '@paraport/static'
 import type { AccountInfo } from '@polkadot/types/interfaces'
@@ -58,7 +53,7 @@ export default class BalanceService {
 		return {
 			chain,
 			asset,
-			address: formatAddress(address, chainPropListOf(chain).ss58Format),
+			address: formatAddress(address, chain),
 			amount,
 			transferable: transferableBalanceOf(amount, chain),
 		} as Balance

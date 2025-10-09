@@ -1,7 +1,9 @@
+import { ss58Of } from '@/utils/chains'
+import type { Chain } from '@paraport/static'
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 
-export const formatAddress = (address: string, ss58Format: number) =>
-	encodeAddress(address, ss58Format)
+export const formatAddress = (address: string, chain: Chain) =>
+	encodeAddress(address, ss58Of(chain))
 
 export const isValidAddress = (address: string) => {
 	try {
