@@ -26,6 +26,9 @@
 			"complexity": {
 				"noUselessConstructor": "off",
 				"noStaticOnlyClass": "off"
+			},
+			"correctness": {
+				"noUnusedImports": "error"
 			}
 		}
 	},
