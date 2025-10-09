@@ -164,6 +164,8 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			teleportMode: TeleportModes.Expected,
 		})
 
+		// First simulate the XCM fee (less accurate) to get an estimate
+		// We need to use a valid amount for the actual fee calculation to avoid dry run failure
 		const xcmFee = await this.getXcmFee({
 			amount: estimateTeleportAmount,
 			origin: originChain,
