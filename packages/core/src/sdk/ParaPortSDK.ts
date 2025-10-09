@@ -23,6 +23,8 @@ import {
 	type TeleportEventPayload,
 	type TeleportEventType,
 	TeleportEventTypes,
+	type TeleportMode,
+	TeleportModes,
 	type TeleportParams,
 } from '@/types/teleport'
 import { getChainsOfAsset, isValidAddress } from '@/utils'
@@ -170,10 +172,12 @@ export default class ParaPortSDK extends Initializable {
 	}
 
 	async initSession(p: TeleportParams<string>): Promise<TeleportSession> {
-		this.ensureInitialized()
-		this.validateTeleportParams(p)
+		const allParams = { ...p, mode: p.mode || TeleportModes.Expected }
 
-		const params = convertToBigInt(p, ['amount'])
+		this.ensureInitialized()
+		this.validateTeleportParams(allParams)
+
+		const params = convertToBigInt(allParams, ['amount'])
 
 		this.logger.debug('initSession', params)
 
@@ -293,8 +297,10 @@ export default class ParaPortSDK extends Initializable {
 		)
 
 		const validAmount = BigInt(params.amount) > BigInt(0)
-
 		const validAddress = isValidAddress(params.address)
+		const validMode = Object.values(TeleportModes).includes(
+			params.mode as TeleportMode,
+		)
 
 		const validationErrors = [
 			!validAddress && 'Invalid address format',
@@ -302,6 +308,7 @@ export default class ParaPortSDK extends Initializable {
 			!validAmount && 'Amount must be greater than 0',
 			!validChain && 'Invalid chain',
 			!validChainAsset && 'Asset not supported on the specified chain',
+			!validMode && 'Invalid mode',
 		].filter(Boolean)
 
 		if (validationErrors.length > 0) {

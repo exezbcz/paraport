@@ -176,7 +176,7 @@ const onAddFunds = async () => {
 }
 
 const viewTx = () => {
-	const chain = autoteleport.value?.details.route.source
+	const chain = autoteleport.value?.details.route.origin
 	const txHash = autoteleport.value?.transactions[0].txHash
 
 	if (!txHash || !chain) return

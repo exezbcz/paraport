@@ -1,5 +1,6 @@
 import { Initializable } from '@/base/Initializable'
 import type BalanceService from '@/services/BalanceService'
+import type { Balance } from '@/services/BalanceService'
 import FeeService from '@/services/FeeService'
 import type SubstrateApi from '@/services/SubstrateApi'
 import type {
@@ -8,9 +9,13 @@ import type {
 	BrigeTransferParams,
 } from '@/types/bridges'
 import type { Quote, SDKConfig } from '@/types/common'
-import type { TeleportParams } from '@/types/teleport'
+import {
+	type TeleportMode,
+	TeleportModes,
+	type TeleportParams,
+} from '@/types/teleport'
 import type { TransactionCallback } from '@/types/transactions'
-import { getChainsOfAsset } from '@/utils'
+import { formatAddress, getChainsOfAsset, ss58Of } from '@/utils'
 import { signAndSend } from '@/utils/tx'
 import type { Asset, Chain } from '@paraport/static'
 import * as paraspell from '@paraspell/sdk-pjs'
@@ -18,19 +23,15 @@ import { maxBy } from 'lodash'
 
 type XCMTeleportParams = {
 	amount: bigint
-	source: Chain
-	target: Chain
+	origin: Chain
+	destination: Chain
 	address: string
 	asset: Asset
 }
 
-const FEE_MARGIN_PERCENTAGE = 10
-
 export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
 	private readonly signatureAmount: number = 1
-
-	private readonly feeService: FeeService
 
 	constructor(
 		private readonly config: SDKConfig,
@@ -39,52 +40,80 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 	) {
 		super()
 		this.api = api
-		this.feeService = new FeeService(this.api)
 	}
 
-	private async teleport({
+	private async getParaspellQuery({
 		amount,
-		source,
-		target,
+		origin,
+		destination,
 		address,
 		asset,
 	}: XCMTeleportParams) {
-		const api = await this.api.getInstance(source)
+		const api = await this.api.getInstance(origin)
 
 		return paraspell
 			.Builder(api)
-			.from(source)
-			.to(target)
+			.from(origin)
+			.to(destination)
 			.currency({ symbol: asset, amount: amount })
-			.address(address)
-			.build()
+			.address(formatAddress(address, ss58Of(destination)))
+			.senderAddress(formatAddress(address, ss58Of(origin)))
 	}
 
-	private async getTeleportFees({
+	private async getXcmFee({
 		amount,
-		source,
-		target,
+		origin,
+		destination,
 		address,
 		asset,
-	}: XCMTeleportParams): Promise<bigint> {
-		const tx = await this.teleport({
+		estimate,
+	}: XCMTeleportParams & { estimate?: boolean }): Promise<bigint> {
+		const query = await this.getParaspellQuery({
 			amount,
-			source,
-			target,
+			origin,
+			destination,
 			address,
 			asset,
 		})
 
-		const teleportFee = await this.feeService.calculateFee(tx, address)
+		try {
+			const { origin, destination } = await query
+				.feeAsset({ symbol: asset })
+				[estimate ? 'getXcmFeeEstimate' : 'getXcmFee']()
 
-		return teleportFee + teleportFee / BigInt(FEE_MARGIN_PERCENTAGE)
+			return BigInt(origin.fee || 0) + BigInt(destination.fee || 0)
+		} catch (error) {
+			console.log('Failed getting Xcm fee', error)
+			throw error
+		}
+	}
+
+	private calculateTeleportAmount({
+		amount,
+		xcmFee,
+		currentChainBalance,
+		teleportMode,
+	}: {
+		amount: bigint
+		teleportMode: TeleportMode
+		currentChainBalance: Balance
+		xcmFee: bigint
+	}) {
+		if (TeleportModes.Expected === teleportMode) {
+			return amount - currentChainBalance.transferable + xcmFee
+		}
+		if (TeleportModes.Only === teleportMode) {
+			return amount - xcmFee
+		}
+		return amount // TeleportModes.Exact
 	}
 
 	async getQuote({
 		address,
 		asset,
-		chain: targetChain,
+		chain: destinationChain,
 		amount,
+		mode = TeleportModes.Expected,
 	}: TeleportParams): Promise<Quote | null> {
 		// 1. get chains where the token is available
 		const chains = getChainsOfAsset(asset).filter((chain) =>
@@ -99,12 +128,12 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		})
 
 		const currentChainBalance = balances.find(
-			(balance) => balance.chain === targetChain,
+			(balance) => balance.chain === destinationChain,
 		)
 
 		// 3. from possible target chains find the one with the highest transferable balance
 		const targetChainBalances = balances.filter(
-			(balance) => balance.chain !== targetChain,
+			(balance) => balance.chain !== destinationChain,
 		)
 
 		const highestBalanceChain = maxBy(
@@ -116,46 +145,66 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			return null
 		}
 
-		const sourceChain = highestBalanceChain.chain
+		const originChain = highestBalanceChain.chain
 
-		// 4. calculate tx fees
-		const teleportFees = await this.getTeleportFees({
+		// 4. calculate amount to teleport
+		const estimateXcmFee = await this.getXcmFee({
 			amount,
-			source: sourceChain,
-			target: targetChain,
+			origin: originChain,
+			destination: destinationChain,
+			address,
+			asset,
+			estimate: true,
+		})
+
+		const estimateTeleportAmount = this.calculateTeleportAmount({
+			amount,
+			xcmFee: estimateXcmFee,
+			currentChainBalance: currentChainBalance,
+			teleportMode: TeleportModes.Expected,
+		})
+
+		const xcmFee = await this.getXcmFee({
+			amount: estimateTeleportAmount,
+			origin: originChain,
+			destination: destinationChain,
 			address,
 			asset,
 		})
 
-		const totalFees = teleportFees
-		const totalAmount = amount + totalFees
+		const amountToTeleport = this.calculateTeleportAmount({
+			amount,
+			xcmFee,
+			currentChainBalance: currentChainBalance,
+			teleportMode: mode,
+		})
 
 		if (
-			currentChainBalance.transferable + highestBalanceChain.xcmTransferable <
-			totalAmount
+			currentChainBalance.transferable + highestBalanceChain.transferable <
+			amountToTeleport
 		) {
 			return null
 		}
 
-		const neededAmount = amount - currentChainBalance.transferable
-
-		if (neededAmount <= 0) {
+		if (amountToTeleport <= 0) {
 			return null
 		}
 
-		const total = neededAmount + totalFees
+		const totalFees = xcmFee
+		const receivingAmount = amountToTeleport - totalFees
 
 		return {
-			amount: neededAmount,
-			total: total,
+			mode: mode,
+			amount: receivingAmount,
+			total: amountToTeleport,
 			asset: asset,
 			route: {
-				source: sourceChain,
-				target: targetChain,
+				origin: originChain,
+				destination: destinationChain,
 				protocol: this.protocol,
 			},
 			fees: {
-				bridge: teleportFees,
+				bridge: xcmFee,
 				total: totalFees,
 			},
 			execution: {
@@ -169,13 +218,15 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		{ amount, from, to, address, asset }: BrigeTransferParams,
 		callback: TransactionCallback,
 	) {
-		const tx = await this.teleport({
+		const query = await this.getParaspellQuery({
 			amount,
-			source: from,
-			target: to,
+			origin: from,
+			destination: to,
 			address,
 			asset,
 		})
+
+		const tx = await query.build()
 
 		return signAndSend({
 			tx,

@@ -22,12 +22,12 @@
 
             <div class="flex items-center justify-between">
                 <span class="text-secondary"> {{t('detailsModal.transferAmount')}} </span>
-                <Amount class="text-text" :amount="selectedQuote.amount" :chain="selectedQuote.route.source" />
+                <Amount class="text-text" :amount="selectedQuote.amount" :chain="selectedQuote.route.origin" />
             </div>
 
             <div class="flex items-center justify-between">
                 <span class="text-secondary"> {{t('detailsModal.fees')}} </span>
-                <Amount class="text-text" :amount="selectedQuote.fees.total" :chain="selectedQuote.route.source" />
+                <Amount class="text-text" :amount="selectedQuote.fees.total" :chain="selectedQuote.route.origin" />
             </div>
 
             <div class="flex items-center justify-between">
@@ -89,9 +89,9 @@ const { t } = useI18n()
 const selectedQuote = computed(() => props.session.quotes.selected)
 
 const sourceChain = computed(() =>
-	selectedQuote.value ? getChainName(selectedQuote.value.route.source) : '',
+	selectedQuote.value ? getChainName(selectedQuote.value.route.origin) : '',
 )
 const targetChain = computed(() =>
-	selectedQuote.value ? getChainName(selectedQuote.value.route.target) : '',
+	selectedQuote.value ? getChainName(selectedQuote.value.route.destination) : '',
 )
 </script>

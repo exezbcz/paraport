@@ -38,6 +38,7 @@ store.setTeleportParams({
 	address: props.address,
 	asset: props.asset,
 	amount: props.amount,
+	mode: props.mode
 })
 store.setLabel(props.label || '')
 store.setDisabled(props.disabled || false)
