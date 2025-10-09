@@ -1,7 +1,6 @@
 import { Initializable } from '@/base/Initializable'
 import type BalanceService from '@/services/BalanceService'
 import type { Balance } from '@/services/BalanceService'
-import FeeService from '@/services/FeeService'
 import type SubstrateApi from '@/services/SubstrateApi'
 import type {
 	BridgeAdapter,
