@@ -172,7 +172,10 @@ export default class ParaPortSDK extends Initializable {
 	}
 
 	async initSession(p: TeleportParams<string>): Promise<TeleportSession> {
-		const allParams = { ...p, mode: p.mode || TeleportModes.Expected }
+		const allParams = {
+			...p,
+			teleportMode: p.teleportMode || TeleportModes.Expected,
+		}
 
 		this.ensureInitialized()
 		this.validateTeleportParams(allParams)
@@ -299,7 +302,7 @@ export default class ParaPortSDK extends Initializable {
 		const validAmount = BigInt(params.amount) > BigInt(0)
 		const validAddress = isValidAddress(params.address)
 		const validMode = Object.values(TeleportModes).includes(
-			params.mode as TeleportMode,
+			params.teleportMode as TeleportMode,
 		)
 
 		const validationErrors = [
@@ -308,7 +311,7 @@ export default class ParaPortSDK extends Initializable {
 			!validAmount && 'Amount must be greater than 0',
 			!validChain && 'Invalid chain',
 			!validChainAsset && 'Asset not supported on the specified chain',
-			!validMode && 'Invalid mode',
+			!validMode && 'Invalid teleport mode',
 		].filter(Boolean)
 
 		if (validationErrors.length > 0) {

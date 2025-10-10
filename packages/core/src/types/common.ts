@@ -102,7 +102,7 @@ export type Quote<Amount = bigint> = {
 		/**
 		 * The number of signatures required to complete this transfer.
 		 */
-		signatureAmount: number
+		requiredSignatureCount: number
 
 		/**
 		 * Estimated time for the execution of the transfer in milliseconds.
@@ -114,5 +114,5 @@ export type Quote<Amount = bigint> = {
 	 * The teleport mode used for this quote calculation.
 	 * Can be 'expected', 'exact', or 'only'.
 	 */
-	mode: TeleportMode
+	teleportMode: TeleportMode
 }

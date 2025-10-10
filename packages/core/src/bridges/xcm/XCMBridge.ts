@@ -5,7 +5,7 @@ import type SubstrateApi from '@/services/SubstrateApi'
 import type {
 	BridgeAdapter,
 	BridgeProtocol,
-	BrigeTransferParams,
+	BridgeTransferParams,
 } from '@/types/bridges'
 import type { Quote, SDKConfig } from '@/types/common'
 import {
@@ -20,7 +20,7 @@ import type { Asset, Chain } from '@paraport/static'
 import * as paraspell from '@paraspell/sdk-pjs'
 import { maxBy } from 'lodash'
 
-type XCMTeleportParams = {
+type XCMTransferParams = {
 	amount: bigint
 	originChain: Chain
 	destinationChain: Chain
@@ -30,7 +30,7 @@ type XCMTeleportParams = {
 
 export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
-	private readonly signatureAmount: number = 1
+	private readonly requiredSignatureCount: number = 1
 
 	constructor(
 		private readonly config: SDKConfig,
@@ -47,7 +47,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		destinationChain,
 		address,
 		asset,
-	}: XCMTeleportParams) {
+	}: XCMTransferParams) {
 		const api = await this.api.getInstance(originChain)
 
 		return paraspell
@@ -66,7 +66,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		address,
 		asset,
 		estimate,
-	}: XCMTeleportParams & { estimate?: boolean }): Promise<bigint> {
+	}: XCMTransferParams & { estimate?: boolean }): Promise<bigint> {
 		const query = await this.getParaspellQuery({
 			amount,
 			originChain,
@@ -112,7 +112,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		asset,
 		chain: destinationChain,
 		amount,
-		mode = TeleportModes.Expected,
+		teleportMode = TeleportModes.Expected,
 	}: TeleportParams): Promise<Quote | null> {
 		// 1. get chains where the token is available
 		const chains = getChainsOfAsset(asset).filter((chain) =>
@@ -173,31 +173,28 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			asset,
 		})
 
-		const amountToTeleport = this.calculateTeleportAmount({
+		const transferAmount = this.calculateTeleportAmount({
 			amount,
 			xcmFee,
 			currentChainBalance,
-			teleportMode: mode,
+			teleportMode,
 		})
 
 		if (
+			transferAmount <= 0 ||
 			currentChainBalance.transferable + highestBalanceChain.transferable <
-			amountToTeleport
+				transferAmount
 		) {
 			return null
 		}
 
-		if (amountToTeleport <= 0) {
-			return null
-		}
-
 		const totalFees = xcmFee
-		const receivingAmount = amountToTeleport - totalFees
+		const receivingAmount = transferAmount - totalFees
 
 		return {
-			mode: mode,
+			teleportMode,
 			amount: receivingAmount,
-			total: amountToTeleport,
+			total: transferAmount,
 			asset: asset,
 			route: {
 				origin: originChain,
@@ -209,7 +206,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 				total: totalFees,
 			},
 			execution: {
-				signatureAmount: this.signatureAmount,
+				requiredSignatureCount: this.requiredSignatureCount,
 				timeMs: 30000,
 			},
 		}
@@ -222,7 +219,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			to: destinationChain,
 			address,
 			asset,
-		}: BrigeTransferParams,
+		}: BridgeTransferParams,
 		callback: TransactionCallback,
 	) {
 		const query = await this.getParaspellQuery({

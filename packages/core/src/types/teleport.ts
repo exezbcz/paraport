@@ -28,7 +28,7 @@ export type TeleportParams<Amount = bigint> = {
 	 * The teleport mode that determines how the amount is calculated
 	 * @see TeleportMode
 	 */
-	mode?: TeleportMode
+	teleportMode?: TeleportMode
 }
 
 export interface TeleportDetails
