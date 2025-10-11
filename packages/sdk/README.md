@@ -8,6 +8,15 @@ UI layer for seamless integration of ParaPort cross-chain teleportation function
 pnpm add @paraport/sdk
 ```
 
+### Install Peer Dependencies
+
+ParaPort SDK is designed to work with PolkadotJS API. Install the required peer dependencies:
+
+```bash
+# PolkadotJS peer dependencies
+pnpm add @polkadot/api @polkadot/extension-dapp @polkadot/types @polkadot/util @polkadot/util-crypto
+```
+
 ## Component Usage
 
 ### Basic Integration

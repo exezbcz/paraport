@@ -95,6 +95,21 @@ sdk.retrySession(session.id)
 - `@polkadot/api`: Polkadot.js API for blockchain interaction
 - `@paraspell/sdk-pjs`: ParaSpell SDK for XCM transfers
 
+## Installation
+
+```bash
+pnpm add @paraport/core
+```
+
+### Install Peer Dependencies
+
+ParaPort Core is designed to work with PolkadotJS API. Install the required peer dependencies:
+
+```bash
+# PolkadotJS peer dependencies
+pnpm add @polkadot/api @polkadot/extension-dapp @polkadot/types @polkadot/util-crypto
+```
+
 ## Automated Token Movement Process
 
 The automated token movement feature simplifies cross-chain transfers by:

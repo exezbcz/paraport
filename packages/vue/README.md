@@ -8,6 +8,15 @@ Vue component for seamless integration of ParaPort cross-chain teleportation fun
 pnpm add @paraport/vue
 ```
 
+### Install Peer Dependencies
+
+ParaPort Vue is designed to work with PolkadotJS API. Install the required peer dependencies:
+
+```bash
+# PolkadotJS peer dependencies
+pnpm add @polkadot/api @polkadot/extension-dapp @polkadot/types @polkadot/util @polkadot/util-crypto
+```
+
 ## Component Usage
 
 ### Basic Integration
