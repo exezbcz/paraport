@@ -3,7 +3,7 @@
 	"version": "0.1.0-alpha.1",
 	"description": "Vue components for ParaPort SDK",
 	"keywords": ["paraport", "polkadot", "sdk", "vue"],
-	"author": "KodaDot",
+	"author": "Paraport",
 	"license": "MIT",
 	"type": "module",
 	"files": ["dist", "README.md"],

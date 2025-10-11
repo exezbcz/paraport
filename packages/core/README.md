@@ -122,4 +122,4 @@ The automated token movement feature simplifies cross-chain transfers by:
 
 ## License
 
-MIT © KodaDot
+MIT © Paraport
