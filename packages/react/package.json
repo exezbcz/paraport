@@ -31,10 +31,20 @@
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "@polkadot/api": "^15.x",
+    "@polkadot/extension-dapp": "^0.58.x",
+    "@polkadot/types": "^15.x",
+    "@polkadot/util": "^13.x",
+    "@polkadot/util-crypto": "^13.x"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@polkadot/api": "15.9.2",
+    "@polkadot/extension-dapp": "^0.58.3",
+    "@polkadot/types": "15.9.2",
+    "@polkadot/util": "^13.4.4",
+    "@polkadot/util-crypto": "^13.4.4",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react-swc": "^3.8.0",

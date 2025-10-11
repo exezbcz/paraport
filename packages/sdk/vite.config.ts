@@ -7,19 +7,26 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'ParaportSDK',
-      fileName: 'index'
+      fileName: 'index',
+      formats: ['es', 'umd']
     },
     rollupOptions: {
       external: [
         'vue',
-        '@paraport/vue',
-        '@paraport/core'
+        '@polkadot/api',
+        '@polkadot/extension-dapp',
+        '@polkadot/types',
+        '@polkadot/util',
+        '@polkadot/util-crypto'
       ],
       output: {
         globals: {
           vue: 'Vue',
-          '@paraport/vue': 'ParaportVue',
-          '@paraport/core': 'ParaportCore'
+          '@polkadot/api': 'polkadotApi',
+          '@polkadot/extension-dapp': 'polkadotExtensionDapp',
+          '@polkadot/types': 'polkadotTypes',
+          '@polkadot/util': 'polkadotUtil',
+          '@polkadot/util-crypto': 'polkadotUtilCrypto'
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') return 'index.css'

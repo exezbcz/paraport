@@ -23,18 +23,6 @@ importers:
       '@paraspell/sdk-pjs':
         specifier: ^8.14.0
         version: 8.14.0(@polkadot/api-base@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/api@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/types@15.9.2)(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4)(bufferutil@4.0.9)(typechain@8.3.2(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10)
-      '@polkadot/api':
-        specifier: 15.9.2
-        version: 15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@polkadot/extension-dapp':
-        specifier: ^0.58.3
-        version: 0.58.3(@polkadot/api@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@polkadot/types':
-        specifier: 15.9.2
-        version: 15.9.2
-      '@polkadot/util-crypto':
-        specifier: ^13.3.1
-        version: 13.4.4(@polkadot/util@13.4.4)
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
@@ -48,12 +36,24 @@ importers:
       '@biomejs/biome':
         specifier: ^1.9.4
         version: 1.9.4
+      '@polkadot/api':
+        specifier: 15.9.2
+        version: 15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/extension-dapp':
+        specifier: ^0.58.3
+        version: 0.58.3(@polkadot/api@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/types':
+        specifier: 15.9.2
+        version: 15.9.2
+      '@polkadot/util-crypto':
+        specifier: ^13.4.4
+        version: 13.4.4(@polkadot/util@13.4.4)
       '@types/lodash':
         specifier: ^4.17.15
         version: 4.17.16
       '@vitest/coverage-v8':
-        specifier: 3.1.1
-        version: 3.1.1(vitest@3.1.2(@types/node@22.15.2)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(sass@1.87.0)(yaml@2.7.1))
+        specifier: 3.1.2
+        version: 3.1.2(vitest@3.1.2(@types/node@22.15.2)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(sass@1.87.0)(yaml@2.7.1))
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -70,7 +70,7 @@ importers:
         specifier: ^4.5.0
         version: 4.5.3(@types/node@22.15.2)(rollup@4.40.0)(typescript@5.7.3)(vite@6.3.3(@types/node@22.15.2)(jiti@1.21.7)(sass@1.87.0)(yaml@2.7.1))
       vitest:
-        specifier: ^3.1.1
+        specifier: ^3.1.2
         version: 3.1.2(@types/node@22.15.2)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(sass@1.87.0)(yaml@2.7.1)
 
   packages/playground:
@@ -84,6 +84,21 @@ importers:
       '@paraport/vue':
         specifier: workspace:*
         version: link:../vue
+      '@polkadot/api':
+        specifier: ^15.9.2
+        version: 15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/extension-dapp':
+        specifier: ^0.58.3
+        version: 0.58.3(@polkadot/api@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/types':
+        specifier: ^15.9.2
+        version: 15.9.2
+      '@polkadot/util':
+        specifier: ^13.4.4
+        version: 13.4.4
+      '@polkadot/util-crypto':
+        specifier: ^13.4.4
+        version: 13.4.4(@polkadot/util@13.4.4)
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
         version: 5.2.3(vite@6.3.3(@types/node@22.15.2)(jiti@1.21.7)(sass@1.87.0)(yaml@2.7.1))(vue@3.5.13(typescript@5.7.3))
@@ -122,6 +137,21 @@ importers:
       '@eslint/js':
         specifier: ^9.22.0
         version: 9.25.1
+      '@polkadot/api':
+        specifier: 15.9.2
+        version: 15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/extension-dapp':
+        specifier: ^0.58.3
+        version: 0.58.3(@polkadot/api@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/types':
+        specifier: 15.9.2
+        version: 15.9.2
+      '@polkadot/util':
+        specifier: ^13.4.4
+        version: 13.4.4
+      '@polkadot/util-crypto':
+        specifier: ^13.4.4
+        version: 13.4.4(@polkadot/util@13.4.4)
       '@types/react':
         specifier: ^19.0.10
         version: 19.1.2
@@ -180,6 +210,21 @@ importers:
       '@biomejs/biome':
         specifier: ^1.9.4
         version: 1.9.4
+      '@polkadot/api':
+        specifier: 15.9.2
+        version: 15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/extension-dapp':
+        specifier: ^0.58.3
+        version: 0.58.3(@polkadot/api@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/types':
+        specifier: 15.9.2
+        version: 15.9.2
+      '@polkadot/util':
+        specifier: ^13.3.1
+        version: 13.4.4
+      '@polkadot/util-crypto':
+        specifier: ^13.3.1
+        version: 13.4.4(@polkadot/util@13.4.4)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -213,9 +258,6 @@ importers:
       '@paraport/core':
         specifier: workspace:*
         version: link:../core
-      '@polkadot/util':
-        specifier: ^13.4.3
-        version: 13.4.4
       '@tanstack/vue-table':
         specifier: ^8.21.2
         version: 8.21.3(vue@3.5.13(typescript@5.7.3))
@@ -259,6 +301,21 @@ importers:
       '@biomejs/biome':
         specifier: ^1.9.4
         version: 1.9.4
+      '@polkadot/api':
+        specifier: 15.9.2
+        version: 15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/extension-dapp':
+        specifier: ^0.58.3
+        version: 0.58.3(@polkadot/api@15.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@polkadot/util-crypto@13.4.4(@polkadot/util@13.4.4))(@polkadot/util@13.4.4)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@polkadot/types':
+        specifier: 15.9.2
+        version: 15.9.2
+      '@polkadot/util':
+        specifier: ^13.4.4
+        version: 13.4.4
+      '@polkadot/util-crypto':
+        specifier: ^13.4.4
+        version: 13.4.4(@polkadot/util@13.4.4)
       '@types/sass':
         specifier: ^1.45.0
         version: 1.45.0
@@ -1460,11 +1517,11 @@ packages:
       vite: ^5.0.0 || ^6.0.0
       vue: ^3.2.25
 
-  '@vitest/coverage-v8@3.1.1':
-    resolution: {integrity: sha512-MgV6D2dhpD6Hp/uroUoAIvFqA8AuvXEFBC2eepG3WFc1pxTfdk1LEqqkWoWhjz+rytoqrnUUCdf6Lzco3iHkLQ==}
+  '@vitest/coverage-v8@3.1.2':
+    resolution: {integrity: sha512-XDdaDOeaTMAMYW7N63AqoK32sYUWbXnTkC6tEbVcu3RlU1bB9of32T+PGf8KZvxqLNqeXhafDFqCkwpf2+dyaQ==}
     peerDependencies:
-      '@vitest/browser': 3.1.1
-      vitest: 3.1.1
+      '@vitest/browser': 3.1.2
+      vitest: 3.1.2
     peerDependenciesMeta:
       '@vitest/browser':
         optional: true
@@ -4751,7 +4808,7 @@ snapshots:
       vite: 6.3.3(@types/node@22.15.2)(jiti@1.21.7)(sass@1.87.0)(yaml@2.7.1)
       vue: 3.5.13(typescript@5.7.3)
 
-  '@vitest/coverage-v8@3.1.1(vitest@3.1.2(@types/node@22.15.2)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(sass@1.87.0)(yaml@2.7.1))':
+  '@vitest/coverage-v8@3.1.2(vitest@3.1.2(@types/node@22.15.2)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(sass@1.87.0)(yaml@2.7.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -5803,7 +5860,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.5.4
+      semver: 7.7.1
 
   merge2@1.4.1: {}
 

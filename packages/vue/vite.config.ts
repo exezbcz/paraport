@@ -23,6 +23,15 @@ export default defineConfig({
 			'@ui': path.resolve(__dirname, './src/components/ui'),
 		},
 	},
+	optimizeDeps: {
+		exclude: [
+			'@polkadot/api',
+			'@polkadot/util',
+			'@polkadot/util-crypto',
+			'@polkadot/extension-dapp',
+			'@polkadot/types',
+		],
+	},
 	build: {
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
@@ -36,7 +45,14 @@ export default defineConfig({
 			include: ['src/**/*'],
 		},
 		rollupOptions: {
-		  external: ['vue', '@paraport/core'],
+			external: [
+				'vue',
+				'@polkadot/api',
+				'@polkadot/extension-dapp',
+				'@polkadot/types',
+				'@polkadot/util',
+				'@polkadot/util-crypto',
+			],
 			output: {
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.name === 'style.css') return 'index.css'

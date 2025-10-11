@@ -41,6 +41,12 @@ export default defineConfig({
         // React core
         'react',
         'react-dom',
+        // Polkadot packages
+        '@polkadot/api',
+        '@polkadot/extension-dapp',
+        '@polkadot/types',
+        '@polkadot/util',
+        '@polkadot/util-crypto',
       ],
       output: {
         globals: {

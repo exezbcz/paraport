@@ -15,13 +15,20 @@ export default defineConfig({
 			clearScreen: false,
 			include: ['src/**/*'],
 		},
+		commonjsOptions: {
+			/**
+			 *	Treat CommonJS deps like @paraspell/sdk-pjs as ESM
+			 *	when imported into our ESM output
+			 */
+			esmExternals: true,
+		},
 		rollupOptions: {
 			external: [
-				'@paraport/static',
-				'@kodadot1/sub-api',
-				'@paraspell/sdk-pjs',
+				'@polkadot/api',
+				'@polkadot/extension-dapp',
+				'@polkadot/types',
 				'@polkadot/util-crypto',
-				'lodash',
+			],
 			plugins: [
 				{
 					name: 'fix-snowbridge-module',

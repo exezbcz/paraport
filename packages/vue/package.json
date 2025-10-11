@@ -30,7 +30,6 @@
 	},
 	"dependencies": {
 		"@paraport/core": "workspace:*",
-		"@polkadot/util": "^13.4.3",
 		"@tanstack/vue-table": "^8.21.2",
 		"@vue/runtime-dom": "^3.5.13",
 		"@vueuse/core": "^13.0.0",
@@ -45,8 +44,20 @@
 		"vue": "^3.5.13",
 		"vue-i18n": "^10.0.5"
 	},
+	"peerDependencies": {
+		"@polkadot/api": "^15.x",
+		"@polkadot/extension-dapp": "^0.58.x",
+		"@polkadot/types": "^15.x",
+		"@polkadot/util": "^13.x",
+		"@polkadot/util-crypto": "^13.x"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
+		"@polkadot/api": "15.9.2",
+		"@polkadot/extension-dapp": "^0.58.3",
+		"@polkadot/types": "15.9.2",
+		"@polkadot/util": "^13.4.4",
+		"@polkadot/util-crypto": "^13.4.4",
 		"@types/sass": "^1.45.0",
 		"@vitejs/plugin-vue": "^5.2.1",
 		"autoprefixer": "^10.4.20",
