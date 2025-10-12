@@ -1,7 +1,15 @@
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+/* Establish a global layer order so SDK layers can win appropriately */
+@layer base, components, paraport-base, paraport-components, utilities, paraport-utilities;
+
+/* Put the reset into the lowest-precedence base layer
+   so layered utilities (including paraport-utilities) can override it */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  /* Avoid fighting utility classes by not zeroing all paddings globally.
+     Keep only a minimal margin reset. */
+  body { margin: 0; }
 }
 
 #wrapper {

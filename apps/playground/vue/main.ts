@@ -1,4 +1,4 @@
-import { USER_ADDRESS, AMOUNT } from '../constants'
+import { USER_ADDRESS, AMOUNT, ENDPOINTS, CHAIN, ASSET, getSigner } from '../utils'
 import { createApp, h } from 'vue'
 import { ParaportPlugin, Paraport } from '@paraport/vue'
 import '@paraport/vue/style'
@@ -9,22 +9,19 @@ const app = createApp({
       Paraport,
       {
         label: 'Mint',
-        address: this.address,
-        amount: this.amount,
-        chain: 'AssetHubKusama',
-        asset: 'KSM',
+        address: USER_ADDRESS,
+        amount: AMOUNT,
+        chain: CHAIN,
+        asset: ASSET,
         onReady: this.onReady,
         onAddFunds: this.onAddFunds,
         onCompleted: this.onCompleted,
-        onSubmit: this.onSubmit
+        onSubmit: this.onSubmit,
+        getSigner,
+        logLevel: 'DEBUG',
+        endpoints: ENDPOINTS
       }
     )
-  },
-  data() {
-    return {
-      address: USER_ADDRESS,
-      amount: AMOUNT
-    }
   },
   methods: {
     onReady(session) {

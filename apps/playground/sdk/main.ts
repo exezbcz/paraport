@@ -1,6 +1,6 @@
 import '@paraport/sdk/style'
 import * as paraport from '@paraport/sdk'
-import { USER_ADDRESS, AMOUNT } from '../constants'
+import { USER_ADDRESS, AMOUNT, ENDPOINTS, CHAIN, ASSET, getSigner } from '../utils'
 
 const main = async () => {
   paraport.init({
@@ -8,9 +8,11 @@ const main = async () => {
     label: 'Mint',
    	address: USER_ADDRESS,
 		amount: AMOUNT,
-		chain: 'AssetHubKusama',
-		asset: 'KSM',
+		chain: CHAIN,
+		asset: ASSET,
+    endpoints: ENDPOINTS,
     logLevel: 'DEBUG',
+    getSigner,
     onReady: (session) => {
       console.log('🚀 ParaPort ready!', session)
     },

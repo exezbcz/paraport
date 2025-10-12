@@ -8,8 +8,13 @@ export default defineConfig({
     exclude: ['@paraport/sdk', '@paraport/react', '@paraport/vue']
   },
   server: {
+    fs: {
+      // Allow serving files from the monorepo root and packages for HMR
+      allow: ['..', '../..']
+    },
     watch: {
-      followSymlinks: false
+      // Follow symlinks so workspace packages trigger HMR
+      followSymlinks: true
     }
   }
 })

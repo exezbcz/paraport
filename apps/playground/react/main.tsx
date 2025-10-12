@@ -1,4 +1,4 @@
-import { USER_ADDRESS, AMOUNT } from '../constants'
+import { USER_ADDRESS, AMOUNT } from '../utils'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { Paraport } from '@paraport/react'
