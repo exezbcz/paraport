@@ -1,5 +1,5 @@
 import { computed, onBeforeMount, onMounted, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { t as translate } from '@/i18n/t'
 
 type Duration = {
 	seconds: number
@@ -12,7 +12,7 @@ export const getFormattedDuration = ({
 	t,
 	short = false,
 }: Duration & {
-	t: ReturnType<typeof useI18n>['t']
+	t: typeof translate
 	short?: boolean
 }): string => {
 	if (minutes > 0) {
@@ -37,7 +37,7 @@ export const useCountDown = ({
 	immediate?: boolean
 	short?: boolean
 }) => {
-	const { t } = useI18n()
+	const t = translate
 
 	const distance = ref(0)
 	const hours = ref(0)

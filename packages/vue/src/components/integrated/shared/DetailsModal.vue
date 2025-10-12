@@ -74,7 +74,7 @@ import {
 import { type TeleportSession, getChainName } from '@paraport/core'
 import { ArrowRight } from 'lucide-vue-next'
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { t } from '@/i18n/t'
 import DetailsPill from './DetailsPill.vue'
 
 const props = defineProps<{
@@ -84,7 +84,6 @@ const props = defineProps<{
 
 const isOpen = defineModel<boolean>()
 
-const { t } = useI18n()
 
 const selectedQuote = computed(() => props.session.quotes.selected)
 

@@ -76,7 +76,6 @@ import TeleportOverview from '@/components/integrated/shared/TeleportOverview.vu
 import SuccessIcon from '@/components/integrated/shared/icon/SuccessIcon.vue'
 import useAutoTeleport from '@/composables/useAutoTeleport'
 import useAutoTeleportButton from '@/composables/useAutoTeleportButton'
-import { useSdkStore } from '@/stores'
 import eventBus from '@/utils/event-bus'
 import {
 	TeleportSessionStatuses,
@@ -86,21 +85,21 @@ import {
 import Button from '@ui/Button/Button.vue'
 import { useDark } from '@vueuse/core'
 import { ArrowUpRight } from 'lucide-vue-next'
-import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { t } from '@/i18n/t'
 import IntegratedLoading from './IntegratedLoading.vue'
 import IntegratedProgress from './IntegratedProgress.vue'
+import { useSdk } from '@/composables/useSdk'
 
 const {
 	label: sdkLabel,
 	disabled: sdkDisabled,
 	params,
-} = storeToRefs(useSdkStore())
+	ui
+} = useSdk()
 
 const buttonRef = ref(null)
 
-const { t } = useI18n()
 
 const isDark = useDark()
 

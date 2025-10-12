@@ -1,15 +1,12 @@
 import { usePreferredDark } from '@vueuse/core'
 import { watchEffect } from 'vue'
 
-export default function () {
+export default function (mode: 'light' | 'dark' | 'auto' = 'auto') {
 	const prefersDark = usePreferredDark()
 
 	watchEffect(() => {
-		if (prefersDark.value) {
-			document.documentElement.classList.add('dark')
-		} else {
-			document.documentElement.classList.remove('dark')
-		}
+		const isDark = mode === 'dark' || (mode === 'auto' && prefersDark.value)
+		document.documentElement.classList.toggle('dark', isDark)
 	})
 
 	return {

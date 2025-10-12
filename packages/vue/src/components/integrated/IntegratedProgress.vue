@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { type Component, type FunctionalComponent, computed, h, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { t } from '@/i18n/t'
 
 import useTeleportSteps from '@/composables/useTeleportSteps'
 import {

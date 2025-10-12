@@ -43,7 +43,7 @@
 		"minutes": "{count} minute | {count} minutes",
 		"minutes_short": "{count} Min | {count} Mins"
 	},
-	"proceedWithAction": "Proceed with {0}",
+	"proceed": "Proceed",
 	"signature": "Signature | Signatures",
 	"addFunds": "Add Funds"
 }

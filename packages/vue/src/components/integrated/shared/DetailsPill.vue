@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import Button from '@ui/Button/Button.vue'
 import { Info } from 'lucide-vue-next'
-import { useI18n } from 'vue-i18n'
+import { t } from '@/i18n/t'
 
 defineEmits(['click'])
 
@@ -24,5 +24,4 @@ defineProps<{
 	label?: string
 }>()
 
-const { t } = useI18n()
 </script>

@@ -24,7 +24,5 @@
 import Container from '@/components/integrated/shared/Container.vue'
 import FullLogo from '@/components/shared/FullLogo.vue'
 import { LoaderCircleIcon } from 'lucide-vue-next'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
+import { t } from '@/i18n/t'
 </script>

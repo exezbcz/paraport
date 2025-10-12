@@ -31,7 +31,7 @@ import Time from '@components/shared/Time.vue'
 import { type TeleportSession } from '@paraport/core'
 import { useElementBounding, useElementSize, useWindowSize } from '@vueuse/core'
 import { Ref, computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { t } from '@/i18n/t'
 import DetailsPill from './DetailsPill.vue'
 
 const MODAL_HEIGHT = 397
@@ -50,7 +50,6 @@ const props = defineProps<{
 
 const isModalActive = ref(false)
 
-const { t } = useI18n()
 const { width } = useElementSize(props.buttonRef)
 
 const isContainerNarrow = computed(() => width.value < NARROW_WIDTH)

@@ -10,10 +10,9 @@ import {
 } from '@paraport/core'
 import type { TeleportEventPayload, TransactionDetails } from '@paraport/core'
 import { type Ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { t } from '@/i18n/t'
 
 export default (teleport: Ref<TeleportEventPayload | undefined>) => {
-	const { t } = useI18n()
 
 	const getTeleportStepText = ({
 		status,

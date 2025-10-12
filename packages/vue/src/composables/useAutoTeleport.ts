@@ -1,4 +1,4 @@
-import { useSdkStore } from '@/stores'
+import { useSdk } from '@/composables/useSdk'
 import eventBus from '@/utils/event-bus'
 import {
 	AutoTeleportSessionEventTypes,
@@ -6,7 +6,6 @@ import {
 	TeleportSessionStatuses,
 } from '@paraport/core'
 import { TeleportEventTypes, type TeleportSession } from '@paraport/core'
-import { storeToRefs } from 'pinia'
 import { computed, onBeforeMount, ref } from 'vue'
 
 const TELEPORT_EVENTS = [
@@ -28,7 +27,7 @@ export default () => {
 
 	const selectedQuote = computed(() => session.value?.quotes.selected)
 
-	const { sdk, params } = storeToRefs(useSdkStore())
+	const { sdk, params } = useSdk()
 
 	const exec = async () => {
 		if (session.value && selectedQuote.value) {
