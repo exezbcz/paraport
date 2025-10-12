@@ -5,16 +5,16 @@ UI layer for seamless integration of ParaPort cross-chain teleportation function
 ## Installation
 
 ```bash
-pnpm add @paraport/sdk
+pnpm add @paraport/sdk polkadot-api
 ```
 
 ### Install Peer Dependencies
 
-ParaPort SDK is designed to work with PolkadotJS API. Install the required peer dependencies:
+ParaPort SDK requires `polkadot-api` in your application. Install it as a peer dependency:
 
 ```bash
-# PolkadotJS peer dependencies
-pnpm add @polkadot/api @polkadot/extension-dapp @polkadot/types @polkadot/util @polkadot/util-crypto
+# Required peer dependency
+pnpm add polkadot-api
 ```
 
 ## Component Usage
@@ -52,6 +52,22 @@ const main = async () => {
 }
 
 main()
+```
+
+## Theming
+
+You can customize the UI via CSS variables or per instance:
+
+- Global: override tokens under `.paraport` in your app stylesheet using cascade layers.
+- Per instance: pass `appearance` (map of CSS variables) and `themeMode` to `init`.
+
+```ts
+paraport.init({
+  integratedTargetId: 'root',
+  // ...required params
+  appearance: { '--radius': '12px', '--accent-blue': '#4f46e5' },
+  themeMode: 'auto', // 'light' | 'dark' | 'auto'
+})
 ```
 
 ## Props Documentation

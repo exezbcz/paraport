@@ -12,27 +12,29 @@ export default defineConfig({
     },
     rollupOptions: {
       external: [
-        'vue',
-        '@polkadot/api',
-        '@polkadot/extension-dapp',
-        '@polkadot/types',
-        '@polkadot/util',
-        '@polkadot/util-crypto'
+        'vue'
       ],
       output: {
         globals: {
-          vue: 'Vue',
-          '@polkadot/api': 'polkadotApi',
-          '@polkadot/extension-dapp': 'polkadotExtensionDapp',
-          '@polkadot/types': 'polkadotTypes',
-          '@polkadot/util': 'polkadotUtil',
-          '@polkadot/util-crypto': 'polkadotUtilCrypto'
+          vue: 'Vue'
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') return 'index.css'
           return assetInfo.name as string
         }
       }
+    },
+  },
+  server: {
+    fs: {
+      // Allow serving files from workspace packages for HMR
+      allow: [
+        '..',
+      ],
+    },
+    watch: {
+      // Follow symlinks so linked workspace deps trigger HMR
+      followSymlinks: true,
     },
   },
   resolve: {

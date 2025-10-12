@@ -14,38 +14,29 @@
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"style": "./dist/index.css",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.js"
-		},
-		"./style": "./dist/index.css"
-	},
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style": "./dist/index.css"
+  },
 	"scripts": {
 		"dev": "vite build --watch --mode development",
 		"build": "vite build",
 		"lint": "biome check --write ."
+	},
+	"peerDependencies": {
+		"polkadot-api": "1.19.x"
 	},
 	"dependencies": {
 		"@paraport/vue": "workspace:*",
 		"@paraport/core": "workspace:*",
 		"vue": "^3.5.13"
 	},
-	"peerDependencies": {
-		"@polkadot/api": "^15.x",
-		"@polkadot/extension-dapp": "^0.58.x",
-		"@polkadot/types": "^15.x",
-		"@polkadot/util": "^13.x",
-		"@polkadot/util-crypto": "^13.x"
-	},
 	"devDependencies": {
+		"polkadot-api": "1.19.x",
 		"@biomejs/biome": "^1.9.4",
-		"@polkadot/api": "15.9.2",
-		"@polkadot/extension-dapp": "^0.58.3",
-		"@polkadot/types": "15.9.2",
-		"@polkadot/util": "^13.3.1",
-		"@polkadot/util-crypto": "^13.3.1",
 		"typescript": "^5.7.3",
 		"vite": "^6.0.7",
 		"vite-plugin-dts": "^4.5.0"

@@ -1,5 +1,5 @@
 import '@paraport/vue/style'
-import { Paraport, ParaportPlugin, DisplayModes, useSdkStore } from '@paraport/vue'
+import { Paraport, ParaportPlugin, DisplayModes, useSdk } from '@paraport/vue'
 import type { MountOptions } from './types'
 import { createApp, h } from 'vue'
 
@@ -13,6 +13,10 @@ export function init({
 	onCompleted,
 	onReady,
 	onAddFunds,
+	getSigner,
+	appearance,
+	themeMode,
+	endpoints,
 	displayMode = DisplayModes.Integrated,
 	...options
 }: MountOptions) {
@@ -29,13 +33,17 @@ export function init({
         address,
         asset,
         displayMode,
+        appearance,
+        themeMode,
         logLevel: options.logLevel,
         label: options.label,
         disabled: options.disabled,
         onReady,
         onAddFunds,
         onCompleted,
-        onSubmit
+        onSubmit,
+        getSigner,
+        endpoints
 		}),
 	})
 
@@ -44,7 +52,7 @@ export function init({
 
 	return {
 		update: (options: Pick<MountOptions, 'label' | 'disabled'>) => {
-			const store = useSdkStore()
+			const store = useSdk()
 			if (options.label !== undefined) store.setLabel(options.label)
 			if (options.disabled !== undefined) store.setDisabled(options.disabled)
 		},
