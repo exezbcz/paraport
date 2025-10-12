@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Integration: XCMBridge transfer (serialized tx snapshot) > builds a serialized transfer tx that matches snapshot 1`] = `
+{
+  "method": "transfer_assets",
+  "module": "PolkadotXcm",
+  "parameters": {
+    "assets": "...omitted for brevity...",
+    "dest": "...omitted for brevity...",
+  },
+}
+`;
