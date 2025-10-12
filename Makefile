@@ -1,13 +1,12 @@
-.PHONY: install-root install-static install-core install-sdk install-react clean build build-static build-core build-sdk build-react
+.PHONY: install-root install-static install-core install-sdk install-react install-vue clean build build-static build-core build-sdk build-react build-vue
 
-install: install-root install-static install-core install-sdk install-react
+install: install-root install-static install-core install-sdk install-react install-vue
 	@echo "✨ All packages installed successfully!"
 
 clean:
 	@echo "🧹 Cleaning node_modules directories..."
 	@rm -rf node_modules
 	@rm -rf packages/*/node_modules
-	@rm -rf scripts/endpoint-generator/node_modules
 	@echo "✨ All node_modules directories removed successfully!"
 
 install-root:
@@ -18,11 +17,14 @@ install-static:
 	@echo "📦 Installing static package dependencies..."
 	cd packages/static && pnpm install
 	@echo "🔧 Setting up endpoint generator..."
-	cd scripts/endpoint-generator && pnpm run setup
 
 install-core:
 	@echo "📦 Installing core package dependencies..."
 	cd packages/core && pnpm install
+
+install-vue:
+	@echo "📦 Installing Vue package dependencies..."
+	cd packages/vue && pnpm install
 
 install-sdk:
 	@echo "📦 Installing SDK package dependencies..."
@@ -32,7 +34,7 @@ install-react:
 	@echo "📦 Installing React package dependencies..."
 	cd packages/react && pnpm install
 
-build: build-static build-core build-sdk build-react
+build: build-static build-core build-sdk build-react build-vue
 	@echo "✨ All packages built successfully!"
 
 build-static:
@@ -54,10 +56,6 @@ build-react:
 build-vue:
 	@echo "🏗️ Building Vue package..."
 	cd packages/vue && pnpm build
-
-generate-endpoints:
-	@echo "🔧 Generating endpoints..."
-	cd scripts/endpoint-generator && pnpm run generate
 
 dev-playground:
 	@echo "🚀 Starting playground..."
