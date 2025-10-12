@@ -3,6 +3,7 @@ import type { BridgeTransferParams } from '@/types/bridges'
 import type { Chain } from '@paraport/static'
 import type { ObjectValues } from './utils'
 
+/** Transaction event channels. */
 export const TransactionEventTypes = {
 	TRANSACTION_STARTED: 'transaction:started',
 	TRANSACTION_UPDATED: 'transaction:updated',
@@ -13,6 +14,7 @@ export const TransactionEventTypes = {
 
 export type TransactionEventType = ObjectValues<typeof TransactionEventTypes>
 
+/** Transaction status values. */
 export const TransactionStatuses = {
 	Broadcast: 'broadcast',
 	Casting: 'casting',
@@ -25,12 +27,16 @@ export const TransactionStatuses = {
 
 export type TransactionStatus = ObjectValues<typeof TransactionStatuses>
 
+/** Transaction type values. */
 export const TransactionTypes = {
 	Teleport: 'teleport',
 } as const
 
 export type TransactionType = ObjectValues<typeof TransactionTypes>
 
+/**
+ * Details tracked for a single transaction in a teleport flow.
+ */
 export interface TransactionDetails
 	extends BaseDetails<
 		TransactionStatus,
@@ -46,6 +52,9 @@ export interface TransactionDetails
 	unsubscribe?: TransactionUnsubscribe
 }
 
+/**
+ * Callback invoked with transaction lifecycle updates.
+ */
 export type TransactionCallback = (
 	params:
 		| {
@@ -74,4 +83,7 @@ export type TransactionCallback = (
 		  },
 ) => void
 
-export type TransactionUnsubscribe = undefined | (() => void)
+/**
+ * Function that unsubscribes the underlying transaction watcher.
+ */
+export type TransactionUnsubscribe = undefined | (() => void) // todo remove

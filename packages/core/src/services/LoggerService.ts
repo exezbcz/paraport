@@ -1,5 +1,6 @@
 import { type LogLevel, LogLevels, type LoggerConfig } from '@/types/sdk'
 
+/** Simple leveled logger with configurable minimum level and prefix. */
 export class Logger {
 	private config: LoggerConfig
 
@@ -11,22 +12,32 @@ export class Logger {
 		}
 	}
 
+	/** Logs a debug-level message. */
 	debug(message: string, data?: unknown): void {
 		this.log(LogLevels.DEBUG, message, data)
 	}
 
+	/** Logs an info-level message. */
 	info(message: string, data?: unknown): void {
 		this.log(LogLevels.INFO, message, data)
 	}
 
+	/** Logs a warn-level message. */
 	warn(message: string, data?: unknown): void {
 		this.log(LogLevels.WARN, message, data)
 	}
 
+	/** Logs an error-level message. */
 	error(message: string, error?: unknown): void {
 		this.log(LogLevels.ERROR, message, error)
 	}
 
+	/**
+	 * Internal logging handler.
+	 * @param level - Log level
+	 * @param message - Message to log
+	 * @param data - Optional metadata or error
+	 */
 	private log(level: LogLevel, message: string, data?: unknown): void {
 		if (this.shouldLog(level)) {
 			const prefix = this.config.prefix ? `[${this.config.prefix}] ` : ''
@@ -49,6 +60,11 @@ export class Logger {
 		}
 	}
 
+	/**
+	 * Determines whether a given level should be logged.
+	 * @param level - Level to check
+	 * @returns True when level >= configured minLevel
+	 */
 	private shouldLog(level: LogLevel): boolean {
 		const levels = [
 			LogLevels.DEBUG,
