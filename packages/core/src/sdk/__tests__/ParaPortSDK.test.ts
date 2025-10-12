@@ -2,24 +2,17 @@ import { SUBSTRATE_ADDRESS } from '@/__tests__/utils/constants'
 import type { SDKConfig } from '@/types/common'
 import { TeleportModes, type TeleportParams } from '@/types/teleport'
 import { Assets, Chains } from '@paraport/static'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import ParaPortSDK from '../ParaPortSDK'
-
-vi.mock('@polkadot/util-crypto', () => ({
-	decodeAddress: vi.fn((address: string) => {
-		if (address === 'invalid-address') {
-			throw new Error('Invalid address format')
-		}
-		return new Uint8Array(32)
-	}),
-	encodeAddress: vi.fn(),
-}))
 
 describe('ParaPortSDK', () => {
 	let sdk: ParaPortSDK
 	const mockConfig: SDKConfig<false> = {
 		chains: [Chains.Kusama, Chains.AssetHubKusama],
 		bridgeProtocols: ['XCM'],
+		getSigner: async () => {
+		  return null as any
+		}
 	}
 
 	beforeEach(() => {

@@ -11,6 +11,6 @@
 			"@/*": ["src/*"]
 		}
 	},
-	"include": ["src"],
+	"include": ["src", "e2e", "vitest.config.ts", "vitest.config.e2e.ts"],
 	"exclude": ["node_modules", "dist"]
 }

@@ -25,7 +25,8 @@
 		"lint": "biome check --write .",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"test:e2e": "vitest run --config ./vitest.config.e2e.ts --sequence.concurrent"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
