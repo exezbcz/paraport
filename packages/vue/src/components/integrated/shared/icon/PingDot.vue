@@ -1,8 +1,8 @@
 <template>
-    <div class="flex items-center justify-center w-full h-full">
-        <span class="relative flex !size-3">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-background"></span>
-            <span class="relative inline-flex size-3 rounded-full bg-accent-blue"></span>
+    <div class="pp-flex pp-items-center pp-justify-center pp-w-full pp-h-full">
+        <span class="pp-relative pp-flex !pp-size-3">
+            <span class="pp-absolute pp-inline-flex pp-h-full pp-w-full pp-animate-ping pp-rounded-full pp-bg-accent-background"></span>
+            <span class="pp-relative pp-inline-flex pp-size-3 pp-rounded-full pp-bg-accent-blue"></span>
         </span>
     </div>
 </template>

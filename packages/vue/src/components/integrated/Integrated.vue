@@ -13,28 +13,28 @@
             <Button
                 ref="buttonRef"
                 :disabled="isDisabled"
-                class="w-full"
+                class="pp-w-full"
                 @click="submit"
             >
-                <div class="inline-flex gap-3 items-center justify-center">
-                    <img v-if="showAutoTeleport" :src="logoSrc" class="w-[20px]" alt="Paraport Logo">
-                    <span class="text-[16px] capitalize font-medium">{{ label }}</span>
+                <div class="pp-inline-flex pp-gap-3 pp-items-center pp-justify-center">
+                    <img v-if="showAutoTeleport" :src="logoSrc" class="pp-w-[20px]" alt="Paraport Logo">
+                    <span class="pp-text-[16px] pp-capitalize pp-font-medium">{{ label }}</span>
                 </div>
             </Button>
         </template>
         <template #bottom v-if="showAutoTeleport || isCompleted || insufficientFunds">
             <template v-if="isCompleted">
-                <div class="flex items-center gap-2">
+                <div class="pp-flex pp-items-center pp-gap-2">
                     <SuccessIcon />
 
-                    <p class="text-success-text capitalize text-xs">
+                    <p class="pp-text-success-text pp-capitalize pp-text-xs">
                         {{ t('autoteleport.successfullyMoved', [ session?.quotes.selected?.asset])}}
                     </p>
                 </div>
 
                 <Button
                     variant="pill-success"
-                    class="!gap-0"
+                    class="!pp-gap-0"
                     @click="viewTx"
                 >
                     <span>
@@ -45,16 +45,16 @@
                 </Button>
             </template>
             <template v-else-if="insufficientFunds">
-                <p class="text-secondary capitalize text-xs">
+                <p class="pp-text-secondary pp-capitalize pp-text-xs">
                     {{ t('autoteleport.insufficientAssetBalance', [ params.asset ]) }}
                 </p>
 
-                <Button variant="pill-blue" @click="onAddFunds">
+                <Button v-if="canAddFunds" variant="pill-blue" @click="onAddFunds">
                     <span>{{ t('addFunds') }}</span>
                 </Button>
             </template>
             <template v-else-if="showAutoTeleport">
-                <p class="text-secondary capitalize text-xs">
+                <p class="pp-text-secondary pp-capitalize pp-text-xs">
                     {{ t('autoteleport.required' )}}
                 </p>
 
@@ -100,10 +100,10 @@ const {
 
 const buttonRef = ref(null)
 
-
 const isDark = useDark()
 
 const logoSrc = computed(() => (isDark.value ? logoDark : logoLight))
+const canAddFunds = computed(() => Boolean(ui?.value))
 
 const {
 	needsAutoTeleport,
@@ -120,6 +120,7 @@ const {
 	insufficientFunds,
 } = useAutoTeleport()
 
+
 const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 	needsAutoTeleport,
 	isAvailable,
@@ -131,7 +132,7 @@ const { allowAutoTeleport, showAutoTeleport } = useAutoTeleportButton({
 
 const label = computed(() => {
 	if (hasEnoughInCurrentChain.value || sdkDisabled.value || isCompleted.value) {
-		return t('proceedWithAction', [sdkLabel.value])
+		return sdkLabel.value || t('proceed')
 	}
 
 	if (insufficientFunds.value) {

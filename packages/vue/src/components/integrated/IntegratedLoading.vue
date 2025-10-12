@@ -1,21 +1,21 @@
 <template>
-   <Container top-classes="bg-surface-grey">
+   <Container top-classes="pp-bg-surface-grey">
         <template #top>
-            <div class="inline-flex gap-3 items-center justify-center w-full text-secondary">
-                <div class="animate-spin">
+            <div class="pp-inline-flex pp-gap-3 pp-items-center pp-justify-center pp-w-full pp-text-secondary">
+                <div class="pp-animate-spin pp-flex">
                     <LoaderCircleIcon :size="20" />
                 </div>
-                <span class="text-[16px] capitalize font-medium">
+                <span class="pp-text-[16px] pp-capitalize pp-font-medium">
                     {{ t('autoteleport.checking' )}}
                 </span>
             </div>
         </template>
         <template #bottom>
-            <p class="text-secondary capitalize text-sm">
+            <p class="pp-text-secondary pp-capitalize pp-text-sm">
                 {{ t('autoteleport.findingOptimalRoute')}}
             </p>
 
-            <FullLogo class="w-[82px]" />
+            <FullLogo class="pp-w-[82px]" />
         </template>
     </Container>
 </template>

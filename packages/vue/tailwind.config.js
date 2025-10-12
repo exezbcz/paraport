@@ -2,6 +2,12 @@
 export default {
 	darkMode: ['class'],
 	content: ['./index.html', './src/**/*.{js,ts,vue}'],
+	// Only apply our utility classes inside the SDK root
+	prefix: 'pp-',
+	corePlugins: {
+		// Avoid injecting global resets into host apps
+		preflight: false,
+	},
 	theme: {
 		extend: {
 			borderRadius: {

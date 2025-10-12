@@ -1,5 +1,5 @@
 <template>
-  <span class="text-text flex gap-[2px] capitalize">
+  <span class="pp-text-text pp-flex pp-gap-[2px] pp-capitalize">
     <span :class="deviderClass">~</span>
     <span>{{ displayDuration }}</span>
   </span>

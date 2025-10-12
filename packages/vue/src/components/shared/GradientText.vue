@@ -1,17 +1,17 @@
 <template>
-    <p class="relative">
-        <span class="relative inline-block">
+    <p class="pp-relative">
+        <span class="pp-relative pp-inline-block">
             <!-- Text outline for definition -->
             <span
                 :class="[outlineClass]"
-                class="absolute inset-0 text-transparent"
+                class="pp-absolute pp-inset-0 pp-text-transparent"
                 :style="{ '-webkit-text-stroke': `${outlineWidth} currentColor` }"
             >
                 {{ text }}
             </span>
 
             <!-- Gradient text with animation -->
-            <span class="gradient-text-animation relative" :style="gradientStyle">
+            <span class="gradient-text-animation pp-relative" :style="gradientStyle">
                 {{ text }}
             </span>
         </span>
@@ -32,7 +32,7 @@ const props = withDefaults(
 		gradientDirection?: string
 	}>(),
 	{
-		outlineClass: 'text-gray-400',
+		outlineClass: 'pp-text-gray-400',
 		outlineWidth: '0.5px',
 		animationDuration: 2,
 		startColor: '#8F8F8F',

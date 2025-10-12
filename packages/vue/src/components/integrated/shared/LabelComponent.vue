@@ -2,8 +2,8 @@
   <component
       :is="is || 'p'"
       :class="[labelClass, {
-        'text-text': active,
-        'text-secondary': passive,
+        'pp-text-text': active,
+        'pp-text-secondary': passive,
       }, additionalClass]"
   >
     {{ label }}

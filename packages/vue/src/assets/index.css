@@ -1,12 +1,37 @@
-.paraport > * {
-	font-family: "Manrope", sans-serif;
-}
+/*
+  ParaPort CSS layering and scoping
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@layer base {
-	:root {
+  Context / problem observed
+  - Host apps often import the SDK CSS from a Nuxt/Vite plugin. That puts the SDK
+    stylesheet late in the bundle. Tailwind emits a universal variables rule
+    ("*,:before,:after { --tw-translate-x:0; --tw-translate-y:0; … }") which, if
+    it appears after a host's utilities layer, resets translate variables and can
+    break positioning like `-translate-x-1/2 -translate-y-1/2` used by modals.
+    This manifested as host dialogs no longer being centered when the SDK CSS was
+    imported after the host CSS.
+
+  Chosen solution
+  - We wrap Tailwind output in named layers: `paraport-base`, `paraport-components`,
+    and `paraport-utilities`. This lets consuming apps control precedence via the
+    global @layer order. Recommended import in the host:
+      @layer base, components, paraport-base, paraport-components, utilities, paraport-utilities;
+      @import '@paraport/vue/style' layer(paraport-base);
+    Importing from global CSS (not a plugin) ensures our universal defaults live
+    under the host utilities so host utilities continue to win.
+
+  Additional isolation
+  - SDK components rendered through portals (e.g., dialogs) wrap content with
+    a `.paraport` element so our design tokens (CSS variables) apply even when
+    portals render outside the original SDK subtree.
+*/
+
+/* Bring in a scoped copy of Tailwind's preflight (adapted to `.paraport`) */
+@import './preflight.css' layer(paraport-base);
+
+@layer paraport-base {
+  @tailwind base;
+
+    .paraport {
 		--foreground: 0 0% 3.9%;
 		--card: 0 0% 100%;
 		--card-foreground: 0 0% 3.9%;
@@ -49,8 +74,14 @@
 		--success-action-hover: #d9f8d4;
 		--accent-blue: #3c82f6;
 		--accent-background: #dbe9fe;
+
+        /* Optional: local font only for SDK root (not global) */
+		font-family: Manrope, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+
+		@apply pp-bg-background pp-text-foreground;
 	}
-	.dark {
+
+	.dark .paraport {
 		--foreground: 0 0% 98%;
 		--card: 0 0% 3.9%;
 		--card-foreground: 0 0% 98%;
@@ -94,11 +125,11 @@
 		--accent-background: #0f1c2e;
 	}
 }
-@layer base {
-	* {
-		@apply border-border;
-	}
-	body {
-		@apply bg-background text-foreground;
-	}
+
+@layer paraport-components {
+  @tailwind components;
+}
+
+@layer paraport-utilities {
+  @tailwind utilities;
 }

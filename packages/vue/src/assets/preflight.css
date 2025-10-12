@@ -1,0 +1,134 @@
+/* Scoped copy of TailwindCSS Preflight adapted for the SDK.
+   Based on: https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css
+   All selectors are scoped under `.paraport` to avoid touching host globals.
+   Notes: We intentionally set `hr { border-top-width: 0 }` to avoid double lines,
+   because SDK components style <hr> with utilities. */
+
+/* 1. Prevent padding/border from affecting width
+   2. Remove default margins and padding
+   3. Reset all borders */
+.paraport, .paraport *, .paraport *::before, .paraport *::after,
+.paraport ::backdrop, .paraport ::file-selector-button {
+  box-sizing: border-box; /* 1 */
+  margin: 0; /* 2 */
+  padding: 0; /* 2 */
+  border: 0 solid; /* 3 */
+  border-color: hsl(var(--border));
+}
+
+/* Base root adjustments (scoped to SDK root) */
+.paraport {
+  line-height: 1.5; /* sensible default */
+  -webkit-text-size-adjust: 100%; /* iOS font-size adjustments */
+  tab-size: 4; /* readable tab size */
+  -webkit-tap-highlight-color: transparent; /* iOS tap highlight */
+}
+
+/* hr: reset UA quirks but don't force a 1px border */
+.paraport hr {
+  height: 0; /* Add the correct height in Firefox */
+  color: inherit; /* Correct border color inheritance in Firefox */
+  border-top-width: 0; /* SDK draws the line via utilities */
+}
+
+/* Abbreviations */
+.paraport abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+}
+
+/* Headings inherit size and weight */
+.paraport h1, .paraport h2, .paraport h3, .paraport h4, .paraport h5, .paraport h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* Links reset */
+.paraport a {
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+}
+
+/* Strong emphasis */
+.paraport b, .paraport strong { font-weight: bolder; }
+
+/* Monospace */
+.paraport code, .paraport kbd, .paraport samp, .paraport pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace; /* Tailwind's default mono stack */
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  font-size: 1em;
+}
+
+.paraport small { font-size: 80%; }
+
+/* Sub/sup baseline corrections */
+.paraport sub, .paraport sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+.paraport sub { bottom: -0.25em; }
+.paraport sup { top: -0.5em; }
+
+/* Tables */
+.paraport table { text-indent: 0; border-color: inherit; border-collapse: collapse; }
+
+/* Focus ring (Firefox) */
+.paraport :-moz-focusring { outline: auto; }
+
+/* Progress alignment */
+.paraport progress { vertical-align: baseline; }
+
+/* Summary display */
+.paraport summary { display: list-item; }
+
+/* Lists unstyled by default */
+.paraport ol, .paraport ul, .paraport menu { list-style: none; }
+
+/* Replaced elements */
+.paraport img, .paraport svg, .paraport video, .paraport canvas, .paraport audio, .paraport iframe, .paraport embed, .paraport object {
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
+}
+.paraport img, .paraport video { max-width: 100%; height: auto; }
+
+/* Form controls */
+.paraport button, .paraport input, .paraport select, .paraport optgroup, .paraport textarea, .paraport ::file-selector-button {
+  font: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
+  letter-spacing: inherit; /* 1 */
+  color: inherit; /* 1 */
+  border-radius: 0; /* 2 */
+  background-color: transparent; /* 3 */
+  opacity: 1; /* 4 */
+}
+.paraport :where(select:is([multiple],[size])) optgroup { font-weight: bolder; }
+.paraport :where(select:is([multiple],[size])) optgroup option { padding-inline-start: 20px; }
+.paraport ::file-selector-button { margin-inline-end: 4px; }
+.paraport ::placeholder { opacity: 1; }
+@supports (not (-webkit-appearance: -apple-pay-button)) or (contain-intrinsic-size: 1px) {
+  .paraport ::placeholder { color: color-mix(in oklab, currentcolor 50%, transparent); }
+}
+.paraport textarea { resize: vertical; }
+.paraport ::-webkit-search-decoration { -webkit-appearance: none; }
+.paraport ::-webkit-date-and-time-value { min-height: 1lh; text-align: inherit; }
+.paraport ::-webkit-datetime-edit { display: inline-flex; }
+.paraport ::-webkit-datetime-edit-fields-wrapper { padding: 0; }
+.paraport ::-webkit-datetime-edit,
+.paraport ::-webkit-datetime-edit-year-field,
+.paraport ::-webkit-datetime-edit-month-field,
+.paraport ::-webkit-datetime-edit-day-field,
+.paraport ::-webkit-datetime-edit-hour-field,
+.paraport ::-webkit-datetime-edit-minute-field,
+.paraport ::-webkit-datetime-edit-second-field,
+.paraport ::-webkit-datetime-edit-millisecond-field,
+.paraport ::-webkit-datetime-edit-meridiem-field { padding-block: 0; }
+.paraport ::-webkit-calendar-picker-indicator { line-height: 1; }
+.paraport :-moz-ui-invalid { box-shadow: none; }
+.paraport button,
+.paraport input:where([type='button'], [type='reset'], [type='submit']),
+.paraport ::file-selector-button { appearance: button; }
+.paraport ::-webkit-inner-spin-button, .paraport ::-webkit-outer-spin-button { height: auto; }
+
+/* Hidden handling */
+.paraport [hidden]:where(:not([hidden='until-found'])) { display: none !important; }

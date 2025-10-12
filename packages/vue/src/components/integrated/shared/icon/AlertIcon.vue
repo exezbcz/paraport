@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'rounded-full flex items-center justify-center w-[inherit] h-[inherit]',
+      'pp-rounded-full pp-flex pp-items-center pp-justify-center pp-w-[inherit] pp-h-[inherit]',
       bgClass
     ]"
   >
@@ -19,12 +19,12 @@ type Variant = 'error' | 'warning'
 
 const variantClassMap: Record<Variant, { text: string; bg: string }> = {
 	error: {
-		text: 'text-error-text',
-		bg: 'bg-error-fill',
+		text: 'pp-text-error-text',
+		bg: 'pp-bg-error-fill',
 	},
 	warning: {
-		text: 'text-caution-text',
-		bg: 'bg-caution-button',
+		text: 'pp-text-caution-text',
+		bg: 'pp-bg-caution-button',
 	},
 }
 

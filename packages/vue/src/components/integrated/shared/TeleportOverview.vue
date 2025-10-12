@@ -1,13 +1,13 @@
 <template>
-    <div class="flex items-center" :class="isContainerNarrow ? 'gap-3' : 'gap-5'">
-        <div class="flex gap-1 text-xs capitalize">
+    <div class="pp-flex pp-items-center" :class="isContainerNarrow ? 'pp-gap-3' : 'pp-gap-5'">
+        <div class="pp-flex pp-gap-1 pp-text-xs pp-capitalize">
             <Time
                 :value="Number(session.quotes.selected?.execution.timeMs)"
-                devider-class="!text-secondary"
+                devider-class="!pp-text-secondary"
 				short
             />
 			<template v-if="!isContainerNarrow">
-				<div class="w-1 h-1 rounded-full bg-surface-grey self-center" />
+				<div class="pp-w-1 pp-h-1 pp-rounded-full pp-bg-surface-grey pp-self-center" />
 				<span> {{ session.quotes.selected?.execution.requiredSignatureCount }} {{ t('signature') }} </span>
 			</template>
         </div>

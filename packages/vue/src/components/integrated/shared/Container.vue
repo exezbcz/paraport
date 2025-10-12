@@ -1,9 +1,9 @@
 <template>
-  <div class="relative bg-background rounded-xl">
+  <div class="pp-relative pp-bg-background pp-rounded-xl">
     <div
-        class="relative z-10 h-12"
+        class="pp-relative pp-z-10 pp-h-12"
         :class="[
-          {'border-b rounded-xl border-surface-grey flex px-4 py-2': $slots.top},
+          {'pp-border pp-rounded-xl pp-border-surface-grey pp-flex pp-px-4 pp-py-2': $slots.top},
           topClasses
         ]"
     >
@@ -12,7 +12,7 @@
       <slot name="top"/>
     </div>
 
-    <div v-if="$slots.bottom" class="h-[50px] px-4 py-2 flex justify-between items-center border-r border-b border-l border-surface-grey rounded-b-xl -mt-2 pt-4">
+    <div v-if="$slots.bottom" class="pp-h-[50px] pp-px-4 pp-py-2 pp-flex pp-justify-between pp-items-center pp-border-r pp-border-b pp-border-l pp-border-surface-grey pp-rounded-b-xl pp--mt-2 pp-pt-4">
       <slot name="bottom" />
     </div>
   </div>

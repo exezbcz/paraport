@@ -5,6 +5,8 @@
 		"moduleResolution": "node",
 		"strict": true,
 		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
 		"noEmit": true,
 		"paths": {
 			"@paraport/core": ["../core/dist/index.d.ts"],

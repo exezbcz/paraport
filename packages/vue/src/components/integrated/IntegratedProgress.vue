@@ -1,8 +1,8 @@
 <template>
     <Container  v-if="state">
         <template #top>
-            <div class="h-full w-full flex gap-3 items-center" ref="topSectionRef">
-                <div class="h-[20px] w-[20px] relative" :class="state.top.icon.class">
+            <div class="pp-h-full pp-w-full pp-flex pp-gap-3 pp-items-center" ref="topSectionRef">
+                <div class="pp-h-[20px] pp-w-[20px] pp-relative" :class="state.top.icon.class">
                     <component :is="state.top.icon.icon" />
                 </div>
 
@@ -107,7 +107,6 @@ const props = defineProps<{
 
 const topSectionRef = ref()
 
-const { t } = useI18n()
 
 const steps = useTeleportSteps(computed(() => props.autoteleport))
 
@@ -139,7 +138,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 				bottom: {
 					left: {
 						label: t('autoteleport.required'),
-						class: 'text-xs',
+						class: 'pp-text-xs',
 						passive: true,
 					},
 					right: {
@@ -165,7 +164,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 				bottom: {
 					left: {
 						label: t('autoteleport.transactionSent'),
-						class: 'text-sm',
+						class: 'pp-text-sm',
 						passive: true,
 					},
 					right: {
@@ -173,7 +172,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 							value: Number(step.duration),
 							countdown: true,
 						}),
-						class: 'text-xs',
+						class: 'pp-text-xs',
 					},
 				},
 			}),
@@ -191,7 +190,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 				bottom: {
 					left: {
 						label: t('autoteleport.almostDone'),
-						class: 'text-sm',
+						class: 'pp-text-sm',
 						passive: true,
 					},
 					right: {
@@ -199,7 +198,7 @@ const customStepStrategyMap: Partial<Record<TeleportStepType, StateStrategy>> =
 							value: Number(step.duration),
 							countdown: true,
 						}),
-						class: 'text-xs',
+						class: 'pp-text-xs',
 					},
 				},
 			}),
@@ -213,13 +212,13 @@ const generalStatusStrategyMap: StateStrategy = {
 				icon: iconStatusMap.failed!,
 				title: {
 					label: step.statusLabel,
-					class: 'text-error-text',
+					class: 'pp-text-error-text',
 				},
 			},
 			bottom: {
 				left: {
 					label: t('autoteleport.status.error'),
-					class: 'text-sm',
+					class: 'pp-text-sm',
 					passive: true,
 				},
 				right: {
@@ -242,13 +241,13 @@ const generalStatusStrategyMap: StateStrategy = {
 				icon: iconStatusMap.cancelled!,
 				title: {
 					label: 'Signing cancelled',
-					class: 'text-caution-text',
+					class: 'pp-text-caution-text',
 				},
 			},
 			bottom: {
 				left: {
 					label: "Transaction couldn't complete",
-					class: 'text-sm',
+					class: 'pp-text-sm',
 					passive: true,
 				},
 				right: {

@@ -7,38 +7,38 @@
         </DialogTitle>
       </DialogHeader>
 
-      <hr class="bg-surface-grey h-[1px]"/>
+      <hr class="pp-bg-surface-grey pp-h-[1px] pp-w-full"/>
 
-      <div class="flex flex-col" v-if="selectedQuote">
-        <div class="flex flex-col gap-[17px] text-xs">
-            <div class="flex items-center justify-between">
-                <span class="text-secondary"> {{t('detailsModal.route')}} </span>
-                <div class="flex items-center gap-3 text-text">
+      <div class="pp-flex pp-flex-col" v-if="selectedQuote">
+        <div class="pp-flex pp-flex-col pp-gap-[17px] pp-text-xs">
+            <div class="pp-flex pp-items-center pp-justify-between">
+                <span class="pp-text-secondary"> {{t('detailsModal.route')}} </span>
+                <div class="pp-flex pp-items-center pp-gap-3 pp-text-text">
                     <div> {{ sourceChain }} </div>
                     <ArrowRight :size="7" />
                     <div> {{ targetChain }} </div>
                 </div>
             </div>
 
-            <div class="flex items-center justify-between">
-                <span class="text-secondary"> {{t('detailsModal.transferAmount')}} </span>
-                <Amount class="text-text" :amount="selectedQuote.amount" :chain="selectedQuote.route.origin" />
+            <div class="pp-flex pp-items-center pp-justify-between">
+                <span class="pp-text-secondary"> {{t('detailsModal.transferAmount')}} </span>
+                <Amount class="pp-text-text" :amount="selectedQuote.amount" :chain="selectedQuote.route.origin" :asset="selectedQuote.asset" />
             </div>
 
-            <div class="flex items-center justify-between">
-                <span class="text-secondary"> {{t('detailsModal.fees')}} </span>
-                <Amount class="text-text" :amount="selectedQuote.fees.total" :chain="selectedQuote.route.origin" />
+            <div class="pp-flex pp-items-center pp-justify-between">
+                <span class="pp-text-secondary"> {{t('detailsModal.fees')}} </span>
+                <Amount class="pp-text-text" :amount="selectedQuote.fees.total" :chain="selectedQuote.route.origin" :asset="selectedQuote.asset" />
             </div>
 
-            <div class="flex items-center justify-between">
-                <span class="text-secondary"> {{t('detailsModal.timeEstimate')}} </span>
-                <Time class="text-text" :value="selectedQuote.execution.timeMs" />
+            <div class="pp-flex pp-items-center pp-justify-between">
+                <span class="pp-text-secondary"> {{t('detailsModal.timeEstimate')}} </span>
+                <Time class="pp-text-text" :value="selectedQuote.execution.timeMs" />
             </div>
         </div>
 
-        <div class="rounded-lg bg-surface-grey py-4 px-[14px] flex flex-col gap-2 mt-[18px]">
-            <p class="text-sm text-text capitalize">{{ t('detailsModal.whatIsAutoteleport.title') }}</p>
-            <p class="text-xs text-secondary">
+        <div class="pp-rounded-lg pp-bg-surface-grey pp-py-4 pp-px-[14px] pp-flex pp-flex-col pp-gap-2 pp-mt-[18px]">
+            <p class="pp-text-sm pp-text-text pp-capitalize">{{ t('detailsModal.whatIsAutoteleport.title') }}</p>
+            <p class="pp-text-xs pp-text-secondary">
             {{
               t('detailsModal.whatIsAutoteleport.description', {
                   asset: selectedQuote?.asset,
@@ -50,10 +50,10 @@
         </div>
 
 
-        <div class="flex items-center justify-between mt-[13px]">
+        <div class="pp-flex pp-items-center pp-justify-between pp-mt-[13px]">
             <DetailsPill :label="t('learnMore')" />
 
-            <FullLogo class="w-[82px]" />
+            <FullLogo class="pp-w-[82px]" />
         </div>
 
       </div>

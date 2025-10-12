@@ -1,6 +1,6 @@
 <template>
-    <div class="rounded-full bg-accent-background">
-        <div class="animate-spin text-accent-blue">
+    <div class="pp-rounded-full pp-bg-accent-background">
+        <div class="pp-animate-spin pp-text-accent-blue">
             <LoaderCircle :size="20" />
         </div>
     </div>

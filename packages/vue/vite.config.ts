@@ -23,15 +23,6 @@ export default defineConfig({
 			'@ui': path.resolve(__dirname, './src/components/ui'),
 		},
 	},
-	optimizeDeps: {
-		exclude: [
-			'@polkadot/api',
-			'@polkadot/util',
-			'@polkadot/util-crypto',
-			'@polkadot/extension-dapp',
-			'@polkadot/types',
-		],
-	},
 	build: {
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
@@ -42,16 +33,18 @@ export default defineConfig({
 		sourcemap: process.env.NODE_ENV !== 'production',
 		watch: {
 			clearScreen: false,
-			include: ['src/**/*'],
+			// Watch upstream packages so changes rebuild this lib during dev
+			include: [
+				'src/**/*',
+				'../core/src/**/*',
+				'../core/dist/**/*',
+				'../static/src/**/*',
+				'../static/dist/**/*',
+			],
 		},
 		rollupOptions: {
 			external: [
 				'vue',
-				'@polkadot/api',
-				'@polkadot/extension-dapp',
-				'@polkadot/types',
-				'@polkadot/util',
-				'@polkadot/util-crypto',
 			],
 			output: {
 				assetFileNames: (assetInfo) => {

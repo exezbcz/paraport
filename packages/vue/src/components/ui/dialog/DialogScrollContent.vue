@@ -11,6 +11,7 @@ import {
 	useForwardPropsEmits,
 } from 'reka-ui'
 import { type HTMLAttributes, computed } from 'vue'
+import { useSdk } from '@/composables/useSdk'
 
 const props = defineProps<
 	DialogContentProps & { class?: HTMLAttributes['class'] }
@@ -24,38 +25,41 @@ const delegatedProps = computed(() => {
 })
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+const { appearance } = useSdk()
 </script>
 
 <template>
   <DialogPortal>
-    <DialogOverlay
-      class="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
-    >
-      <DialogContent
-        :class="
-          cn(
-            'relative z-50 grid w-full max-w-xs my-8 gap-4 border border-border bg-background p-6 shadow-lg duration-200 sm:rounded-lg md:w-full',
-            props.class,
-          )
-        "
-        v-bind="forwarded"
-        @pointer-down-outside="(event) => {
-          const originalEvent = event.detail.originalEvent;
-          const target = originalEvent.target as HTMLElement;
-          if (originalEvent.offsetX > target.clientWidth || originalEvent.offsetY > target.clientHeight) {
-            event.preventDefault();
-          }
-        }"
+    <div class="paraport" :style="appearance">
+      <DialogOverlay
+        class="pp-fixed pp-inset-0 pp-z-[999] pp-grid pp-place-items-center pp-overflow-y-auto pp-bg-black/80 data-[state=open]:pp-animate-in data-[state=closed]:pp-animate-out data-[state=closed]:pp-fade-out-0 data-[state=open]:pp-fade-in-0"
       >
-        <slot />
-
-        <DialogClose
-          class="absolute top-3 right-3 p-0.5 transition-colors rounded-md hover:bg-secondary"
+        <DialogContent
+          :class="
+            cn(
+              'pp-relative pp-z-[999] pp-grid pp-w-full pp-max-w-xs pp-my-8 pp-gap-4 pp-border pp-border-border pp-bg-background pp-p-6 pp-shadow-lg pp-duration-200 sm:pp-rounded-lg md:pp-w-full',
+              props.class,
+            )
+          "
+          v-bind="forwarded"
+          @pointer-down-outside="(event) => {
+            const originalEvent = event.detail.originalEvent;
+            const target = originalEvent.target as HTMLElement;
+            if (originalEvent.offsetX > target.clientWidth || originalEvent.offsetY > target.clientHeight) {
+              event.preventDefault();
+            }
+          }"
         >
-          <X class="w-4 h-4" />
-          <span class="sr-only">Close</span>
-        </DialogClose>
-      </DialogContent>
-    </DialogOverlay>
+          <slot />
+
+          <DialogClose
+            class="pp-absolute pp-ring-pink-200 pp-top-3 pp-right-3 pp-p-0.5 pp-transition-colors pp-rounded-md hover:pp-bg-secondary"
+          >
+            <X class="pp-w-4 pp-h-4" />
+            <span class="pp-sr-only">Close</span>
+          </DialogClose>
+        </DialogContent>
+      </DialogOverlay>
+    </div>
   </DialogPortal>
 </template>
