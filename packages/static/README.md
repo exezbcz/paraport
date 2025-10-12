@@ -33,10 +33,10 @@ Static chain files including decimals, symbol, and ss58 formats
 import { CHAINS } from "@paraport/static";
 ```
 
-### 🔧 Endpoints
-Map of RPC endpoints for each chain
+### 🔧 providers
+Map of RPC providers for each chain
 ```js
-import { ENDPOINT_MAP } from "@paraport/static";
+import { provider_MAP } from "@paraport/static";
 ```
 
 ### 🔧 Names
@@ -53,32 +53,21 @@ import { TYPES } from "@paraport/static";
 
 ## Developer Notes
 
-### Endpoint Generation
+### Provider Generation
 
-The RPC endpoints are pre-generated to avoid external dependencies in the published package. The endpoint generator is automatically set up during package installation via the postinstall script in the root package.json, and the endpoints are automatically generated during the prebuild process.
-
-The endpoint generator is maintained in a separate directory to isolate Polkadot dependencies and prevent version conflicts with the main project.
+The RPC providers are pre-generated to avoid external dependencies in the published package. The provider generator is automatically set up during package installation via the postinstall script in the root package.json, and the providers are automatically generated during the prebuild process.
 
 #### Automatic Process
 
-When you install dependencies or build the package, the following happens automatically:
-
-1. The endpoint generator is set up during `pnpm install` via the postinstall script
-2. The endpoints are generated automatically when building the package via the prebuild script
+The providers are generated automatically when building the package via the prebuild script
 
 #### Manual Process (if needed)
 
-If you need to manually update the endpoints:
+If you need to manually update the providers:
 
-1. The endpoint generator setup is already done during installation, but if needed you can run it manually:
+1. Run the provider generation script:
 ```bash
-cd scripts/endpoint-generator
-pnpm run setup
-```
-
-2. Run the endpoint generation script:
-```bash
-cd scripts/endpoint-generator
+cd scripts/generate-providers
 pnpm run generate
 ```
 
