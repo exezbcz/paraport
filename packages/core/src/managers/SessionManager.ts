@@ -76,4 +76,19 @@ export default class SessionManager extends BaseManager<
 	getSessionByTeleportId(teleportId: string): TeleportSession | undefined {
 		return this.getItemsWhere((session) => session.teleportId === teleportId)[0]
 	}
+
+	/**
+	 * Cleans up all sessions and listeners.
+	 */
+	destroy(): void {
+		for (const session of this.getAllItems()) {
+			try {
+				session.unsubscribe?.()
+			} catch {
+				// ignore
+			}
+		}
+		this.items.clear()
+		this.eventEmitter.removeAllListeners()
+	}
 }

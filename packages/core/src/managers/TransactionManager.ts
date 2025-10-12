@@ -88,4 +88,17 @@ export class TransactionManager extends BaseManager<
 			unsubscribe: undefined,
 		})
 	}
+
+	/**
+	 * Unsubscribes active watchers, clears items and listeners.
+	 */
+	destroy(): void {
+		// Unsubscribe any active watchers and clear items
+		for (const tx of this.getAllItems()) {
+			tx.unsubscribe?.()
+		}
+		this.items.clear()
+		// Remove all event listeners on this manager's emitter
+		this.eventEmitter.removeAllListeners()
+	}
 }

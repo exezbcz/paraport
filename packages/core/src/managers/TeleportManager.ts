@@ -36,6 +36,7 @@ export class TeleportManager extends BaseManager<
 > {
 	private readonly transactionManager: TransactionManager
 	private readonly balanceService: BalanceService
+	private readonly unsubs: Array<() => void> = []
 
 	private readonly statusActionMap: Partial<
 		Record<TeleportStatus, (teleport: TeleportDetails) => Promise<void>>
@@ -152,43 +153,49 @@ export class TeleportManager extends BaseManager<
 		/**
 		 * Subscribe to teleport events.
 		 **/
-		this.subscribe(TeleportEventTypes.TELEPORT_STARTED, (teleport) => {
-			this.logger.debug(
-				`[${TeleportEventTypes.TELEPORT_STARTED}] ${teleport.id}`,
-			)
+		this.unsubs.push(
+			this.subscribe(TeleportEventTypes.TELEPORT_STARTED, (teleport) => {
+				this.logger.debug(
+					`[${TeleportEventTypes.TELEPORT_STARTED}] ${teleport.id}`,
+				)
 
-			this.processNextStep(teleport)
-		})
+				this.processNextStep(teleport)
+			}),
+		)
 
-		this.subscribe(TeleportEventTypes.TELEPORT_UPDATED, async (teleport) => {
-			this.logger.debug(
-				`[${TeleportEventTypes.TELEPORT_UPDATED}] ${teleport.status}`,
-			)
+		this.unsubs.push(
+			this.subscribe(TeleportEventTypes.TELEPORT_UPDATED, async (teleport) => {
+				this.logger.debug(
+					`[${TeleportEventTypes.TELEPORT_UPDATED}] ${teleport.status}`,
+				)
 
-			if (teleport.status === TeleportStatuses.Failed) return
+				if (teleport.status === TeleportStatuses.Failed) return
 
-			if (teleport.status === TeleportStatuses.Completed) {
-				return this.eventEmitter.emit({
-					type: TeleportEventTypes.TELEPORT_COMPLETED,
-					payload: teleport,
-				})
-			}
+				if (teleport.status === TeleportStatuses.Completed) {
+					return this.eventEmitter.emit({
+						type: TeleportEventTypes.TELEPORT_COMPLETED,
+						payload: teleport,
+					})
+				}
 
-			this.processNextStep(teleport)
-		})
+				this.processNextStep(teleport)
+			}),
+		)
 
 		/**
 		 * Subscribe to transaction events.
 		 **/
-		this.transactionManager.subscribe(
-			TransactionEventTypes.TRANSACTION_UPDATED,
-			async (transaction) => {
-				this.logger.debug(
-					`[${TransactionEventTypes.TRANSACTION_UPDATED}] ${transaction.id} -> ${transaction.status}`,
-				)
+		this.unsubs.push(
+			this.transactionManager.subscribe(
+				TransactionEventTypes.TRANSACTION_UPDATED,
+				async (transaction) => {
+					this.logger.debug(
+						`[${TransactionEventTypes.TRANSACTION_UPDATED}] ${transaction.id} -> ${transaction.status}`,
+					)
 
-				this.handleTransactionUpdate(transaction)
-			},
+					this.handleTransactionUpdate(transaction)
+				},
+			),
 		)
 	}
 
@@ -431,5 +438,27 @@ export class TeleportManager extends BaseManager<
 		item: TeleportDetails,
 	): TeleportEventPayload {
 		return this.teleportMapper(item)
+	}
+
+	/**
+	 * Clears internal state and unsubscribes all listeners.
+	 */
+	destroy(): void {
+		// Unsubscribe local listener subscriptions
+		for (const u of this.unsubs) {
+			try {
+				u()
+			} catch {
+				// ignore
+			}
+		}
+		this.unsubs.length = 0
+
+		// Destroy downstream managers
+		this.transactionManager.destroy()
+
+		// Clear state and listeners
+		this.items.clear()
+		this.eventEmitter.removeAllListeners()
 	}
 }

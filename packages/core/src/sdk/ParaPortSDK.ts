@@ -39,6 +39,7 @@ export default class ParaPortSDK extends Initializable {
 	private readonly papi: PolkadotApi
 	private readonly logger: Logger
 	private readonly sessionManager: SessionManager
+	private readonly unsubs: Array<() => void> = []
 
 	constructor(config: SDKConfig<false>) {
 		super()
@@ -96,15 +97,15 @@ export default class ParaPortSDK extends Initializable {
 	onSession(
 		event: AutoTeleportSessionEventType,
 		callback: (item: TeleportSessionPayload) => void,
-	): void {
-		this.sessionManager.subscribe(event, callback)
+	): () => void {
+		return this.sessionManager.subscribe(event, callback)
 	}
 
 	onTeleport(
 		event: TeleportEventType,
 		callback: (item: TeleportEventPayload) => void,
-	): void {
-		this.teleportManager.subscribe(event, callback)
+	): () => void {
+		return this.teleportManager.subscribe(event, callback)
 	}
 
 	private async getQuotes(params: TeleportParams): Promise<Quote[]> {
@@ -267,30 +268,34 @@ export default class ParaPortSDK extends Initializable {
 	private registerListeners() {
 		if (!this.teleportManager) return
 
-		this.teleportManager.subscribe(
-			TeleportEventTypes.TELEPORT_STARTED,
-			(payload) => {
-				const session = this.sessionManager.getSessionByTeleportId(payload.id)
+		this.unsubs.push(
+			this.teleportManager.subscribe(
+				TeleportEventTypes.TELEPORT_STARTED,
+				(payload) => {
+					const session = this.sessionManager.getSessionByTeleportId(payload.id)
 
-				if (!session) return
+					if (!session) return
 
-				this.sessionManager.updateSession(session.id, {
-					status: TeleportSessionStatuses.Processing,
-				})
-			},
+					this.sessionManager.updateSession(session.id, {
+						status: TeleportSessionStatuses.Processing,
+					})
+				},
+			),
 		)
 
-		this.teleportManager.subscribe(
-			TeleportEventTypes.TELEPORT_COMPLETED,
-			(payload) => {
-				const session = this.sessionManager.getSessionByTeleportId(payload.id)
+		this.unsubs.push(
+			this.teleportManager.subscribe(
+				TeleportEventTypes.TELEPORT_COMPLETED,
+				(payload) => {
+					const session = this.sessionManager.getSessionByTeleportId(payload.id)
 
-				if (!session) return
+					if (!session) return
 
-				this.sessionManager.updateSession(session.id, {
-					status: TeleportSessionStatuses.Completed,
-				})
-			},
+					this.sessionManager.updateSession(session.id, {
+						status: TeleportSessionStatuses.Completed,
+					})
+				},
+			),
 		)
 	}
 
@@ -321,5 +326,26 @@ export default class ParaPortSDK extends Initializable {
 				`Invalid teleport parameters: ${validationErrors.join(', ')}`,
 			)
 		}
+	}
+
+	/**
+	 * Tears down internal resources and subscriptions.
+	 * Destroys managers and closes network clients.
+	 */
+	destroy(): void {
+		// Unsubscribe local listeners registered by SDK
+		for (const u of this.unsubs) {
+			try {
+				u()
+			} catch {
+				// ignore
+			}
+		}
+		this.unsubs.length = 0
+
+		// Destroy managers/state and close network clients
+		this.sessionManager.destroy()
+		this.teleportManager.destroy()
+		this.papi.closeAll()
 	}
 }
