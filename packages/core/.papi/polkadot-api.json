@@ -1,0 +1,39 @@
+{
+	"version": 0,
+	"descriptorPath": "src/descriptors",
+	"entries": {
+		"dot": {
+			"chain": "polkadot",
+			"metadata": ".papi/metadata/dot.scale",
+			"genesis": "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3",
+			"codeHash": "0xe260d17fcfa34f10503c91148a7bc2fd820e356295d2e18f828b5fa4190d47f7"
+		},
+		"ahp": {
+			"chain": "polkadot_asset_hub",
+			"metadata": ".papi/metadata/ahp.scale",
+			"genesis": "0x68d56f15f85d3136970ec16946040bc1752654e906147f7e43e9d539d7c3de2f",
+			"codeHash": "0x8cada8f706ffc7c9bd0c31985ec4f34520914778edefaa94b624bc6adea48a1c"
+		},
+		"ahk": {
+			"chain": "ksmcc3_asset_hub",
+			"metadata": ".papi/metadata/ahk.scale",
+			"genesis": "0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a",
+			"codeHash": "0xc1db15b71ce88e1e74f4f4075837204788e40ace9fca23290002f8f52d639dd4"
+		},
+		"ksm": {
+			"chain": "ksmcc3",
+			"metadata": ".papi/metadata/ksm.scale",
+			"genesis": "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe",
+			"codeHash": "0x1e0c7ef66f67073483ec5ad670c6b226fbd9a26e2e7d9b61afb65f2b82f95854"
+		},
+		"hyd": {
+			"wsUrl": "wss://hydration-rpc.n.dwellir.com",
+			"metadata": ".papi/metadata/hyd.scale",
+			"genesis": "0xafdc188f45c71dacbaa0b62e16a91f726c7b8699a9748cdf715459de6b7f366d",
+			"codeHash": "0x5b3789c70537a0508cf6065fcd09ba930a24918afc8f00a49c7e6474eb643af6"
+		}
+	},
+  "options": {
+    "noDescriptorsPackage": true
+  }
+}
