@@ -1,6 +1,6 @@
 {
 	"name": "@paraport/core",
-	"version": "0.1.0-alpha.1",
+	"version": "0.1.0-alpha.13",
 	"description": "Core functionality for ParaPort SDK",
 	"keywords": ["paraport", "polkadot", "sdk", "blockchain"],
 	"license": "MIT",
