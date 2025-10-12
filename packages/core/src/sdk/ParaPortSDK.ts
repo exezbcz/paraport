@@ -10,7 +10,7 @@ import SessionManager from '@/managers/SessionManager'
 import { TeleportManager } from '@/managers/TeleportManager'
 import BalanceService from '@/services/BalanceService'
 import { Logger } from '@/services/LoggerService'
-import SubstrateApi from '@/services/SubstrateApi'
+import PolkadotApi from '@/services/PolkadotApi'
 import type { Quote, SDKConfig } from '@/types/common'
 import {
 	type AutoTeleportSessionCalculation,
@@ -27,7 +27,7 @@ import {
 	TeleportModes,
 	type TeleportParams,
 } from '@/types/teleport'
-import { getChainsOfAsset, isValidAddress } from '@/utils'
+import { getRouteChains, isValidAddress } from '@/utils'
 import { convertToBigInt } from '@/utils/number'
 import { Assets, Chains } from '@paraport/static'
 
@@ -36,7 +36,7 @@ export default class ParaPortSDK extends Initializable {
 	private readonly config: SDKConfig
 	private readonly bridgeRegistry = new BridgeRegistry()
 	private readonly balanceService: BalanceService
-	private readonly subApi: SubstrateApi
+	private readonly papi: PolkadotApi
 	private readonly logger: Logger
 	private readonly sessionManager: SessionManager
 
@@ -46,15 +46,15 @@ export default class ParaPortSDK extends Initializable {
 		SDKConfigManager.validateConfig(combinedConfig)
 		this.config = combinedConfig
 
-		this.subApi = new SubstrateApi()
+		this.papi = new PolkadotApi(config)
 		this.logger = new Logger({ minLevel: this.config.logLevel })
-		this.balanceService = new BalanceService(this.subApi, this.logger)
+		this.balanceService = new BalanceService(this.papi, this.logger)
 		this.sessionManager = new SessionManager(new GenericEmitter())
 
 		this.teleportManager = new TeleportManager(
 			new GenericEmitter<TeleportEventPayload, TeleportEventType>(),
 			this.bridgeRegistry,
-			this.subApi,
+			this.papi,
 			this.logger,
 		)
 	}
@@ -67,7 +67,7 @@ export default class ParaPortSDK extends Initializable {
 		try {
 			if (this.config.bridgeProtocols?.includes('XCM')) {
 				this.bridgeRegistry.register(
-					new XCMBridge(this.config, this.balanceService, this.subApi),
+					new XCMBridge(this.config, this.balanceService, this.papi),
 				)
 			}
 
@@ -127,7 +127,7 @@ export default class ParaPortSDK extends Initializable {
 			{
 				address: params.address,
 				asset: params.asset,
-				chains: getChainsOfAsset(params.asset),
+				chains: getRouteChains(params.chain, params.asset),
 			},
 			callback,
 		)
@@ -182,9 +182,11 @@ export default class ParaPortSDK extends Initializable {
 
 		const params = convertToBigInt(allParams, ['amount'])
 
-		this.logger.debug('initSession', params)
+		this.logger.debug('Starting to calculate teleport with params', params)
 
 		const { quotes, funds } = await this.calculateTeleport(params)
+
+		this.logger.debug('Calculated teleport', { quotes, funds })
 
 		const unsubscribe = await this.subscribeBalanceChanges(params, async () => {
 			const newState = await this.calculateTeleport(params)
@@ -295,7 +297,7 @@ export default class ParaPortSDK extends Initializable {
 	private validateTeleportParams(params: TeleportParams<string>) {
 		const validAsset = Object.values(Assets).includes(params.asset)
 		const validChain = Object.values(Chains).includes(params.chain)
-		const validChainAsset = getChainsOfAsset(params.asset).includes(
+		const validChainAsset = getRouteChains(params.chain, params.asset).includes(
 			params.chain,
 		)
 

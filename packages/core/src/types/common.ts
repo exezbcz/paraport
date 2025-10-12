@@ -1,5 +1,5 @@
 import type { Asset, Chain } from '@paraport/static'
-import type { Signer } from '@polkadot/api/types'
+import type { PolkadotSigner } from 'polkadot-api'
 import type { BridgeProtocol } from './bridges'
 import type { LogLevel } from './sdk'
 import type { TeleportMode } from './teleport'
@@ -24,7 +24,7 @@ export type SDKConfig<T extends boolean = true> = {
 	 * Function that returns a Signer instance for transaction signing
 	 * Used for authenticating and signing transactions on supported chains
 	 */
-	getSigner?: () => Promise<Signer>
+	getSigner: () => Promise<PolkadotSigner>
 
 	/**
 	 * Logging level configuration for SDK operations

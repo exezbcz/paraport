@@ -4,7 +4,7 @@ import type BridgeRegistry from '@/bridges/BridgeRegistry'
 import { TransactionManager } from '@/managers/TransactionManager'
 import BalanceService from '@/services/BalanceService'
 import type { Logger } from '@/services/LoggerService'
-import type SubstrateApi from '@/services/SubstrateApi'
+import type PolkadotApi from '@/services/PolkadotApi'
 import type { Quote } from '@/types/common'
 import {
 	type TeleportDetails,
@@ -56,7 +56,7 @@ export class TeleportManager extends BaseManager<
 			TeleportEventType
 		>,
 		private readonly bridgeRegistry: BridgeRegistry,
-		private readonly subApi: SubstrateApi,
+		private readonly subApi: PolkadotApi,
 		private readonly logger: Logger,
 	) {
 		super(teleportEventEmitter)

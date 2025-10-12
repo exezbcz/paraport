@@ -1,21 +1,17 @@
 import {
-	ASSET_CHAINS_MAP,
 	type Asset,
 	CHAINS,
 	CHAIN_NAMES,
 	type Chain,
 	type ChainProperties,
-	ENDPOINT_MAP,
+	Chains,
 	existentialDeposit,
-	teleportExistentialDeposit,
 } from '@paraport/static'
+import { SUBSTRATE_CHAINS } from '@paraspell/sdk'
+import { isAssetSupported } from './assets'
 
 export const edOf = (chain: Chain): bigint => {
 	return BigInt(existentialDeposit[chain])
-}
-
-export const teleportEdOf = (chain: Chain): bigint => {
-	return BigInt(teleportExistentialDeposit[chain])
 }
 
 export const chainPropListOf = (chain: Chain): ChainProperties => {
@@ -30,12 +26,26 @@ export const decimalsOf = (chain: Chain): number => {
 	return chainPropListOf(chain).tokenDecimals
 }
 
-export const getChainsOfAsset = (asset: Asset): Chain[] => {
-	return ASSET_CHAINS_MAP[asset] || []
-}
+//
 
-export const endpointOf = (chain: Chain): string => {
-	return ENDPOINT_MAP[chain]
+/**
+ * Lists chains where telport will interact and where a given asset is available.
+ * @param chain - Chain identifier
+ * @param asset - Asset symbol
+ * @returns Array of chains
+ */
+export const getRouteChains = (chain: Chain, asset: Asset): Chain[] => {
+	const otherChains = SUBSTRATE_CHAINS.filter((subChain) => {
+		if (chain === subChain) return false
+
+		return isAssetSupported(chain, subChain as Chain, asset)
+	})
+
+	const allowed = new Set(Object.values(Chains))
+
+	return [chain, ...otherChains].filter((c) =>
+		allowed.has(c as Chain),
+	) as Chain[]
 }
 
 export const getChainName = (chain: Chain): string => {

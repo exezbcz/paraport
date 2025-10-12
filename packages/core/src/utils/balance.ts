@@ -1,10 +1,18 @@
-import { edOf, teleportEdOf } from '@/utils/chains'
-import type { Chain } from '@paraport/static'
+import type { Asset, Chain } from '@paraport/static'
+import { getAssetExistentialDeposit } from './assets'
 
-export const transferableBalanceOf = (amount: bigint, chain: Chain): bigint => {
-	return amount - edOf(chain)
-}
+/**
+ * Computes transferable balance after subtracting chain existential deposit.
+ * @param amount - Free balance
+ * @param chain - Chain identifier
+ * @returns Transferable balance
+ */
+export const transferableBalanceOf = (
+	amount: bigint,
+	chain: Chain,
+	asset: Asset,
+): bigint => {
+	const ed = BigInt(getAssetExistentialDeposit(chain, asset) ?? 0)
 
-export const xcmSafeBalanceOf = (amount: bigint, chain: Chain): bigint => {
-	return amount - teleportEdOf(chain)
+	return amount - ed
 }

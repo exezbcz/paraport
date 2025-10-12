@@ -1,7 +1,7 @@
 import { Initializable } from '@/base/Initializable'
 import type BalanceService from '@/services/BalanceService'
 import type { Balance } from '@/services/BalanceService'
-import type SubstrateApi from '@/services/SubstrateApi'
+import type PolkadotApi from '@/services/PolkadotApi'
 import type {
 	BridgeAdapter,
 	BridgeProtocol,
@@ -14,10 +14,11 @@ import {
 	type TeleportParams,
 } from '@/types/teleport'
 import type { TransactionCallback } from '@/types/transactions'
-import { formatAddress, getChainsOfAsset } from '@/utils'
+import { formatAddress, getRouteChains } from '@/utils'
+import { getParaspellCurrencyInput } from '@/utils/assets'
 import { signAndSend } from '@/utils/tx'
 import type { Asset, Chain } from '@paraport/static'
-import * as paraspell from '@paraspell/sdk-pjs'
+import { Builder } from '@paraspell/sdk'
 import { maxBy } from 'lodash'
 
 type XCMTransferParams = {
@@ -35,28 +36,32 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 	constructor(
 		private readonly config: SDKConfig,
 		private readonly balanceService: BalanceService,
-		private readonly api: SubstrateApi,
+		private readonly papi: PolkadotApi,
 	) {
 		super()
-		this.api = api
 	}
 
-	private async getParaspellQuery({
+	private getParaspellQuery({
 		amount,
 		originChain,
 		destinationChain,
 		address,
 		asset,
 	}: XCMTransferParams) {
-		const api = await this.api.getInstance(originChain)
+		const { client } = this.papi.getInstance(originChain)
 
-		return paraspell
-			.Builder(api)
-			.from(originChain)
-			.to(destinationChain)
-			.currency({ symbol: asset, amount })
-			.address(formatAddress(address, destinationChain))
-			.senderAddress(formatAddress(address, originChain))
+		const currencyInput = getParaspellCurrencyInput(originChain, asset)
+
+		return (
+			Builder(client)
+				.from(originChain)
+				.to(destinationChain)
+				.currency({ ...currencyInput, amount })
+				.address(formatAddress(address, destinationChain))
+				.senderAddress(formatAddress(address, originChain))
+				// Pay transaction fee with the same asset
+				.feeAsset(currencyInput)
+		)
 	}
 
 	private async getXcmFee({
@@ -65,9 +70,8 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		destinationChain,
 		address,
 		asset,
-		estimate,
-	}: XCMTransferParams & { estimate?: boolean }): Promise<bigint> {
-		const query = await this.getParaspellQuery({
+	}: XCMTransferParams): Promise<bigint> {
+		const query = this.getParaspellQuery({
 			amount,
 			originChain,
 			destinationChain,
@@ -76,9 +80,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		})
 
 		try {
-			const { origin, destination } = await query
-				.feeAsset({ symbol: asset })
-				[estimate ? 'getXcmFeeEstimate' : 'getXcmFee']()
+			const { origin, destination } = await query.getXcmFee()
 
 			return BigInt(origin.fee || 0) + BigInt(destination.fee || 0)
 		} catch (error) {
@@ -115,7 +117,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		teleportMode = TeleportModes.Expected,
 	}: TeleportParams): Promise<Quote | null> {
 		// 1. get chains where the token is available
-		const chains = getChainsOfAsset(asset).filter((chain) =>
+		const chains = getRouteChains(destinationChain, asset).filter((chain) =>
 			this.config.chains.includes(chain),
 		)
 
@@ -147,26 +149,23 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		const originChain = highestBalanceChain.chain
 
 		// 4. calculate amount to teleport
-		const estimateXcmFee = await this.getXcmFee({
+		const simpleXcmFee = await this.getXcmFee({
 			amount,
 			originChain,
 			destinationChain,
 			address,
 			asset,
-			estimate: true,
 		})
 
-		const estimateTeleportAmount = this.calculateTeleportAmount({
+		const teleportAmountWithXcmFee = this.calculateTeleportAmount({
 			amount,
-			xcmFee: estimateXcmFee,
+			xcmFee: simpleXcmFee,
 			currentChainBalance: currentChainBalance,
 			teleportMode: TeleportModes.Expected,
 		})
 
-		// First simulate the XCM fee (less accurate) to get an estimate
-		// We need to use a valid amount for the actual fee calculation to avoid dry run failure
 		const xcmFee = await this.getXcmFee({
-			amount: estimateTeleportAmount,
+			amount: teleportAmountWithXcmFee,
 			originChain,
 			destinationChain,
 			address,
@@ -180,16 +179,29 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			teleportMode,
 		})
 
-		if (
-			transferAmount <= 0 ||
-			currentChainBalance.transferable + highestBalanceChain.transferable <
-				transferAmount
-		) {
-			return null
-		}
+		const query = this.getParaspellQuery({
+			amount: transferAmount,
+			originChain,
+			destinationChain,
+			address,
+			asset,
+		})
+
+		const dryRun = await query.dryRun()
 
 		const totalFees = xcmFee
 		const receivingAmount = transferAmount - totalFees
+
+		if (
+			transferAmount <= 0n || // valid transfer amount
+			receivingAmount <= 0n || // ensures positive receive
+			Boolean(dryRun.failureReason) || // fails to execute
+			highestBalanceChain.transferable < transferAmount || // can transfer
+			(teleportMode === TeleportModes.Expected &&
+				currentChainBalance.transferable + receivingAmount < amount) // ends up with desired amount
+		) {
+			return null
+		}
 
 		return {
 			teleportMode,
@@ -222,7 +234,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		}: BridgeTransferParams,
 		callback: TransactionCallback,
 	) {
-		const query = await this.getParaspellQuery({
+		const query = this.getParaspellQuery({
 			amount,
 			originChain,
 			destinationChain,
@@ -230,17 +242,20 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 			asset,
 		})
 
-		const tx = await query.build()
+		const transaction = await query.build()
 
 		return signAndSend({
-			tx,
+			transaction,
 			callback,
-			address,
-			signer: await this.config.getSigner?.(),
+			signer: await this.config.getSigner(),
 		})
 	}
 
+	/**
+	 * Initializes the adapter. Pre-warming of APIs could be added here.
+	 * @returns Promise resolving when ready
+	 */
 	async initialize(): Promise<void> {
-		await Promise.all(this.config.chains.map(this.api.getInstance))
+		return Promise.resolve()
 	}
 }

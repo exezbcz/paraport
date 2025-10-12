@@ -22,6 +22,7 @@ export class SDKConfigManager {
 				Chains.AssetHubPolkadot,
 				Chains.Kusama,
 				Chains.AssetHubKusama,
+				Chains.Hydration,
 			],
 		}
 	}

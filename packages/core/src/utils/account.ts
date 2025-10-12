@@ -1,6 +1,6 @@
 import { ss58Of } from '@/utils/chains'
 import type { Chain } from '@paraport/static'
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
+import { decodeAddress, encodeAddress } from 'dedot/utils'
 
 export const formatAddress = (address: string, chain: Chain) =>
 	encodeAddress(address, ss58Of(chain))
