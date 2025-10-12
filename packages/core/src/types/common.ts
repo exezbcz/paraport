@@ -30,6 +30,11 @@ export type SDKConfig<T extends boolean = true> = {
 	 * Logging level configuration for SDK operations
 	 */
 	logLevel?: LogLevel | undefined
+
+	/**
+	 * Endpoints for each supported chain
+	 */
+	endpoints?: Partial<Record<Chain, string[]>> | undefined
 }
 
 export type Route = {
