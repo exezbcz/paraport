@@ -5,19 +5,19 @@ React components for seamless integration of ParaPort cross-chain teleportation 
 ## Installation
 
 ```bash
-pnpm add @paraport/react
+pnpm add @paraport/react polkadot-api
 ```
 
 ### Install Peer Dependencies
 
-ParaPort React is designed to work with PolkadotJS API and React. Install the required peer dependencies:
+ParaPort React requires `polkadot-api` and React in your application. Install the required peers:
 
 ```bash
 # React peer dependencies
 pnpm add react react-dom
 
-# PolkadotJS peer dependencies
-pnpm add @polkadot/api @polkadot/extension-dapp @polkadot/types @polkadot/util @polkadot/util-crypto
+# Required peer dependency
+pnpm add polkadot-api
 ```
 
 ## Component Usage
@@ -70,6 +70,19 @@ const App = () => {
 };
 
 export default App;
+```
+
+## Theming
+
+- Import SDK CSS once (already included via `@paraport/react/style`).
+- Pass `appearance` for per-instance token overrides and `themeMode` if needed.
+
+```tsx
+<Paraport
+  appearance={{ '--radius': '12px', '--accent-blue': '#4f46e5' }}
+  themeMode="auto" // 'light' | 'dark' | 'auto'
+  {...otherProps}
+/>
 ```
 
 ## Props Documentation

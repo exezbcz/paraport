@@ -14,10 +14,13 @@ function Paraport({
   onReady,
   onAddFunds,
   displayMode,
+  appearance,
+  themeMode,
   label,
   disabled,
   getSigner,
   logLevel,
+  endpoints,
 }: ParaportParams) {
   const sdkInstanceRef = useRef<ReturnType<typeof init> | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -37,10 +40,13 @@ function Paraport({
       asset,
       // Optional
       displayMode,
+      appearance,
+      themeMode,
       label,
       disabled,
       getSigner,
       logLevel,
+      endpoints,
       // Events
       onSubmit,
       onCompleted,

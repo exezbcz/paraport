@@ -29,24 +29,25 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'ParaPortReact',
       fileName: 'index',
-      formats: ['es'],
+      formats: ['es', 'cjs'],
     },
     sourcemap: false,
     watch: {
       clearScreen: false,
-      include: ['src/**/*'],
+      // Watch upstream core/static so React lib rebuilds during dev
+      include: [
+        'src/**/*',
+        '../core/src/**/*',
+        '../core/dist/**/*',
+        '../static/src/**/*',
+        '../static/dist/**/*',
+      ],
     },
     rollupOptions: {
       external: [
         // React core
         'react',
         'react-dom',
-        // Polkadot packages
-        '@polkadot/api',
-        '@polkadot/extension-dapp',
-        '@polkadot/types',
-        '@polkadot/util',
-        '@polkadot/util-crypto',
       ],
       output: {
         globals: {
@@ -54,6 +55,11 @@ export default defineConfig({
           'react-dom': 'ReactDOM',
         },
         sourcemap: false,
+        exports: 'named',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') return 'index.css'
+          return assetInfo.name as string
+        },
       },
     },
   },
