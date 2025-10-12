@@ -44,7 +44,6 @@
 	},
 	"dependencies": {
 		"@paraport/static": "workspace:*",
-		"@paraspell/sdk-pjs": "^8.14.0",
 		"@paraspell/sdk": "^11.8.6",
 		"dedot": "^0.16.0",
 		"eventemitter3": "^5.0.1",

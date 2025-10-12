@@ -91,23 +91,20 @@ sdk.retrySession(session.id)
 ## Dependencies
 
 - `@paraport/static`: Static data about chains and assets
-- `@kodadot1/sub-api`: Substrate API utilities
-- `@polkadot/api`: Polkadot.js API for blockchain interaction
-- `@paraspell/sdk-pjs`: ParaSpell SDK for XCM transfers
+- `polkadot-api`: High-performance Substrate/Polkadot API used for network interactions
 
 ## Installation
 
 ```bash
-pnpm add @paraport/core
+pnpm add @paraport/core polkadot-api
 ```
 
 ### Install Peer Dependencies
 
-ParaPort Core is designed to work with PolkadotJS API. Install the required peer dependencies:
+ParaPort Core declares `polkadot-api` as a peer dependency. Install it alongside the package:
 
 ```bash
-# PolkadotJS peer dependencies
-pnpm add @polkadot/api @polkadot/extension-dapp @polkadot/types @polkadot/util-crypto
+pnpm add polkadot-api
 ```
 
 ## Automated Token Movement Process
