@@ -31,6 +31,12 @@ import { getRouteChains, isValidAddress } from '@/utils'
 import { convertToBigInt } from '@/utils/number'
 import { Assets, Chains } from '@paraport/static'
 
+/**
+ * Main entrypoint for interacting with ParaPort SDK.
+ *
+ * Provides session lifecycle management, quote calculation, teleport execution,
+ * and event subscriptions for both sessions and teleports.
+ */
 export default class ParaPortSDK extends Initializable {
 	private readonly teleportManager: TeleportManager
 	private readonly config: SDKConfig
@@ -60,6 +66,13 @@ export default class ParaPortSDK extends Initializable {
 		)
 	}
 
+	/**
+	 * Initializes the SDK and registered bridge adapters.
+	 *
+	 * @throws {SDKInitializationError} If initialization is attempted more than once
+	 * or when any bridge fails to initialize.
+	 * @returns Promise that resolves when the SDK is initialized
+	 */
 	async initialize() {
 		if (this.isInitialized()) {
 			throw new SDKInitializationError('SDK already initialized')
@@ -94,6 +107,13 @@ export default class ParaPortSDK extends Initializable {
 		}
 	}
 
+	/**
+	 * Subscribes to session lifecycle events.
+	 *
+	 * @param event - Session event type to listen for
+	 * @param callback - Handler invoked with the session payload
+	 * @returns Unsubscribe function
+	 */
 	onSession(
 		event: AutoTeleportSessionEventType,
 		callback: (item: TeleportSessionPayload) => void,
@@ -101,6 +121,13 @@ export default class ParaPortSDK extends Initializable {
 		return this.sessionManager.subscribe(event, callback)
 	}
 
+	/**
+	 * Subscribes to teleport events emitted by the underlying TeleportManager.
+	 *
+	 * @param event - Teleport event type to listen for
+	 * @param callback - Handler invoked with the teleport payload
+	 * @returns Unsubscribe function
+	 */
 	onTeleport(
 		event: TeleportEventType,
 		callback: (item: TeleportEventPayload) => void,
@@ -108,6 +135,12 @@ export default class ParaPortSDK extends Initializable {
 		return this.teleportManager.subscribe(event, callback)
 	}
 
+	/**
+	 * Gets quotes from all registered bridges for the given teleport params.
+	 *
+	 * @param params - Teleport parameters
+	 * @returns Resolved quotes (errors are swallowed per bridge)
+	 */
 	private async getQuotes(params: TeleportParams): Promise<Quote[]> {
 		const bridges = this.bridgeRegistry.getAll()
 
@@ -120,6 +153,13 @@ export default class ParaPortSDK extends Initializable {
 		return results.filter((quote): quote is Quote => quote !== null)
 	}
 
+	/**
+	 * Subscribes to balance changes for relevant chains and asset.
+	 *
+	 * @param params - Teleport parameters
+	 * @param callback - Invoked on balance increase
+	 * @returns Unsubscribe function
+	 */
 	private subscribeBalanceChanges(
 		params: TeleportParams,
 		callback: () => void,
@@ -134,6 +174,12 @@ export default class ParaPortSDK extends Initializable {
 		)
 	}
 
+	/**
+	 * Calculates whether a teleport is needed and gathers available quotes.
+	 *
+	 * @param params - Teleport parameters
+	 * @returns Quote selection and funds availability
+	 */
 	private async calculateTeleport(
 		params: TeleportParams,
 	): Promise<AutoTeleportSessionCalculation> {
@@ -172,6 +218,14 @@ export default class ParaPortSDK extends Initializable {
 		}
 	}
 
+	/**
+	 * Creates a new auto-teleport session for the provided parameters.
+	 * Performs validation, resolves quotes, and watches balances.
+	 *
+	 * @param p - Raw teleport parameters with string amount
+	 * @returns Created session
+	 * @throws {InvalidTeleportParamsError} If parameters fail validation
+	 */
 	async initSession(p: TeleportParams<string>): Promise<TeleportSession> {
 		const allParams = {
 			...p,
@@ -214,6 +268,14 @@ export default class ParaPortSDK extends Initializable {
 		return session
 	}
 
+	/**
+	 * Executes the teleport flow for an existing session.
+	 * Creates the teleport, wires up transaction sequence, and starts processing.
+	 *
+	 * @param sessionId - ID of the session to execute
+	 * @returns Teleport ID
+	 * @throws {InvalidSessionError} If session state is invalid for execution
+	 */
 	public async executeSession(sessionId: string): Promise<string> {
 		this.ensureInitialized()
 
@@ -253,6 +315,12 @@ export default class ParaPortSDK extends Initializable {
 		return teleport.id
 	}
 
+	/**
+	 * Retries a previously failed session's teleport.
+	 *
+	 * @param sessionId - Session containing a failed teleport
+	 * @throws {InvalidSessionError} If session has no teleport ID
+	 */
 	public retrySession(sessionId: string): void {
 		const session = this.sessionManager.getItem(sessionId)
 
@@ -265,6 +333,9 @@ export default class ParaPortSDK extends Initializable {
 		this.teleportManager.retryTeleport(session.teleportId)
 	}
 
+	/**
+	 * Registers internal listeners to synchronize SessionManager with TeleportManager events.
+	 */
 	private registerListeners() {
 		if (!this.teleportManager) return
 
@@ -299,6 +370,12 @@ export default class ParaPortSDK extends Initializable {
 		)
 	}
 
+	/**
+	 * Validates that the supplied teleport parameters are acceptable.
+	 *
+	 * @param params - Teleport parameters to be validated
+	 * @throws {InvalidTeleportParamsError} When parameters are malformed or unsupported
+	 */
 	private validateTeleportParams(params: TeleportParams<string>) {
 		const validAsset = Object.values(Assets).includes(params.asset)
 		const validChain = Object.values(Chains).includes(params.chain)

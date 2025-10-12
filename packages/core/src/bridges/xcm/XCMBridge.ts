@@ -29,6 +29,9 @@ type XCMTransferParams = {
 	asset: Asset
 }
 
+/**
+ * XCM bridge adapter using Paraspell to construct and submit XCM transactions.
+ */
 export default class XCMBridge extends Initializable implements BridgeAdapter {
 	protocol: BridgeProtocol = 'XCM'
 	private readonly requiredSignatureCount: number = 1
@@ -41,6 +44,11 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		super()
 	}
 
+	/**
+	 * Builds a typed Paraspell query builder for XCM transfers.
+	 * @param params - XCM transfer parameters
+	 * @returns Paraspell builder instance
+	 */
 	private getParaspellQuery({
 		amount,
 		originChain,
@@ -64,6 +72,11 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		)
 	}
 
+	/**
+	 * Estimates the XCM fees for origin and destination.
+	 * @param params - XCM transfer parameters
+	 * @returns Sum of origin and destination fees as bigint
+	 */
 	private async getXcmFee({
 		amount,
 		originChain,
@@ -89,6 +102,14 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		}
 	}
 
+	/**
+	 * Computes transfer amount based on teleport mode and fees.
+	 * @param amount - User requested amount
+	 * @param xcmFee - Estimated XCM fee
+	 * @param currentChainBalance - Balance on target chain
+	 * @param teleportMode - Teleport mode
+	 * @returns Calculated send amount
+	 */
 	private calculateTeleportAmount({
 		amount,
 		xcmFee,
@@ -109,6 +130,12 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		return amount // TeleportModes.Exact
 	}
 
+	/**
+	 * Produces a quote for teleporting funds via XCM given input params.
+	 *
+	 * @param params - Teleport parameters
+	 * @returns Quote or null if not feasible
+	 */
 	async getQuote({
 		address,
 		asset,
@@ -224,6 +251,13 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		}
 	}
 
+	/**
+	 * Executes an XCM transfer and wires events to a transaction callback.
+	 *
+	 * @param params - Transfer parameters
+	 * @param callback - Receives transaction lifecycle updates
+	 * @returns Unsubscribe function for the underlying transaction observer
+	 */
 	async transfer(
 		{
 			amount,

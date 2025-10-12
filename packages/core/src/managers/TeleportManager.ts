@@ -26,6 +26,13 @@ import {
 	TransactionTypes,
 } from '@/types/transactions'
 
+/**
+ * Orchestrates teleport lifecycle and related transactions.
+ *
+ * Accepts quotes and parameters, creates teleport records, sequences
+ * underlying transactions via TransactionManager, and emits teleport events
+ * as the state progresses.
+ */
 export class TeleportManager extends BaseManager<
 	TeleportDetails,
 	TeleportStatus,
@@ -73,6 +80,13 @@ export class TeleportManager extends BaseManager<
 	// Public API Methods
 	// --------------------------
 
+	/**
+	 * Creates a new teleport in Pending status and stores it.
+	 *
+	 * @param params - Original teleport parameters
+	 * @param quote - Selected quote used for execution
+	 * @returns Created teleport record
+	 */
 	async createTeleport(
 		params: TeleportParams,
 		quote: Quote,
@@ -98,6 +112,14 @@ export class TeleportManager extends BaseManager<
 		return teleport
 	}
 
+	/**
+	 * Initializes and starts execution of a teleport by creating its
+	 * transaction sequence and emitting initial events.
+	 *
+	 * @param teleport - Teleport created via createTeleport
+	 * @param params - Original teleport params
+	 * @param quote - Selected quote
+	 */
 	initiateTeleport(
 		teleport: TeleportDetails,
 		params: TeleportParams,
@@ -108,6 +130,13 @@ export class TeleportManager extends BaseManager<
 		this.startTeleport(teleport)
 	}
 
+	/**
+	 * Retries a failed teleport by resetting failed transactions and
+	 * resuming the processing pipeline.
+	 *
+	 * @param teleportId - ID of the failed teleport
+	 * @throws Error If teleport is not found or not in Failed status
+	 */
 	retryTeleport(teleportId: string) {
 		const teleport = this.getItem(teleportId)
 
@@ -136,6 +165,12 @@ export class TeleportManager extends BaseManager<
 		this.processNextStep(teleport)
 	}
 
+	/**
+	 * Picks the best quote by minimizing total fees.
+	 *
+	 * @param quotes - Available quotes
+	 * @returns Best quote or undefined when none
+	 */
 	selectBestQuote(quotes: Quote[]): Quote | undefined {
 		return quotes.reduce<Quote | undefined>((best, quote) => {
 			if (!best || Number(quote.fees.total) < Number(best.fees.total)) {
@@ -416,6 +451,12 @@ export class TeleportManager extends BaseManager<
 		this.emitUpdate(this.teleportMapper(teleport))
 	}
 
+	/**
+	 * Retrieves a teleport by id or throws.
+	 * @param teleportId - Teleport identifier
+	 * @returns Teleport details
+	 * @throws Error if not found
+	 */
 	private getTeleportById(teleportId: string) {
 		const teleport = this.getItem(teleportId)
 
@@ -426,17 +467,31 @@ export class TeleportManager extends BaseManager<
 		return teleport
 	}
 
+	/**
+	 * Computes the transaction id associated with a teleport.
+	 * @param teleportId - Teleport identifier
+	 * @returns Transaction id string
+	 */
 	private getTeleportTransactionId(teleportId: string) {
 		return `${teleportId}-transaction` as const
 	}
 
 	protected getUpdateEventType(): TeleportEventType {
+		/**
+		 * Event channel used when emitting teleport updates.
+		 * @returns Teleport update event type
+		 */
 		return TeleportEventTypes.TELEPORT_UPDATED
 	}
 
 	protected getEmitUpdateEventPayload(
 		item: TeleportDetails,
 	): TeleportEventPayload {
+		/**
+		 * Maps internal teleport to emitted payload shape with transactions.
+		 * @param item - Teleport details
+		 * @returns Teleport event payload
+		 */
 		return this.teleportMapper(item)
 	}
 

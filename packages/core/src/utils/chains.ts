@@ -10,18 +10,38 @@ import {
 import { SUBSTRATE_CHAINS } from '@paraspell/sdk'
 import { isAssetSupported } from './assets'
 
+/**
+ * Gets the existential deposit for a chain.
+ * @param chain - Chain identifier
+ * @returns Existential deposit as bigint
+ */
 export const edOf = (chain: Chain): bigint => {
 	return BigInt(existentialDeposit[chain])
 }
 
+/**
+ * Returns static chain properties (ss58, decimals, explorer, etc.).
+ * @param chain - Chain identifier
+ * @returns Chain properties
+ */
 export const chainPropListOf = (chain: Chain): ChainProperties => {
 	return CHAINS[chain]
 }
 
+/**
+ * Gets the SS58 address format for a chain.
+ * @param chain - Chain identifier
+ * @returns ss58 format number
+ */
 export const ss58Of = (chain: Chain): number => {
 	return chainPropListOf(chain).ss58Format
 }
 
+/**
+ * Gets token decimals for a chain.
+ * @param chain - Chain identifier
+ * @returns Number of decimals
+ */
 export const decimalsOf = (chain: Chain): number => {
 	return chainPropListOf(chain).tokenDecimals
 }
@@ -48,10 +68,20 @@ export const getRouteChains = (chain: Chain, asset: Asset): Chain[] => {
 	) as Chain[]
 }
 
+/**
+ * Gets a human-readable chain name.
+ * @param chain - Chain identifier
+ * @returns Chain name
+ */
 export const getChainName = (chain: Chain): string => {
 	return CHAIN_NAMES[chain]
 }
 
+/**
+ * Returns the block explorer URL for a chain.
+ * @param chain - Chain identifier
+ * @returns Explorer base URL
+ */
 export const blockExplorerOf = (chain: Chain): string => {
 	return chainPropListOf(chain).blockExplorer
 }

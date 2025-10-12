@@ -10,6 +10,10 @@ import {
 } from '@/types/sdk'
 import type { TeleportParams } from '@/types/teleport'
 
+/**
+ * Tracks auto-teleport sessions and synchronizes state derived
+ * from quotes, funds availability, and teleport progress.
+ */
 export default class SessionManager extends BaseManager<
 	TeleportSession,
 	TeleportSessionStatus,
@@ -17,6 +21,13 @@ export default class SessionManager extends BaseManager<
 	AutoTeleportSessionEventType,
 	TeleportSessionPayload
 > {
+	/**
+	 * Creates a new session with initial state and emits SESSION_CREATED.
+	 *
+	 * @param params - Teleport parameters
+	 * @param initialState - Optional initial session fields
+	 * @returns The created session id
+	 */
 	createSession(
 		params: TeleportParams,
 		initialState: Partial<TeleportSession>,
@@ -54,6 +65,9 @@ export default class SessionManager extends BaseManager<
 		return sessionId
 	}
 
+	/**
+	 * Updates an existing session and emits SESSION_UPDATED.
+	 */
 	updateSession(sessionId: string, updates: Partial<TeleportSession>) {
 		const session = this.getItem(sessionId)
 		if (session) {
@@ -61,6 +75,9 @@ export default class SessionManager extends BaseManager<
 		}
 	}
 
+	/**
+	 * Removes a session and cleans up its subscription.
+	 */
 	removeSession(sessionId: string) {
 		const session = this.getItem(sessionId)
 		if (session) {
@@ -69,10 +86,19 @@ export default class SessionManager extends BaseManager<
 		}
 	}
 
+	/**
+	 * Event channel used when emitting session updates.
+	 * @returns Session update event type
+	 */
 	getUpdateEventType() {
 		return AutoTeleportSessionEventTypes.SESSION_UPDATED
 	}
 
+	/**
+	 * Finds a session belonging to a specific teleport.
+	 * @param teleportId - Teleport identifier
+	 * @returns Matching session or undefined
+	 */
 	getSessionByTeleportId(teleportId: string): TeleportSession | undefined {
 		return this.getItemsWhere((session) => session.teleportId === teleportId)[0]
 	}
