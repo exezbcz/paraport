@@ -146,9 +146,9 @@ export const isAssetSupported = (
 
 	if (originInfo?.alias) {
 		return supported.some(
-			(info: any) => info.symbol === asset && info.alias === originInfo.alias,
+			(info) => info.symbol === asset && info.alias === originInfo.alias,
 		)
 	}
 
-	return supported.some((info: any) => info.symbol === asset)
+	return supported.some((info) => info.symbol === asset)
 }
