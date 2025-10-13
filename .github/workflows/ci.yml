@@ -66,6 +66,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Build @paraport/static (dependency for core tests)
+        run: pnpm --filter @paraport/static build
+
       - name: Unit tests (@paraport/core)
         run: pnpm --filter @paraport/core test
         env:
