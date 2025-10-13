@@ -33,15 +33,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Biome (core, static, sdk, vue)
+      - name: Biome (core, static, sdk)
         run: |
           pnpm --filter @paraport/core exec biome ci .
           pnpm --filter @paraport/static exec biome ci .
           pnpm --filter @paraport/sdk exec biome ci .
-          pnpm --filter @paraport/vue exec biome ci .
 
       - name: ESLint (react)
         run: pnpm --filter @paraport/react exec eslint . --max-warnings=0
+
+      - name: ESLint (vue)
+        run: pnpm --filter @paraport/vue exec eslint . --max-warnings=0
 
   test:
     name: Test (Node 20.x)

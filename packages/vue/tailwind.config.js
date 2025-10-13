@@ -1,80 +1,80 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-	darkMode: ['class'],
-	content: ['./index.html', './src/**/*.{js,ts,vue}'],
-	// Only apply our utility classes inside the SDK root
-	prefix: 'pp-',
-	corePlugins: {
-		// Avoid injecting global resets into host apps
-		preflight: false,
-	},
-	theme: {
-		extend: {
-			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)',
-			},
-			colors: {
-				foreground: 'hsl(var(--foreground))',
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))',
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))',
-				},
-				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))',
-				},
-				secondary: {
-					DEFAULT: 'var(--secondary-text)',
-					foreground: 'hsl(var(--secondary-foreground))',
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))',
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))',
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))',
-				},
+  darkMode: ['class'],
+  content: ['./index.html', './src/**/*.{js,ts,vue}'],
+  // Only apply our utility classes inside the SDK root
+  prefix: 'pp-',
+  corePlugins: {
+    // Avoid injecting global resets into host apps
+    preflight: false,
+  },
+  theme: {
+    extend: {
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      colors: {
+        'foreground': 'hsl(var(--foreground))',
+        'card': {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+        'popover': {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        'primary': {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        'secondary': {
+          DEFAULT: 'var(--secondary-text)',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        'muted': {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        'accent': {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        'destructive': {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
 
-				// custom
-				background: 'var(--background)',
-				'surface-grey': 'var(--surface-grey)',
-				'error-fill': 'var(--error-fill)',
-				'caution-text': 'var(--caution-text)',
-				'caution-fill': 'var(--caution-fill)',
-				text: 'var(--text)',
-				'accent-blue': 'var(--accent-blue)',
-				'accent-background': 'var(--accent-background)',
-				'error-text': 'var(--error-text)',
-				'surface-hover': 'var(--surface-hover)',
-				'caution-button': 'var(--caution-button)',
-				'error-action-hover': 'var(--error-action-hover)',
-				'success-fill': 'var(--success-fill)',
-				'success-text': 'var(--success-text)',
-				'success-action-hover': 'var(--success-action-hover)',
+        // custom
+        'background': 'var(--background)',
+        'surface-grey': 'var(--surface-grey)',
+        'error-fill': 'var(--error-fill)',
+        'caution-text': 'var(--caution-text)',
+        'caution-fill': 'var(--caution-fill)',
+        'text': 'var(--text)',
+        'accent-blue': 'var(--accent-blue)',
+        'accent-background': 'var(--accent-background)',
+        'error-text': 'var(--error-text)',
+        'surface-hover': 'var(--surface-hover)',
+        'caution-button': 'var(--caution-button)',
+        'error-action-hover': 'var(--error-action-hover)',
+        'success-fill': 'var(--success-fill)',
+        'success-text': 'var(--success-text)',
+        'success-action-hover': 'var(--success-action-hover)',
 
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				chart: {
-					1: 'hsl(var(--chart-1))',
-					2: 'hsl(var(--chart-2))',
-					3: 'hsl(var(--chart-3))',
-					4: 'hsl(var(--chart-4))',
-					5: 'hsl(var(--chart-5))',
-				},
-			},
-		},
-	},
-	plugins: [require('tailwindcss-animate')],
+        'border': 'hsl(var(--border))',
+        'input': 'hsl(var(--input))',
+        'ring': 'hsl(var(--ring))',
+        'chart': {
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))',
+        },
+      },
+    },
+  },
+  plugins: [require('tailwindcss-animate')],
 }
