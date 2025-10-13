@@ -20,7 +20,9 @@
 	},
 	"files": ["dist", "README.md", "LICENSE"],
 	"scripts": {
-		"build": "papi --whitelist .papi/whitelist.ts && vite build",
+		"papi:generate": "papi --whitelist .papi/whitelist.ts",
+		"build": "pnpm run papi:generate && vite build",
+		"pretest": "pnpm run papi:generate",
 		"dev": "vite build --watch --mode development",
 		"lint": "biome check --write .",
 		"test": "vitest run",
@@ -44,7 +46,7 @@
 		"polkadot-api": "1.19.x"
 	},
 	"dependencies": {
-		"@paraport/static": "workspace:*",
+		"@paraport/static": "0.0.2-alpha.3",
 		"@paraspell/sdk": "^11.8.6",
 		"dedot": "^0.16.0",
 		"eventemitter3": "^5.0.1",
