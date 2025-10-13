@@ -58,8 +58,8 @@ importers:
   packages/core:
     dependencies:
       '@paraport/static':
-        specifier: 0.0.2-alpha.3
-        version: 0.0.2-alpha.3
+        specifier: workspace:*
+        version: link:../static
       '@paraspell/sdk':
         specifier: ^11.8.6
         version: 11.8.6(bufferutil@4.0.9)(polkadot-api@1.19.2(@microsoft/api-extractor@7.52.5(@types/node@24.6.2))(@swc/core@1.11.22)(bufferutil@4.0.9)(jiti@1.21.7)(postcss@8.5.6)(rxjs@7.8.2)(utf-8-validate@5.0.10)(yaml@2.8.1))(typescript@5.7.3)(utf-8-validate@5.0.10)
@@ -1072,9 +1072,6 @@ packages:
 
   '@parallel-finance/type-definitions@2.0.1':
     resolution: {integrity: sha512-fC1QfhFFd8oSZqdIh6kmoMNvTxZdQGw1sTAbdYSINyVxyCxKiDg47ZP9bAZFDexL7POqnXnn4pYM7kUAnsT+8Q==}
-
-  '@paraport/static@0.0.2-alpha.3':
-    resolution: {integrity: sha512-lHJlOxnYoMFwxCOFHZB18Bv6pQa8vBENgVutd9S7Zf/AyKIaf4icJR2dNpl7Mb2/1lwx7IYygBtkDZ1P0DR/qA==}
 
   '@paraspell/assets@11.8.6':
     resolution: {integrity: sha512-Y2tCqUBdhdMX0A0lMvygMv3HD1sf1vptyuNBlvOKA7ASG1K1oDZacRXV8xF3dfYPKxvdXF3Z8DLej2DRqqOuJw==}
@@ -6671,8 +6668,6 @@ snapshots:
   '@parallel-finance/type-definitions@2.0.1':
     dependencies:
       '@open-web3/orml-type-definitions': 2.0.1
-
-  '@paraport/static@0.0.2-alpha.3': {}
 
   '@paraspell/assets@11.8.6':
     dependencies:

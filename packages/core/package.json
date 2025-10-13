@@ -46,7 +46,7 @@
 		"polkadot-api": "1.19.x"
 	},
 	"dependencies": {
-		"@paraport/static": "0.0.2-alpha.3",
+	  "@paraport/static": "workspace:*",
 		"@paraspell/sdk": "^11.8.6",
 		"dedot": "^0.16.0",
 		"eventemitter3": "^5.0.1",
