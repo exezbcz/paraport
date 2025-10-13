@@ -1,129 +1,129 @@
-import {
-	type TeleportStepDetails,
-	type TeleportStepStatus,
-	TeleportStepStatuses,
-} from '@/types'
-import {
-	TeleportStatuses,
-	TransactionStatuses,
-	TransactionTypes,
-} from '@paraport/core'
 import type { TeleportEventPayload, TransactionDetails } from '@paraport/core'
-import { type Ref, computed } from 'vue'
+import type { Ref } from 'vue'
+import type { TeleportStepDetails, TeleportStepStatus } from '@/types'
+import {
+  TeleportStatuses,
+  TransactionStatuses,
+  TransactionTypes,
+} from '@paraport/core'
+import { computed } from 'vue'
 import { t } from '@/i18n/t'
+import {
+
+  TeleportStepStatuses,
+} from '@/types'
 
 export default (teleport: Ref<TeleportEventPayload | undefined>) => {
+  const getTeleportStepText = ({
+    status,
+  }: { status: TeleportStepStatus }): string => {
+    if (status === TeleportStepStatuses.Completed) {
+      return t('autoteleport.status.completed')
+    }
 
-	const getTeleportStepText = ({
-		status,
-	}: { status: TeleportStepStatus }): string => {
-		if (status === TeleportStepStatuses.Completed) {
-			return t('autoteleport.status.completed')
-		}
+    if (status === TeleportStepStatuses.Failed) {
+      return t('autoteleport.status.error')
+    }
 
-		if (status === TeleportStepStatuses.Failed) {
-			return t('autoteleport.status.error')
-		}
+    if (status === TeleportStepStatuses.Loading) {
+      return t('autoteleport.status.loading')
+    }
 
-		if (status === TeleportStepStatuses.Loading) {
-			return t('autoteleport.status.loading')
-		}
+    return t('autoteleport.status.waiting')
+  }
 
-		return t('autoteleport.status.waiting')
-	}
+  const getStepStatus = (transaction: TransactionDetails) => {
+    if (
+      transaction.status === TransactionStatuses.Finalized
+      && transaction.succeeded
+    ) {
+      return TeleportStepStatuses.Completed
+    }
 
-	const getStepStatus = (transaction: TransactionDetails) => {
-		if (
-			transaction.status === TransactionStatuses.Finalized &&
-			transaction.succeeded
-		) {
-			return TeleportStepStatuses.Completed
-		}
+    if (transaction.status === TransactionStatuses.Cancelled) {
+      return TeleportStepStatuses.Cancelled
+    }
 
-		if (transaction.status === TransactionStatuses.Cancelled) {
-			return TeleportStepStatuses.Cancelled
-		}
+    if (transaction.error) {
+      return TeleportStepStatuses.Failed
+    }
 
-		if (transaction.error) {
-			return TeleportStepStatuses.Failed
-		}
+    if (transaction.status !== TransactionStatuses.Unknown) {
+      return TeleportStepStatuses.Loading
+    }
 
-		if (transaction.status !== TransactionStatuses.Unknown) {
-			return TeleportStepStatuses.Loading
-		}
+    return TeleportStepStatuses.Waiting
+  }
 
-		return TeleportStepStatuses.Waiting
-	}
+  const balanceCheckDetails = computed<{
+    status: TeleportStepStatus
+    message?: string
+  }>(() => {
+    if (!teleport.value) {
+      return { status: TeleportStepStatuses.Waiting }
+    }
 
-	const balanceCheckDetails = computed<{
-		status: TeleportStepStatus
-		message?: string
-	}>(() => {
-		if (!teleport.value) {
-			return { status: TeleportStepStatuses.Waiting }
-		}
+    const status = teleport.value.status
 
-		const status = teleport.value.status
+    if (teleport.value?.checked) {
+      return { status: TeleportStepStatuses.Completed }
+    }
 
-		if (teleport.value?.checked) {
-			return { status: TeleportStepStatuses.Completed }
-		}
+    if (status === TeleportStatuses.Waiting) {
+      return {
+        status: TeleportStepStatuses.Loading,
+        message: t('autoteleport.status.noSignatureRequired'),
+      }
+    }
 
-		if (status === TeleportStatuses.Waiting) {
-			return {
-				status: TeleportStepStatuses.Loading,
-				message: t('autoteleport.status.noSignatureRequired'),
-			}
-		}
+    return { status: TeleportStepStatuses.Waiting }
+  })
 
-		return { status: TeleportStepStatuses.Waiting }
-	})
+  const steps = computed<TeleportStepDetails[]>(() => {
+    const items = teleport.value?.transactions || []
 
-	const steps = computed<TeleportStepDetails[]>(() => {
-		const items = teleport.value?.transactions || []
+    if (!items.length) {
+      return []
+    }
 
-		if (!items.length) {
-			return []
-		}
+    const teleportTransaction = items.find(
+      item => item.type === TransactionTypes.Teleport,
+    )
 
-		const teleportTransaction = items.find(
-			(item) => item.type === TransactionTypes.Teleport,
-		)
+    if (!teleportTransaction) {
+      return []
+    }
 
-		if (!teleportTransaction) {
-			return []
-		}
+    const teleportSteps = [
+      {
+        status: getStepStatus(teleportTransaction),
+        txHash: teleportTransaction.txHash,
+        type: TransactionTypes.Teleport,
+        duration: 30000,
+      },
+      {
+        status: balanceCheckDetails.value.status,
+        statusLabel: balanceCheckDetails.value.message,
+        type: 'balance-check' as const,
+        duration: 5000,
+      },
+    ]
 
-		const teleportSteps = [
-			{
-				status: getStepStatus(teleportTransaction),
-				txHash: teleportTransaction.txHash,
-				type: TransactionTypes.Teleport,
-				duration: 30000,
-			},
-			{
-				status: balanceCheckDetails.value.status,
-				statusLabel: balanceCheckDetails.value.message,
-				type: 'balance-check' as const,
-				duration: 5000,
-			},
-		]
+    return teleportSteps.map((step, index) => {
+      const isFirstActive
+        = index === 0 && step.status !== TeleportStepStatuses.Completed
+      const isPreviousCompleted
+        = index > 0
+          && teleportSteps[index - 1].status === TeleportStepStatuses.Completed
 
-		return teleportSteps.map((step, index) => {
-			const isFirstActive =
-				index === 0 && step.status !== TeleportStepStatuses.Completed
-			const isPreviousCompleted =
-				index > 0 &&
-				teleportSteps[index - 1].status === TeleportStepStatuses.Completed
+      return {
+        ...step,
+        isActive: isFirstActive || isPreviousCompleted,
+        id: crypto.randomUUID() as string,
+        statusLabel: step.statusLabel || getTeleportStepText(step),
+      }
+    })
+  })
 
-			return {
-				...step,
-				isActive: isFirstActive || isPreviousCompleted,
-				id: crypto.randomUUID() as string,
-				statusLabel: step.statusLabel || getTeleportStepText(step),
-			}
-		})
-	})
-
-	return steps
+  return steps
 }

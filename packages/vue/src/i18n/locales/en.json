@@ -1,49 +1,49 @@
 {
-	"autoteleport": {
-		"checking": "Analyzing Your Balances",
-		"findingOptimalRoute": "Finding Optimal Route",
-		"successfullyMoved": "{0} Successfully moved",
-		"sign": "Move tokens to {0}",
-		"moving": "Moving {0} to {1}",
-		"almostDone": "Almost Done",
-		"finalizing": "Finalizing Transfer",
-		"required": "Autoteleport Required",
-		"transactionSent": "Transaction Sent",
-		"insufficientAssetBalance": "Insufficient {0} Balance",
-		"notEnoughFunds": "Not Enough Funds",
-		"status": {
-			"broadcastingTx": "Broadcasting tx",
-			"completed": "Completed",
-			"error": "Transaction couldn't complete",
-			"loading": "Transaction in Progress",
-			"noSignatureRequired": "Signature not needed",
-			"uploading": "Uploading data to IPFS",
-			"waiting": "Approve in your wallet"
-		}
-	},
-	"retry": "Retry",
-	"details": "Details",
-	"viewTx": "View Tx",
-	"tryAgain": "Try Again",
-	"learnMore": "Learn More",
-	"detailsModal": {
-		"title": "Autoteleport Details",
-		"route": "Route",
-		"transferAmount": "Transfer Amount",
-		"fees": "Fees",
-		"timeEstimate": "Time Estimate",
-		"whatIsAutoteleport": {
-			"title": "What is Autoteleport?",
-			"description": "Autoteleport automatically moves your {asset} from {source} to {target} to complete this transaction. This ensures you have tokens where you need them."
-		}
-	},
-	"time": {
-		"seconds": "{count} second | {count} seconds",
-		"seconds_short": "{count} Sec | {count} Secs",
-		"minutes": "{count} minute | {count} minutes",
-		"minutes_short": "{count} Min | {count} Mins"
-	},
-	"proceed": "Proceed",
-	"signature": "Signature | Signatures",
-	"addFunds": "Add Funds"
+  "autoteleport": {
+    "checking": "Analyzing Your Balances",
+    "findingOptimalRoute": "Finding Optimal Route",
+    "successfullyMoved": "{0} Successfully moved",
+    "sign": "Move tokens to {0}",
+    "moving": "Moving {0} to {1}",
+    "almostDone": "Almost Done",
+    "finalizing": "Finalizing Transfer",
+    "required": "Autoteleport Required",
+    "transactionSent": "Transaction Sent",
+    "insufficientAssetBalance": "Insufficient {0} Balance",
+    "notEnoughFunds": "Not Enough Funds",
+    "status": {
+      "broadcastingTx": "Broadcasting tx",
+      "completed": "Completed",
+      "error": "Transaction couldn't complete",
+      "loading": "Transaction in Progress",
+      "noSignatureRequired": "Signature not needed",
+      "uploading": "Uploading data to IPFS",
+      "waiting": "Approve in your wallet"
+    }
+  },
+  "retry": "Retry",
+  "details": "Details",
+  "viewTx": "View Tx",
+  "tryAgain": "Try Again",
+  "learnMore": "Learn More",
+  "detailsModal": {
+    "title": "Autoteleport Details",
+    "route": "Route",
+    "transferAmount": "Transfer Amount",
+    "fees": "Fees",
+    "timeEstimate": "Time Estimate",
+    "whatIsAutoteleport": {
+      "title": "What is Autoteleport?",
+      "description": "Autoteleport automatically moves your {asset} from {source} to {target} to complete this transaction. This ensures you have tokens where you need them."
+    }
+  },
+  "time": {
+    "seconds": "{count} second | {count} seconds",
+    "seconds_short": "{count} Sec | {count} Secs",
+    "minutes": "{count} minute | {count} minutes",
+    "minutes_short": "{count} Min | {count} Mins"
+  },
+  "proceed": "Proceed",
+  "signature": "Signature | Signatures",
+  "addFunds": "Add Funds"
 }

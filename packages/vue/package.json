@@ -1,27 +1,19 @@
 {
-	"name": "@paraport/vue",
-	"version": "0.1.0-alpha.35",
-	"description": "Vue components for ParaPort SDK",
-	"keywords": [
-		"paraport",
-		"polkadot",
-		"sdk",
-		"vue"
-	],
-	"author": "Paraport",
-	"license": "MIT",
-	"type": "module",
-	"files": [
-		"dist",
-		"README.md"
-	],
-	"publishConfig": {
-		"access": "public"
-	},
-	"main": "./dist/index.js",
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"style": "./dist/index.css",
+  "name": "@paraport/vue",
+  "type": "module",
+  "version": "0.1.0-alpha.35",
+  "description": "Vue components for ParaPort SDK",
+  "author": "Paraport",
+  "license": "MIT",
+  "keywords": [
+    "paraport",
+    "polkadot",
+    "sdk",
+    "vue"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -29,43 +21,54 @@
     },
     "./style": "./dist/index.css"
   },
-	"scripts": {
-		"dev": "vite build --watch --mode development",
-		"build": "vue-tsc && vite build",
-		"preview": "vite preview",
-		"lint": "biome check --write ."
-	},
-	"dependencies": {
-		"@paraport/core": "workspace:*",
-		"@tanstack/vue-table": "^8.21.2",
-		"@vue/runtime-dom": "^3.5.13",
-		"@vueuse/core": "^13.0.0",
-		"class-variance-authority": "^0.7.1",
-		"clsx": "^2.1.1",
-		"dedot": "^0.16.0",
-		"lucide-vue-next": "^0.477.0",
-		"mitt": "^3.0.1",
-		"reka-ui": "^2.0.2",
-		"tailwind-merge": "^3.0.2",
-		"tailwindcss-animate": "^1.0.7",
-		"vue": "^3.5.13"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@types/sass": "^1.45.0",
-		"@vitejs/plugin-vue": "^5.2.1",
-		"autoprefixer": "^10.4.20",
-		"postcss": "^8.5.2",
-		"sass": "^1.84.0",
-		"tailwindcss": "^3.4.17",
-		"polkadot-api": "1.19.x",
-		"typescript": "^5.7.3",
-		"vite": "^6.0.7",
-		"vite-plugin-dts": "^4.5.0",
-		"vue-tsc": "^2.2.0"
-	}
-	,
-	"peerDependencies": {
-		"polkadot-api": "1.19.x"
-	}
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "style": "./dist/index.css",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "polkadot-api": "1.19.x"
+  },
+  "dependencies": {
+    "@paraport/core": "workspace:*",
+    "@tanstack/vue-table": "^8.21.2",
+    "@vue/runtime-dom": "^3.5.13",
+    "@vueuse/core": "^13.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dedot": "^0.16.0",
+    "lucide-vue-next": "^0.477.0",
+    "mitt": "^3.0.1",
+    "reka-ui": "^2.0.2",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^5.0.0",
+    "@biomejs/biome": "^1.9.4",
+    "@types/sass": "^1.45.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.32.0",
+    "polkadot-api": "1.19.x",
+    "postcss": "^8.5.2",
+    "sass": "^1.84.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7",
+    "vite-plugin-dts": "^4.5.0",
+    "vue-tsc": "^2.2.0"
+  }
+
 }

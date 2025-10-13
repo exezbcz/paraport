@@ -1,6 +1,7 @@
-import { type DisplayMode, DisplayModes, ParaportParams } from '@/types'
 import type { ParaPortSDK, TeleportParams } from '@paraport/core'
-import { type Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import type { type DisplayMode, DisplayModes, ParaportParams } from '@/types'
+import { ref } from 'vue'
 
 const sdk = ref() as Ref<ParaPortSDK>
 const params = ref() as Ref<TeleportParams<string>>
@@ -10,49 +11,49 @@ const displayMode = ref<DisplayMode>(DisplayModes.Integrated)
 const ui = ref<ParaportParams['ui']>({ addFunds: true })
 const appearance = ref<Record<string, string>>({})
 
-export const useSdk = () => {
-	const setSdk = (newSdk: ParaPortSDK) => {
-		sdk.value = newSdk
-	}
+export function useSdk() {
+  const setSdk = (newSdk: ParaPortSDK) => {
+    sdk.value = newSdk
+  }
 
-	const setTeleportParams = (teleportParams: TeleportParams<string>) => {
-		params.value = teleportParams
-	}
+  const setTeleportParams = (teleportParams: TeleportParams<string>) => {
+    params.value = teleportParams
+  }
 
-	const setLabel = (newLabel: string) => {
-		label.value = newLabel
-	}
+  const setLabel = (newLabel: string) => {
+    label.value = newLabel
+  }
 
-	const setDisabled = (isDisabled: boolean) => {
-		disabled.value = isDisabled
-	}
+  const setDisabled = (isDisabled: boolean) => {
+    disabled.value = isDisabled
+  }
 
-	const setDisplayMode = (mode: DisplayMode) => {
-		displayMode.value = mode
-	}
+  const setDisplayMode = (mode: DisplayMode) => {
+    displayMode.value = mode
+  }
 
-	const setUi = (newUi: Partial<ParaportParams['ui']>) => {
-		ui.value = { ...ui.value, ...newUi }
-	}
+  const setUi = (newUi: Partial<ParaportParams['ui']>) => {
+    ui.value = { ...ui.value, ...newUi }
+  }
 
-	const setAppearance = (a?: Record<string, string>) => {
-		appearance.value = a ?? {}
-	}
+  const setAppearance = (a?: Record<string, string>) => {
+    appearance.value = a ?? {}
+  }
 
-	return {
-		sdk,
-		params,
-		label,
-		disabled,
-		displayMode,
-		setSdk,
-		setTeleportParams,
-		setLabel,
-		setDisabled,
-		setDisplayMode,
-		ui,
-		setUi,
-		appearance,
-		setAppearance,
-	}
+  return {
+    sdk,
+    params,
+    label,
+    disabled,
+    displayMode,
+    setSdk,
+    setTeleportParams,
+    setLabel,
+    setDisabled,
+    setDisplayMode,
+    ui,
+    setUi,
+    appearance,
+    setAppearance,
+  }
 }

@@ -9,17 +9,20 @@ function resolvePath(obj: any, path: string): unknown {
 }
 
 function getCount(params?: TParams): number | undefined {
-  if (!params || Array.isArray(params)) return undefined
+  if (!params || Array.isArray(params))
+    return undefined
   const val = (params as Record<string, unknown>).count
   return typeof val === 'number' ? val : undefined
 }
 
 function choosePlural(form: string, params?: TParams): string {
   // Support simple ICU-like "singular | plural" forms
-  if (!form.includes(' | ')) return form
+  if (!form.includes(' | '))
+    return form
   const [singular, plural] = form.split(' | ')
   const count = getCount(params)
-  if (count === 1) return singular
+  if (count === 1)
+    return singular
   // Default to plural if count is undefined or not 1
   return plural
 }
@@ -55,4 +58,3 @@ export const t: TFunction = (path, params) => {
   const selected = choosePlural(raw, params)
   return interpolate(selected, params)
 }
-

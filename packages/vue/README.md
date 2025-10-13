@@ -22,8 +22,8 @@ pnpm add polkadot-api
 ### Basic Integration
 
 ```typescript
-import { createApp } from 'vue'
 import { ParaportPlugin } from '@paraport/vue'
+import { createApp } from 'vue'
 import '@paraport/vue/style'
 
 const app = createApp({
@@ -37,6 +37,34 @@ app.use(ParaportPlugin)
 ```
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const address = ref('YOUR_ADDRESS')
+const amount = ref('YOUR_AMOUNT')
+const chain = ref('AssetHubKusama')
+const asset = ref('KSM')
+const label = ref('Mint')
+
+function onReady(session) {
+  console.log('🚀 ParaPort ready!', session)
+}
+
+function onSubmit({ autoteleport, completed }) {
+  console.log('📦 Submit button pressed')
+  console.log('💥 Autoteleport: ', autoteleport)
+  console.log('✅ Completed: ', completed)
+}
+
+function onCompleted() {
+  console.log('✅ Auto-teleport successfully completed!')
+}
+
+function onAddFunds() {
+  console.log('💰 Add funds button pressed')
+}
+</script>
+
 <template>
   <Paraport
     :address="address"
@@ -47,37 +75,9 @@ app.use(ParaportPlugin)
     @ready="onReady"
     @submit="onSubmit"
     @completed="onCompleted"
-    @addFunds="onAddFunds"
+    @add-funds="onAddFunds"
   />
 </template>
-
-<script setup>
-import { ref } from 'vue'
-
-const address = ref('YOUR_ADDRESS')
-const amount = ref('YOUR_AMOUNT')
-const chain = ref('AssetHubKusama')
-const asset = ref('KSM')
-const label = ref('Mint')
-
-const onReady = (session) => {
-  console.log('🚀 ParaPort ready!', session)
-}
-
-const onSubmit = ({ autoteleport, completed }) => {
-  console.log('📦 Submit button pressed')
-  console.log('💥 Autoteleport: ', autoteleport)
-  console.log('✅ Completed: ', completed)
-}
-
-const onCompleted = () => {
-  console.log('✅ Auto-teleport successfully completed!')
-}
-
-const onAddFunds = () => {
-  console.log('💰 Add funds button pressed')
-}
-</script>
 ```
 
 ## Props Documentation
@@ -131,10 +131,10 @@ ParaPort ships its CSS wrapped in named cascade layers to avoid clashing with a 
 2) Import that stylesheet once in your app entry.
 
 ```ts
+import { ParaportPlugin } from '@paraport/vue'
+import { createApp } from 'vue'
 // main.ts
 import './styles.css'
-import { createApp } from 'vue'
-import { ParaportPlugin } from '@paraport/vue'
 
 createApp(App).use(ParaportPlugin).mount('#app')
 ```
@@ -198,7 +198,8 @@ Full docs: https://docs.paraport.dev
 ```vue
 <Paraport
   :appearance="{ '--radius': '12px', '--accent-blue': '#4f46e5' }"
-  themeMode="auto"  <!-- 'light' | 'dark' | 'auto' -->
+  themeMode="auto"  <!-- 'light' | 'dark' | 'auto' --
+>
   ...
 />
 ```

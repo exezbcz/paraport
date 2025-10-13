@@ -1,7 +1,7 @@
 import '@paraport/vue/style'
-import { Paraport, ParaportPlugin, DisplayModes, useSdk } from '@paraport/vue'
-import type { MountOptions } from './types'
+import { DisplayModes, Paraport, ParaportPlugin, useSdk } from '@paraport/vue'
 import { createApp, h } from 'vue'
+import type { MountOptions } from './types'
 
 export function init({
 	integratedTargetId,
@@ -27,24 +27,25 @@ export function init({
 	}
 
 	const app = createApp({
-		render: () => h(Paraport, {
-        chain,
-        amount,
-        address,
-        asset,
-        displayMode,
-        appearance,
-        themeMode,
-        logLevel: options.logLevel,
-        label: options.label,
-        disabled: options.disabled,
-        onReady,
-        onAddFunds,
-        onCompleted,
-        onSubmit,
-        getSigner,
-        endpoints
-		}),
+		render: () =>
+			h(Paraport, {
+				chain,
+				amount,
+				address,
+				asset,
+				displayMode,
+				appearance,
+				themeMode,
+				logLevel: options.logLevel,
+				label: options.label,
+				disabled: options.disabled,
+				onReady,
+				onAddFunds,
+				onCompleted,
+				onSubmit,
+				getSigner,
+				endpoints,
+			}),
 	})
 
 	app.use(ParaportPlugin)

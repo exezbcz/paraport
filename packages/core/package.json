@@ -20,7 +20,9 @@
 	},
 	"files": ["dist", "README.md", "LICENSE"],
 	"scripts": {
-		"build": "papi --whitelist .papi/whitelist.ts && vite build",
+		"papi:generate": "papi --whitelist .papi/whitelist.ts",
+		"build": "pnpm run papi:generate && vite build",
+		"pretest": "pnpm run papi:generate",
 		"dev": "vite build --watch --mode development",
 		"lint": "biome check --write .",
 		"test": "vitest run",
