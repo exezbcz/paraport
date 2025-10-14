@@ -25,6 +25,8 @@
 		"pretest": "pnpm run papi:generate",
 		"dev": "vite build --watch --mode development",
 		"lint": "biome check --write .",
+		"typecheck": "tsc -p tsconfig.build.json --noEmit",
+		"test:typecheck": "tsc -p tsconfig.tests.json --noEmit",
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",

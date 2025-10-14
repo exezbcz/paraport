@@ -32,6 +32,7 @@
   "scripts": {
     "dev": "vite build --watch --mode development",
     "build": "vue-tsc && vite build",
+    "typecheck": "vue-tsc --noEmit",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
