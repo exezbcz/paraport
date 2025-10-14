@@ -2,6 +2,16 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@paraport/core": [
+        "../core/src/index.ts",
+        "../core/src",
+        "../core/dist/index.d.ts"
+      ],
+      "@paraport/static": [
+        "../static/src/index.ts",
+        "../static/src",
+        "../static/dist/index.d.ts"
+      ],
       "@/*": ["./src/*"]
     }
   }
