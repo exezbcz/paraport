@@ -2,7 +2,11 @@
   <img src="https://github.com/user-attachments/assets/b45d0026-9533-4e49-915b-085c1ac6ba84" alt="ParaPort Logo" width="420" />
 </p>
 
-# ParaPort SDK Monorepo
+<p align="center">
+    <strong style="font-size: 1.2em;">Seamless Cross-Chain Experience</strong> <br/>
+    One signature. Zero complexity. Multiple chains.
+</p>
+<br/>
 
 ParaPort enables “auto-teleport” flows in the Polkadot ecosystem — automatically funding the destination and guiding users through cross-chain transfers with a drop‑in UI or framework components.
 
@@ -19,10 +23,6 @@ ParaPort enables “auto-teleport” flows in the Polkadot ecosystem — automat
 - React integration: see [@paraport/react](https://github.com/exezbcz/paraport/tree/main/packages/react/README.md#component-usage) usage and props
 - Vue 3 integration: see [@paraport/vue](https://github.com/exezbcz/paraport/tree/main/packages/vue/README.md#component-usage) usage and props
 - Embedded SDK: see [@paraport/sdk](https://github.com/exezbcz/paraport/tree/main/packages/sdk/README.md#component-usage) usage and options
-
-Notes
-- UI packages declare `polkadot-api` as a peer dependency.
-- `getSigner` is required; custom RPC `endpoints` are optional.
 
 ## Development
 
