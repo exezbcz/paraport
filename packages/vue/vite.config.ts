@@ -1,12 +1,11 @@
 import path, { resolve } from 'node:path'
-import process from 'node:process'
 import vue from '@vitejs/plugin-vue'
 import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [vue(), dts({ rollupTypes: true })],
   css: {
     postcss: {
@@ -31,18 +30,21 @@ export default defineConfig({
       fileName: 'index',
       formats: ['es'],
     },
-    sourcemap: process.env.NODE_ENV !== 'production',
-    watch: {
-      clearScreen: false,
-      // Watch upstream packages so changes rebuild this lib during dev
-      include: [
-        'src/**/*',
-        '../core/src/**/*',
-        '../core/dist/**/*',
-        '../static/src/**/*',
-        '../static/dist/**/*',
-      ],
-    },
+    sourcemap: mode !== 'production',
+    // Enable watch only in development to avoid hanging CI builds
+    watch: mode === 'development'
+      ? {
+          clearScreen: false,
+          // Watch upstream packages so changes rebuild this lib during dev
+          include: [
+            'src/**/*',
+            '../core/src/**/*',
+            '../core/dist/**/*',
+            '../static/src/**/*',
+            '../static/dist/**/*',
+          ],
+        }
+      : undefined,
     rollupOptions: {
       external: [
         'vue',
@@ -57,4 +59,4 @@ export default defineConfig({
     },
     cssCodeSplit: false,
   },
-})
+}))

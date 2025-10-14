@@ -11,15 +11,18 @@ export default defineConfig(({ mode }) => ({
       fileName: 'index',
     },
     sourcemap: mode !== 'production',
-    watch: {
-      clearScreen: false,
-      // Watch static so its changes rebuild core during dev
-      include: [
-        'src/**/*',
-        '../static/src/**/*',
-        '../static/dist/**/*',
-      ],
-    },
+    // Only enable watch during development to avoid hanging CI builds
+    watch: mode === 'development'
+      ? {
+          clearScreen: false,
+          // Watch static so its changes rebuild core during dev
+          include: [
+            'src/**/*',
+            '../static/src/**/*',
+            '../static/dist/**/*',
+          ],
+        }
+      : undefined,
     rollupOptions: {
       external: [
         'polkadot-api',
