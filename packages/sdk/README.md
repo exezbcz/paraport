@@ -24,14 +24,23 @@ pnpm add polkadot-api
 ```typescript
 import '@paraport/sdk/style'
 import * as paraport from '@paraport/sdk'
+import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 
 const main = async () => {
+  // Required signer (polkadot-api compatible)
+  const getSigner = async () => {
+    const ext = await connectInjectedExtension('talisman', 'Your App')
+    const account = ext.getAccounts()[0]
+    return account.polkadotSigner
+  }
+
   paraport.init({
     integratedTargetId: 'root',
     address: USER_ADDRESS,
-    amount: '500000000000', // 0.5 KSM
-    chain: 'AssetHubKusama',
-    asset: 'KSM',
+    amount: '10000000000', // 1 DOT
+    chain: 'AssetHubPolkadot',
+    asset: 'DOT',
+    getSigner,
     label: 'Mint',
     logLevel: 'DEBUG',
     onReady: (session) => {
@@ -52,6 +61,24 @@ const main = async () => {
 }
 
 main()
+```
+
+### With custom endpoints (optional)
+
+```ts
+import '@paraport/sdk/style'
+import * as paraport from '@paraport/sdk'
+paraport.init({
+  integratedTargetId: 'root',
+  address: USER_ADDRESS,
+  amount: '10000000000',
+  chain: 'AssetHubPolkadot',
+  asset: 'DOT',
+  endpoints: {
+    AssetHubPolkadot: ['wss://statemint.api.onfinality.io/public-ws'],
+    Polkadot: ['wss://polkadot-rpc.publicnode.com']
+  },
+})
 ```
 
 ## Theming
@@ -81,6 +108,8 @@ paraport.init({
 | amount | string | Amount to be teleported |
 | chain | string | Chain to be teleported to |
 | asset | string | Asset to be teleported |
+| endpoints | Record<string, string[]> | Optional RPC endpoints per chain to override defaults |
+| getSigner | () => Promise<PolkadotSigner> | Required function returning a polkadot-api signer |
 | label | string | Button display text |
 | logLevel | string | Log level for debugging (e.g., 'DEBUG') |
 | onSubmit | Function | Callback on form submission with { autoteleport, completed } parameters |

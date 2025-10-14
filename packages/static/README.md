@@ -79,6 +79,4 @@ pnpm build
 
 ## License
 
-Made with 💛
-
-Published under [MIT License](LICENSE).
+MIT

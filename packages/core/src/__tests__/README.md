@@ -1,7 +1,7 @@
 # Testing Documentation
 
 ## Overview
-This directory contains the test suite for the AutoTeleport SDK core package. The tests are written using Vitest and follow a structured approach to ensure comprehensive coverage of the SDK's functionality.
+This directory contains the test suite for the ParaPort Core package. The tests are written using Vitest and follow a structured approach to ensure comprehensive coverage of the SDK's functionality.
 
 ## Test Structure
 - `__tests__/` - Root test directory

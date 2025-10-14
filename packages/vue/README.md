@@ -19,32 +19,29 @@ pnpm add polkadot-api
 
 ## Component Usage
 
-### Basic Integration
+### Basic Integration (component-first)
 
-```typescript
-import { ParaportPlugin } from '@paraport/vue'
-import { createApp } from 'vue'
-import '@paraport/vue/style'
-
-const app = createApp({
-  /* your app config */
-})
-
-// Register the plugin
-app.use(ParaportPlugin)
-
-// Then use the component in your templates
-```
+Use the `Paraport` component directly in your app.
 
 ```vue
 <script setup>
+import { Paraport } from '@paraport/vue'
+import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { ref } from 'vue'
+import '@paraport/vue/style'
 
 const address = ref('YOUR_ADDRESS')
-const amount = ref('YOUR_AMOUNT')
-const chain = ref('AssetHubKusama')
-const asset = ref('KSM')
+const amount = ref('10000000000')
+const chain = ref('AssetHubPolkadot')
+const asset = ref('DOT')
 const label = ref('Mint')
+
+// Required signer (polkadot-api compatible)
+async function getSigner() {
+  const ext = await connectInjectedExtension('talisman', 'Your App')
+  const account = ext.getAccounts()[0]
+  return account.polkadotSigner
+}
 
 function onReady(session) {
   console.log('🚀 ParaPort ready!', session)
@@ -72,12 +69,58 @@ function onAddFunds() {
     :chain="chain"
     :asset="asset"
     :label="label"
+    :get-signer="getSigner"
     @ready="onReady"
     @submit="onSubmit"
     @completed="onCompleted"
     @add-funds="onAddFunds"
   />
 </template>
+```
+
+### Optional: Plugin registration
+
+If you prefer global registration, you can install the plugin once at app setup.
+
+```ts
+import { ParaportPlugin } from '@paraport/vue'
+import { createApp } from 'vue'
+import '@paraport/vue/style'
+
+createApp(App).use(ParaportPlugin).mount('#app')
+```
+
+### Custom endpoints (component usage)
+
+```ts
+import { Paraport } from '@paraport/vue'
+import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
+import { createApp, h } from 'vue'
+import '@paraport/vue/style'
+
+async function getSigner() {
+  const ext = await connectInjectedExtension('talisman', 'Your App')
+  const account = ext.getAccounts()[0]
+  return account.polkadotSigner
+}
+
+createApp({
+  render() {
+    return h('div', [
+      h('h1', 'ParaPort Vue'),
+      h('div', [
+        h(Paraport, {
+          address: 'YOUR_ADDRESS',
+          amount: '10000000000',
+          chain: 'AssetHubPolkadot',
+          asset: 'DOT',
+          endpoints: { AssetHubPolkadot: ['wss://statemint.api.onfinality.io/public-ws'] },
+          getSigner,
+        })
+      ])
+    ])
+  }
+}).mount('#app')
 ```
 
 ## Props Documentation
@@ -88,8 +131,10 @@ function onAddFunds() {
 |----------|------|-------------|
 | address | string | User's address |
 | amount | string | Amount to be transferred |
-| chain | string | Chain ID (e.g., 'AssetHubKusama') |
+| chain | string | Chain ID (e.g., 'AssetHubPolkadot') |
 | asset | string | Asset ID |
+| endpoints | Record<string, string[]> | Optional RPC endpoints per chain to override defaults |
+| getSigner | () => Promise<PolkadotSigner> | Required function returning a polkadot-api signer |
 | label | string | Button display text |
 | logLevel | string | Log level for debugging (e.g., 'DEBUG') |
 | onSubmit | Function | Callback on form submission with { autoteleport, completed } parameters |

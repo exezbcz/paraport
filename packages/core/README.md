@@ -37,7 +37,7 @@ The core package is structured around several key components:
 
 ```typescript
 const sdk = new ParaPortSDK({
-  getSigner: () => yourPolkadotSigner, // Optional
+  getSigner: () => yourPolkadotSigner, // Required
   logLevel: 'INFO', // Optional
   bridgeProtocols: ['XCM'], // Optional
   chains: customChainConfigurations // Optional
@@ -51,9 +51,9 @@ await sdk.initialize();
 ```typescript
 // Create a teleport session
 const session = await sdk.initSession({
-  chain: 'Polkadot', // Polkadot, Kusama, AssetHubPolkadot, AssetHubKusama, Hydration
+  chain: 'AssetHubPolkadot', // Polkadot, Kusama, AssetHubPolkadot, AssetHubKusama, Hydration
   asset: 'DOT',
-  amount: '1000000000000', // 1 DOT in planck
+  amount: '10000000000', // 1 DOT (10^10 planck)
   address: 'yourPolkadotAddress'
 });
 
@@ -119,4 +119,4 @@ The automated token movement feature simplifies cross-chain transfers by:
 
 ## License
 
-MIT © Paraport
+MIT
