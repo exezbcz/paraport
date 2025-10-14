@@ -1,6 +1,8 @@
-# ParaPort SDK Monorepo
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b45d0026-9533-4e49-915b-085c1ac6ba84" alt="ParaPort Logo" width="420" />
+</p>
 
-![ParaPort Logo](https://github.com/user-attachments/assets/b45d0026-9533-4e49-915b-085c1ac6ba84)
+# ParaPort SDK Monorepo
 
 ParaPort enables “auto-teleport” flows in the Polkadot ecosystem — automatically funding the destination and guiding users through cross-chain transfers with a drop‑in UI or framework components.
 
