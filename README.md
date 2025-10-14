@@ -1,94 +1,47 @@
-# ParaPort SDK
+# ParaPort SDK Monorepo
 
-AutoTeleport SDK is a powerful toolkit for seamless cross-chain teleportation in the Polkadot/Substrate ecosystem. It provides a user-friendly interface for handling cross-chain token transfers.
+![ParaPort Logo](https://github.com/user-attachments/assets/b45d0026-9533-4e49-915b-085c1ac6ba84)
 
-## 📦 Package Structure
+ParaPort enables “auto-teleport” flows in the Polkadot ecosystem — automatically funding the destination and guiding users through cross-chain transfers with a drop‑in UI or framework components.
 
-This monorepo contains the following packages:
+## Packages
 
-- `@paraport/core`: Core functionality for cross-chain teleportation
-- `@paraport/sdk`: Vue-based SDK components for integration
-- `@paraport/static`: Static assets and utilities
-- `playground`: Development and testing environment
+- [@paraport/core](https://github.com/exezbcz/paraport/tree/main/packages/core#readme) — core logic and evented session management for auto‑teleport
+- [@paraport/vue](https://github.com/exezbcz/paraport/tree/main/packages/vue/README.md) — Vue 3 component library and plugin
+- [@paraport/react](https://github.com/exezbcz/paraport/tree/main/packages/react/README.md) — React component wrapper
+- [@paraport/sdk](https://github.com/exezbcz/paraport/tree/main/packages/sdk/README.md) — framework‑agnostic, embeddable UI (ships CSS + init API)
+- [@paraport/static](https://github.com/exezbcz/paraport/tree/main/packages/static/README.md) — chain metadata, providers and constants
 
-## 🚀 Installation
+## Integrations
 
-```bash
-pnpm install @paraport/sdk
-```
+- React integration: see [@paraport/react](https://github.com/exezbcz/paraport/tree/main/packages/react/README.md#component-usage) usage and props
+- Vue 3 integration: see [@paraport/vue](https://github.com/exezbcz/paraport/tree/main/packages/vue/README.md#component-usage) usage and props
+- Embedded SDK: see [@paraport/sdk](https://github.com/exezbcz/paraport/tree/main/packages/sdk/README.md#component-usage) usage and options
 
-## 💡 Usage
+Notes
+- UI packages declare `polkadot-api` as a peer dependency.
+- `getSigner` is required; custom RPC `endpoints` are optional.
 
-### Basic Integration
-
-```typescript
-import '@paraport/sdk/style'
-import * as paraport from '@paraport/sdk'
-
-const main = async () => {
-  paraport.init({
-    integratedTargetId: 'root',
-    label: 'Mint',
-    autoteleport: {
-      address: USER_ADDRESS,
-      amount: '500000000000', // 0.5 KSM
-      chain: 'AssetHubKusama',
-      asset: 'KSM',
-    },
-    logLevel: 'DEBUG',
-    onReady: (session) => {
-      console.log('🚀 ParaPort ready!', session)
-    },
-    onSubmit: ({ autoteleport, completed }) => {
-      console.log('📦 Submit button pressed')
-      console.log('💥 Autoteleport: ', autoteleport)
-      console.log('✅ Completed: ', completed)
-    },
-    onCompleted: () => {
-      console.log('✅ Auto-teleport successfully completed!')
-    },
-    onAddFunds: () => {
-      console.log('💰 Add funds button pressed')
-    },
-  })
-}
-
-main()
-```
-
-### Display Modes
-
-The SDK supports different display modes for integration:
-
-- `DisplayMode.Integrated`: Embed the teleport interface directly in your application
-
-## 🛠️ Development
-
-### Setup
+## Development
 
 ```bash
-# Install dependencies
+# Install workspace deps
 pnpm install
 
-# Start development
-pnpm dev
-
-# Build packages
+# Build core (and related)
 pnpm build
 
-# Lint code
+# Run all package dev builds in watch mode
+pnpm dev
+
+# Lint focused packages
 pnpm lint
 ```
 
-### Project Requirements
-
-- Node.js
+Requirements
+- Node.js (LTS)
 - pnpm 9.1.3+
 
-## 🔗 Dependencies
+## License
 
-Core dependencies include:
-
-- `@polkadot/api`: Polkadot/Substrate API
-- `@paraspell/sdk-pjs`: ParaSpell SDK for cross-chain operations
-- Vue.js for UI components
+MIT

@@ -31,10 +31,18 @@ import '@paraport/react/style';
 
 const App = () => {
   const address = 'YOUR_ADDRESS';
-  const amount = 'YOUR_AMOUNT';
-  const chain = 'AssetHubKusama';
-  const asset = 'KSM';
+  const amount = '10000000000';
+  const chain = 'AssetHubPolkadot';
+  const asset = 'DOT';
   const label = 'Mint';
+
+  // Required signer (polkadot-api compatible)
+  const getSigner = useCallback(async () => {
+    const { connectInjectedExtension } = await import('polkadot-api/pjs-signer')
+    const ext = await connectInjectedExtension('talisman', 'Your App')
+    const account = ext.getAccounts()[0]
+    return account.polkadotSigner
+  }, [])
 
   const handleReady = useCallback((session) => {
     console.log('🚀 ParaPort ready!', session);
@@ -61,6 +69,7 @@ const App = () => {
       chain={chain}
       asset={asset}
       label={label}
+      getSigner={getSigner}
       onReady={handleReady}
       onSubmit={handleSubmit}
       onCompleted={handleCompleted}
@@ -70,6 +79,21 @@ const App = () => {
 };
 
 export default App;
+```
+
+### Optional: custom endpoints
+
+```tsx
+import { Paraport } from '@paraport/react'
+import '@paraport/react/style'
+<Paraport
+  address={address}
+  amount="10000000000"
+  chain="AssetHubPolkadot"
+  asset="DOT"
+  endpoints={{ AssetHubPolkadot: ['wss://statemint.api.onfinality.io/public-ws'] }}
+  getSigner={getSigner}
+/>
 ```
 
 ## Theming
@@ -93,8 +117,10 @@ export default App;
 |----------|------|-------------|
 | address | string | User's address |
 | amount | string | Amount to be transferred |
-| chain | string | Chain ID (e.g., 'AssetHubKusama') |
+| chain | string | Chain ID (e.g., 'AssetHubPolkadot') |
 | asset | string | Asset ID |
+| endpoints | Record<string, string[]> | Optional RPC endpoints per chain to override defaults |
+| getSigner | () => Promise<PolkadotSigner> | Required function returning a polkadot-api signer |
 | label | string | Button display text |
 | logLevel | string | Log level for debugging (e.g., 'DEBUG') |
 | onSubmit | Function | Callback on form submission with { autoteleport, completed } parameters |
