@@ -5,7 +5,7 @@ import dts from 'vite-plugin-dts'
 import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     dts({
@@ -32,17 +32,20 @@ export default defineConfig({
       formats: ['es', 'cjs'],
     },
     sourcemap: false,
-    watch: {
-      clearScreen: false,
-      // Watch upstream core/static so React lib rebuilds during dev
-      include: [
-        'src/**/*',
-        '../core/src/**/*',
-        '../core/dist/**/*',
-        '../static/src/**/*',
-        '../static/dist/**/*',
-      ],
-    },
+    // Enable watch only in development to avoid hanging CI builds
+    watch: mode === 'development'
+      ? {
+          clearScreen: false,
+          // Watch upstream core/static so React lib rebuilds during dev
+          include: [
+            'src/**/*',
+            '../core/src/**/*',
+            '../core/dist/**/*',
+            '../static/src/**/*',
+            '../static/dist/**/*',
+          ],
+        }
+      : undefined,
     rollupOptions: {
       external: [
         // React core
@@ -63,4 +66,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
