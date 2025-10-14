@@ -41,6 +41,16 @@ export default defineConfig(({ mode }) => ({
     dts({
       compilerOptions: { preserveWatchOutput: true },
       rollupTypes: true,
+      tsconfigPath: resolve(__dirname, './tsconfig.build.json'),
+      exclude: [
+        '**/__tests__/**',
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        'e2e/**',
+      ],
+      include: ['src'],
     }),
   ],
 }))
