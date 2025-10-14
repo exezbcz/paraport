@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/b45d0026-9533-4e49-915b-085c1ac6ba84" alt="ParaPort Logo" width="420" />
+  <img src=".github/paraport.svg" alt="ParaPort Logo" width="420" />
 </p>
 
 <p align="center">
