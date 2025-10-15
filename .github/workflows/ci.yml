@@ -45,25 +45,18 @@ jobs:
       - name: ESLint (vue)
         run: pnpm --filter @paraport/vue exec eslint . --max-warnings=0
 
-      # Prebuild minimal .d.ts
-      - name: Build d.ts (@paraport/static)
-        run: pnpm --filter @paraport/static exec tsc -p tsconfig.json --emitDeclarationOnly --outDir dist
-
-      - name: Build d.ts (@paraport/core)
-        run: pnpm --filter @paraport/core exec tsc -p tsconfig.build.json --emitDeclarationOnly --outDir dist
-
       # Typecheck steps
-      - name: Typecheck (vue)
-        run: pnpm --filter @paraport/vue run typecheck
+      - name: Typecheck (static)
+        run: pnpm --filter @paraport/static run typecheck
 
       - name: Typecheck (core)
         run: pnpm --filter @paraport/core run typecheck
 
+      - name: Typecheck (vue)
+        run: pnpm --filter @paraport/vue run typecheck
+
       - name: Typecheck (sdk)
         run: pnpm --filter @paraport/sdk run typecheck
-
-      - name: Typecheck (static)
-        run: pnpm --filter @paraport/static run typecheck
 
       - name: Typecheck (react)
         run: pnpm --filter @paraport/react run typecheck
