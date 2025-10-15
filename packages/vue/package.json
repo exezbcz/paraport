@@ -32,6 +32,7 @@
   "scripts": {
     "dev": "vite build --watch --mode development",
     "build": "vue-tsc && vite build",
+    "build:types": "vue-tsc -p tsconfig.types.json",
     "typecheck": "vue-tsc -p tsconfig.json --noEmit",
     "preview": "vite preview",
     "lint": "eslint .",
