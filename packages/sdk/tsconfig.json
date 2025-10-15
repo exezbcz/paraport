@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "ESNext",
-		"moduleResolution": "bundler",
+		"moduleResolution": "node",
 		"strict": true,
 		"declaration": true,
 		"outDir": "dist",
@@ -13,7 +13,8 @@
 		"skipLibCheck": true,
 		"isolatedModules": true,
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["src/*"],
+			"@paraport/vue": ["../vue/dist/index.d.ts"]
 		}
 	},
 	"include": ["src"],
