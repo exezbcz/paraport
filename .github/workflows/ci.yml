@@ -45,6 +45,10 @@ jobs:
       - name: ESLint (vue)
         run: pnpm --filter @paraport/vue exec eslint . --max-warnings=0
 
+      # Typecheck prerequisites
+      - name: Bootstrap types for typecheck
+        run: pnpm -w run ci:bootstrap
+
       # Typecheck steps
       - name: Typecheck (static)
         run: pnpm --filter @paraport/static run typecheck
