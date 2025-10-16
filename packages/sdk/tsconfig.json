@@ -13,8 +13,7 @@
 		"skipLibCheck": true,
 		"isolatedModules": true,
 		"paths": {
-			"@/*": ["src/*"],
-			"@paraport/vue": ["../vue/dist/index.d.ts"]
+			"@/*": ["src/*"]
 		}
 	},
 	"include": ["src"],
