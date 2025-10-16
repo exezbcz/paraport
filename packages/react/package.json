@@ -27,6 +27,7 @@
     "dev": "vite build --watch --mode development",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "preview": "vite preview"
   },
   "peerDependencies": {
