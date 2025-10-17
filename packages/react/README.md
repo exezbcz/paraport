@@ -118,6 +118,7 @@ import '@paraport/react/style'
 | address | string | User's address |
 | amount | string | Amount to be transferred |
 | chain | string | Chain ID (e.g., 'AssetHubPolkadot') |
+| chains | string[] | Optional list of allowed chains to scope routing/UX |
 | asset | string | Asset ID |
 | endpoints | Record<string, string[]> | Optional RPC endpoints per chain to override defaults |
 | getSigner | () => Promise<PolkadotSigner> | Required function returning a polkadot-api signer |

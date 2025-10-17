@@ -107,6 +107,7 @@ paraport.init({
 | address | string | User's address |
 | amount | string | Amount to be teleported |
 | chain | string | Chain to be teleported to |
+| chains | string[] | Optional list of allowed chains to scope routing/UX |
 | asset | string | Asset to be teleported |
 | endpoints | Record<string, string[]> | Optional RPC endpoints per chain to override defaults |
 | getSigner | () => Promise<PolkadotSigner> | Required function returning a polkadot-api signer |
