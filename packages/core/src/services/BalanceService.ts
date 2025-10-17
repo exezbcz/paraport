@@ -85,10 +85,15 @@ export default class BalanceService {
 				amount = await (
 					api as ApiMap['Hydration']
 				).apis.CurrenciesApi.free_balance(assetId, formattedAddress)
-			} else if (chain === 'AssetHubPolkadot' || chain === 'AssetHubKusama') {
+			} else if (
+				chain === 'AssetHubPolkadot' ||
+				chain === 'AssetHubKusama' ||
+				chain === 'AssetHubPaseo'
+			) {
 				const typedApi = api as
 					| ApiMap['AssetHubPolkadot']
 					| ApiMap['AssetHubKusama']
+					| ApiMap['AssetHubPaseo']
 				if (location) {
 					const response = await typedApi.query.ForeignAssets.Account.getValue(
 						transform(location),
@@ -202,10 +207,15 @@ export default class BalanceService {
 
 				// Foreign assets (by location or assetId) — prefer pallet subscriptions when available.
 				const foreignAsset = assetInfo as TForeignAssetInfo
-				if (chain === 'AssetHubPolkadot' || chain === 'AssetHubKusama') {
+				if (
+					chain === 'AssetHubPolkadot' ||
+					chain === 'AssetHubKusama' ||
+					chain === 'AssetHubPaseo'
+				) {
 					const typedApi = api as
 						| ApiMap['AssetHubPolkadot']
 						| ApiMap['AssetHubKusama']
+						| ApiMap['AssetHubPaseo']
 					// Prefer ForeignAssets by location
 					if (foreignAsset.location) {
 						const initial = await typedApi.query.ForeignAssets.Account.getValue(
