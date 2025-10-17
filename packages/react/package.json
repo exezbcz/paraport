@@ -31,12 +31,12 @@
     "preview": "vite preview"
   },
   "peerDependencies": {
-    "polkadot-api": "1.19.x",
+    "polkadot-api": "1.20.x",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "polkadot-api": "1.19.x",
+    "polkadot-api": "1.20.x",
     "@eslint/js": "^9.22.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
