@@ -55,7 +55,7 @@ export type ApiMap = {
 export default class PolkadotApi {
 	private clients = new Map<SupportedChain, PolkadotClient>()
 
-	constructor(private readonly config: SDKConfig<false>) {}
+	constructor(private readonly config: SDKConfig) {}
 
 	/**
 	 * Retrieves a typed API client for a chain, creating it on-demand.
