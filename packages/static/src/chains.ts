@@ -1,5 +1,5 @@
 import { type Asset, Assets, type ChainProperties, type Config } from './types'
-import { type Chain, Chains } from './types'
+import { Chains } from './types'
 
 export const toChainProperty = (
 	ss58Format: number,
@@ -64,16 +64,4 @@ export const CHAINS: Config<ChainProperties> = {
 		Assets.PAS,
 		'https://coretime-paseo.subscan.io/',
 	),
-}
-
-// TODO: remove
-export const existentialDeposit: Record<Chain, number> = {
-	[Chains.Polkadot]: 1e10,
-	[Chains.AssetHubPolkadot]: 1e8,
-	[Chains.Kusama]: 333333333,
-	[Chains.AssetHubKusama]: 333333333,
-	[Chains.Hydration]: 1000000000000,
-	[Chains.Paseo]: 0,
-	[Chains.AssetHubPaseo]: 0,
-	[Chains.CoretimePaseo]: 0,
 }
