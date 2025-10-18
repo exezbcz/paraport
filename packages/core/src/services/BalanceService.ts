@@ -323,4 +323,52 @@ export default class BalanceService {
 			throw error
 		}
 	}
+
+	/**
+	 * Polls until the transferable balance increases by at least the specified delta.
+	 * Captures the baseline on the first poll and computes a fixed target: baseline + delta.
+	 *
+	 * @param params - Address, asset, chain and required delta increase
+	 * @returns First balance that satisfies the baseline + delta threshold
+	 */
+	async waitForFundsIncrease({
+		address,
+		asset,
+		chain,
+		delta,
+	}: {
+		address: string
+		asset: Asset
+		chain: Chain
+		delta: bigint
+	}): Promise<Balance> {
+		let target: bigint | null = null
+
+		const getBalanceAttempt = async (): Promise<Balance> => {
+			const current = await this.getBalance({ address, asset, chain })
+
+			if (target === null) {
+				// Capture baseline on first successful read
+				target = current.transferable + BigInt(delta)
+			}
+
+			if (current.transferable >= target) {
+				return current
+			}
+
+			throw new Error('Increase threshold not met yet.')
+		}
+
+		try {
+			const balance = await pRetry(getBalanceAttempt, {
+				retries: 100,
+				minTimeout: 5000,
+				maxTimeout: 10000,
+			})
+			return balance
+		} catch (error) {
+			this.logger.error('Error waiting for balance increase:', error)
+			throw error
+		}
+	}
 }
