@@ -18,9 +18,7 @@ const parseChainEnv = (value?: string): Chain => {
   return value as Chain
 }
 
-const CHAIN: Chain = parseChainEnv(process.env.E2E_CHAIN)
 const ASSET: Asset = Assets.PAS
-
 let ADDRESS = process.env.E2E_ADDRESS || ''
 const MNEMONIC = process.env.E2E_MNEMONIC || ''
 
@@ -36,6 +34,7 @@ async function makeSr25519SignerFromMnemonic(mnemonic: string) {
 
 maybeDescribe('LIVE: XCM Auto Top-up', () => {
   it('tops up the specified chain when feasible', async () => {
+    const CHAIN: Chain = parseChainEnv(process.env.E2E_CHAIN)
     // Derive an address (ss58 of DEST) if not provided
     if (!ADDRESS && MNEMONIC) {
       const { cryptoWaitReady, mnemonicToMiniSecret, sr25519PairFromSeed } = await import('@polkadot/util-crypto')
