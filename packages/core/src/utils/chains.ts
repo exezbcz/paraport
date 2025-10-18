@@ -36,8 +36,6 @@ export const decimalsOf = (chain: Chain): number => {
 	return chainPropListOf(chain).tokenDecimals
 }
 
-//
-
 /**
  * Lists chains where telport will interact and where a given asset is available.
  * @param chain - Chain identifier
