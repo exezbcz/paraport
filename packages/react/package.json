@@ -1,8 +1,13 @@
 {
   "name": "@paraport/react",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "description": "React components for Paraport SDK",
-  "keywords": ["react", "paraport", "sdk", "polkadot"],
+  "keywords": [
+    "react",
+    "paraport",
+    "sdk",
+    "polkadot"
+  ],
   "license": "MIT",
   "type": "module",
   "files": [
