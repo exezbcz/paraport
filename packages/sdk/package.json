@@ -28,7 +28,7 @@
 		"typecheck": "tsc -p tsconfig.json --noEmit"
 	},
 	"peerDependencies": {
-		"polkadot-api": "1.19.x"
+		"polkadot-api": "1.20.x"
 	},
 	"dependencies": {
 		"@paraport/vue": "workspace:*",
@@ -36,7 +36,7 @@
 		"vue": "^3.5.13"
 	},
 	"devDependencies": {
-		"polkadot-api": "1.19.x",
+		"polkadot-api": "1.20.x",
 		"@biomejs/biome": "^1.9.4",
 		"typescript": "^5.7.3",
 		"vite": "^6.0.7",

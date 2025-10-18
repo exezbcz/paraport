@@ -6,7 +6,6 @@ vi.mock('@paraport/static', () => ({
     Polkadot: { ss58Format: 0, tokenDecimals: 10, blockExplorer: 'https://polkadot.subscan.io' },
   },
   CHAIN_NAMES: { Polkadot: 'Polkadot', AssetHubPolkadot: 'AssetHubPolkadot' },
-  existentialDeposit: { Polkadot: '1000' },
   Chains: { Polkadot: 'Polkadot', AssetHubPolkadot: 'AssetHubPolkadot' },
 }))
 
@@ -21,13 +20,9 @@ vi.mock('@/utils/assets', () => ({
   },
 }))
 
-import { edOf, chainPropListOf, getChainName, blockExplorerOf, getRouteChains } from '@/utils/chains'
+import { chainPropListOf, getChainName, blockExplorerOf, getRouteChains } from '@/utils/chains'
 
 describe('chains utils', () => {
-  it('edOf', () => {
-    expect(edOf('Polkadot')).toBe(1000n)
-  })
-
   it('chainPropListOf and helpers', () => {
     const props = chainPropListOf('Polkadot')
     expect(props.ss58Format).toBe(0)

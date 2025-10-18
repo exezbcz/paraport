@@ -5,19 +5,9 @@ import {
 	type Chain,
 	type ChainProperties,
 	Chains,
-	existentialDeposit,
 } from '@paraport/static'
 import { SUBSTRATE_CHAINS } from '@paraspell/sdk'
 import { isAssetSupported } from './assets'
-
-/**
- * Gets the existential deposit for a chain.
- * @param chain - Chain identifier
- * @returns Existential deposit as bigint
- */
-export const edOf = (chain: Chain): bigint => {
-	return BigInt(existentialDeposit[chain])
-}
 
 /**
  * Returns static chain properties (ss58, decimals, explorer, etc.).
@@ -45,8 +35,6 @@ export const ss58Of = (chain: Chain): number => {
 export const decimalsOf = (chain: Chain): number => {
 	return chainPropListOf(chain).tokenDecimals
 }
-
-//
 
 /**
  * Lists chains where telport will interact and where a given asset is available.

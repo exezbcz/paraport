@@ -28,7 +28,7 @@ export class SDKConfigManager {
 			...config,
 			bridgeProtocols: ['XCM'],
 			logLevel: config.logLevel ?? LogLevels.INFO,
-			chains: [
+			chains: config.chains ?? [
 				Chains.Polkadot,
 				Chains.AssetHubPolkadot,
 				Chains.Kusama,

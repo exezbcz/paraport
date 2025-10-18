@@ -94,6 +94,11 @@ jobs:
         env:
           CI: true
 
+      - name: Mocked E2E (@paraport/core)
+        run: pnpm --filter @paraport/core run test:e2e
+        env:
+          CI: true
+
   build:
     name: Build (Node 20.x)
     runs-on: ubuntu-latest

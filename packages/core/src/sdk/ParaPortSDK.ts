@@ -53,7 +53,7 @@ export default class ParaPortSDK extends Initializable {
 		SDKConfigManager.validateConfig(combinedConfig)
 		this.config = combinedConfig
 
-		this.papi = new PolkadotApi(config)
+		this.papi = new PolkadotApi(this.config)
 		this.logger = new Logger({ minLevel: this.config.logLevel })
 		this.balanceService = new BalanceService(this.papi, this.logger)
 		this.sessionManager = new SessionManager(new GenericEmitter())

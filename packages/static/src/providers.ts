@@ -73,6 +73,30 @@ export const PROVIDERS = {
 		'wss://hydration.ibp.network',
 		'wss://hydration.dotters.network',
 	] as const,
+
+	// Paseo (PAS)
+	Paseo: [
+		'wss://paseo.rpc.amforc.com',
+		'wss://paseo-rpc.n.dwellir.com',
+		'wss://rpc.ibp.network/paseo',
+		'wss://paseo.dotters.network',
+		'wss://pas-rpc.stakeworld.io',
+	] as const,
+
+	// Paseo Asset Hub (AHPAS)
+	AssetHubPaseo: [
+		'wss://asset-hub-paseo-rpc.n.dwellir.com',
+		'wss://sys.ibp.network/asset-hub-paseo',
+		'wss://asset-hub-paseo.dotters.network',
+		'wss://pas-rpc.stakeworld.io/assethub',
+		'wss://sys.turboflakes.io/asset-hub-paseo',
+	] as const,
+
+	// Paseo Coretime (COPAS)
+	CoretimePaseo: [
+		'wss://sys.ibp.network/coretime-paseo',
+		'wss://coretime-paseo.dotters.network',
+	] as const,
 } as const
 
 export type ProviderChain = keyof typeof PROVIDERS

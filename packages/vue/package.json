@@ -1,7 +1,7 @@
 {
   "name": "@paraport/vue",
   "type": "module",
-  "version": "0.1.0-alpha.35",
+  "version": "0.1.0-alpha.36",
   "description": "Vue components for ParaPort SDK",
   "author": "Paraport",
   "license": "MIT",
@@ -39,7 +39,7 @@
     "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
-    "polkadot-api": "1.19.x"
+    "polkadot-api": "1.20.x"
   },
   "dependencies": {
     "@paraport/core": "workspace:*",
@@ -63,7 +63,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.32.0",
-    "polkadot-api": "1.19.x",
+    "polkadot-api": "1.20.x",
     "postcss": "^8.5.2",
     "sass": "^1.84.0",
     "tailwindcss": "^3.4.17",
