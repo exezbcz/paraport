@@ -3,9 +3,8 @@
   "scripts": {
     "build": "pnpm --filter @paraport/core build",
     "dev": "pnpm run -r --parallel dev",
-    "lint": "pnpm --filter @paraport/core @paraport/sdk lint",
-    "lint:pkgjson": "pnpm --filter @paraport/core exec biome check --write package.json && pnpm --filter @paraport/static exec biome check --write package.json && pnpm --filter @paraport/sdk exec biome check --write package.json && pnpm --filter @paraport/vue exec eslint package.json --fix",
-    "changeset:version": "pnpm changeset version && pnpm run lint:pkgjson",
+    "lint": "pnpm -r --if-present run lint:fix && pnpm -r --if-present run lint",
+    "changeset:version": "pnpm changeset version && pnpm run lint",
     "publish:static": "cd packages/static && npm publish",
     "typecheck": "pnpm -r typecheck",
     "check": "pnpm -r lint && pnpm typecheck",
