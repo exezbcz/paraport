@@ -107,6 +107,9 @@ jobs:
         env:
           CI: true
 
+      - name: Build @paraport/vue (for SDK tests)
+        run: pnpm --filter @paraport/vue build
+
       - name: Unit tests (@paraport/sdk)
         run: pnpm --filter @paraport/sdk test
         env:
