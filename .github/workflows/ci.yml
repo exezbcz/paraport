@@ -115,6 +115,9 @@ jobs:
         env:
           CI: true
 
+      - name: Build @paraport/sdk (for React tests)
+        run: pnpm --filter @paraport/sdk build
+
       - name: Unit tests (@paraport/react)
         run: pnpm --filter @paraport/react test
         env:
