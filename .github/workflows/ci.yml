@@ -99,6 +99,21 @@ jobs:
         env:
           CI: true
 
+      - name: Unit tests (@paraport/vue)
+        run: pnpm --filter @paraport/vue test
+        env:
+          CI: true
+
+      - name: Unit tests (@paraport/sdk)
+        run: pnpm --filter @paraport/sdk test
+        env:
+          CI: true
+
+      - name: Unit tests (@paraport/react)
+        run: pnpm --filter @paraport/react test
+        env:
+          CI: true
+
   build:
     name: Build (Node 20.x)
     runs-on: ubuntu-latest
