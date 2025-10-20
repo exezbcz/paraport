@@ -99,6 +99,30 @@ jobs:
         env:
           CI: true
 
+      - name: Build @paraport/core (for Vue tests)
+        run: pnpm --filter @paraport/core build
+
+      - name: Unit tests (@paraport/vue)
+        run: pnpm --filter @paraport/vue test
+        env:
+          CI: true
+
+      - name: Build @paraport/vue (for SDK tests)
+        run: pnpm --filter @paraport/vue build
+
+      - name: Unit tests (@paraport/sdk)
+        run: pnpm --filter @paraport/sdk test
+        env:
+          CI: true
+
+      - name: Build @paraport/sdk (for React tests)
+        run: pnpm --filter @paraport/sdk build
+
+      - name: Unit tests (@paraport/react)
+        run: pnpm --filter @paraport/react test
+        env:
+          CI: true
+
   build:
     name: Build (Node 20.x)
     runs-on: ubuntu-latest
