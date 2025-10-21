@@ -231,6 +231,10 @@ export class TeleportManager extends BaseManager<
 						transaction,
 					)
 
+					if (transaction.status === TransactionStatuses.Block) {
+						this.logger.debug(`txHash ${transaction.txHash}`)
+					}
+
 					this.handleTransactionUpdate(transaction)
 				},
 			),
