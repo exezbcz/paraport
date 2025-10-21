@@ -14,7 +14,7 @@ import {
 	type TeleportParams,
 } from '@/types/teleport'
 import type { TransactionCallback } from '@/types/transactions'
-import { formatAddress, getRouteChains } from '@/utils'
+import { formatAddress, getRouteChains, isRouteDisabled } from '@/utils'
 import { getParaspellCurrencyInput } from '@/utils/assets'
 import { signAndSend } from '@/utils/tx'
 import type { Asset, Chain } from '@paraport/static'
@@ -268,6 +268,12 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		}: BridgeTransferParams,
 		callback: TransactionCallback,
 	) {
+		if (isRouteDisabled(originChain, destinationChain)) {
+			throw new Error(
+				`XCM route between ${originChain}>${destinationChain} temporarily disabled`,
+			)
+		}
+
 		const query = this.getParaspellQuery({
 			amount,
 			originChain,
