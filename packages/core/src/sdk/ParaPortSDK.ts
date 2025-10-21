@@ -93,7 +93,7 @@ export default class ParaPortSDK extends Initializable {
 
 			this.markInitialized()
 
-			this.logger.info('SDK initialized successfully')
+			this.logger.debug('SDK initialized successfully')
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				throw new SDKInitializationError(
@@ -239,18 +239,19 @@ export default class ParaPortSDK extends Initializable {
 
 		this.logger.debug('Starting to calculate teleport with params', params)
 
-		const { quotes, funds } = await this.calculateTeleport(params)
+		const [{ quotes, funds }, unsubscribe] = await Promise.all([
+			this.calculateTeleport(params),
+			this.subscribeBalanceChanges(params, async () => {
+				const newState = await this.calculateTeleport(params)
+
+				this.sessionManager.updateSession(sessionId, {
+					quotes: newState.quotes,
+					funds: newState.funds,
+				})
+			}),
+		])
 
 		this.logger.debug('Calculated teleport', { quotes, funds })
-
-		const unsubscribe = await this.subscribeBalanceChanges(params, async () => {
-			const newState = await this.calculateTeleport(params)
-
-			this.sessionManager.updateSession(sessionId, {
-				quotes: newState.quotes,
-				funds: newState.funds,
-			})
-		})
 
 		const sessionId = this.sessionManager.createSession(params, {
 			status: TeleportSessionStatuses.Ready,
