@@ -1,5 +1,11 @@
 # @paraport/core
 
+## 0.1.2
+
+### Patch Changes
+
+- 77534e7: improve init session perfoamance and better logging
+
 ## 0.1.1
 
 ### Patch Changes
