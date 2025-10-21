@@ -93,7 +93,7 @@ export default class ParaPortSDK extends Initializable {
 
 			this.markInitialized()
 
-			this.logger.info('SDK initialized successfully')
+			this.logger.debug('SDK initialized successfully')
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				throw new SDKInitializationError(

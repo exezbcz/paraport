@@ -152,6 +152,12 @@ export default class BalanceService {
 		{ address, asset, chains }: GetBalancesParams,
 		callback: () => void,
 	) {
+		this.logger.debug('Subscribing to balance changes', {
+			chains,
+			asset,
+			address,
+		})
+
 		const balancePromises = chains.map(async (chain) => {
 			const { api, client } = this.api.getInstance(chain)
 			const formattedAddress = formatAddress(address, chain)
