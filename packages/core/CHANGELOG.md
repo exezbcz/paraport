@@ -1,5 +1,12 @@
 # @paraport/core
 
+## 0.1.3
+
+### Patch Changes
+
+- 35492b9: disable ahk<>ahp xcm transfers
+- 173865e: Externalize polkadot-api (and its subpaths)
+
 ## 0.1.2
 
 ### Patch Changes
