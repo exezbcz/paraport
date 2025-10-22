@@ -1,5 +1,15 @@
 # @paraport/sdk
 
+## 0.1.4
+
+### Patch Changes
+
+- 173865e: Externalize polkadot-api (and its subpaths)
+- Updated dependencies [35492b9]
+- Updated dependencies [173865e]
+  - @paraport/core@0.1.3
+  - @paraport/vue@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes

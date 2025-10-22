@@ -1,5 +1,13 @@
 # @paraport/react
 
+## 0.1.4
+
+### Patch Changes
+
+- 173865e: Externalize polkadot-api (and its subpaths)
+- Updated dependencies [173865e]
+  - @paraport/sdk@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes
