@@ -7,11 +7,14 @@ import type { SDKConfig } from '@/types/common'
 import { dummySigner, makePolkadotApiMock } from '@/__tests__/utils/test-helpers'
 import { Assets, Chains } from '@paraport/static'
 import { TeleportModes } from '@/types/teleport'
+import { isRouteDisabled } from '@/utils'
 
 // Mock utils used in XCMBridge
 vi.mock('@/utils', () => ({
   formatAddress: vi.fn((a: string) => a),
   getRouteChains: vi.fn((_dest: string, _asset: string) => [Chains.Kusama, Chains.AssetHubKusama]),
+  // default to all routes enabled for unit tests unless explicitly testing blocklist
+  isRouteDisabled: vi.fn(() => false),
 }))
 
 // Mock paraspell Builder chain (factory hoisted) using shared helper via dynamic import
@@ -260,6 +263,30 @@ describe('XCMBridge', () => {
     })
 
     expect(quote).toBeNull()
+  })
+
+  it('throws when route is disabled with dynamic message', async () => {
+    // Arrange: disable route for this call
+    ;(isRouteDisabled as any).mockReturnValueOnce(true)
+
+    const balanceService = { getBalances: vi.fn() } as unknown as BalanceService
+    const bridge = new XCMBridge(
+      {
+        ...config,
+        chains: [Chains.AssetHubKusama, Chains.AssetHubPolkadot],
+      },
+      balanceService,
+      makePapi(),
+    )
+
+    const from = Chains.AssetHubKusama
+    const to = Chains.AssetHubPolkadot
+    await expect(
+      bridge.transfer(
+        { amount: 1n, from, to, address: SUBSTRATE_ADDRESS, asset: Assets.KSM },
+        vi.fn(),
+      ),
+    ).rejects.toThrow(`XCM route between ${from}>${to} temporarily disabled`)
   })
 
 })
