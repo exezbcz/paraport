@@ -56,12 +56,16 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 		address,
 		asset,
 	}: XCMTransferParams) {
-		const { client } = this.papi.getInstance(originChain)
-
 		const currencyInput = getParaspellCurrencyInput(originChain, asset)
 
 		return (
-			Builder(client)
+			Builder({
+				// Provide chain-specific clients to avoid paraspell from instantiating its own papi instances
+				apiOverrides: {
+					[originChain]: this.papi.getInstance(originChain).client,
+					[destinationChain]: this.papi.getInstance(destinationChain).client,
+				},
+			})
 				.from(originChain)
 				.to(destinationChain)
 				.currency({ ...currencyInput, amount })
