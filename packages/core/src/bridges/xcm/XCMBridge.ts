@@ -60,7 +60,7 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 
 		return (
 			Builder({
-				// Provide chain-specific clients to avoid it paraspell instantiating its own papi instance
+				// Provide chain-specific clients to avoid paraspell from instantiating its own papi instances
 				apiOverrides: {
 					[originChain]: this.papi.getInstance(originChain).client,
 					[destinationChain]: this.papi.getInstance(destinationChain).client,
