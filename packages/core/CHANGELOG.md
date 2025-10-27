@@ -1,5 +1,11 @@
 # @paraport/core
 
+## 0.1.4
+
+### Patch Changes
+
+- 0be2239: upgrade @paraspell/sdk
+
 ## 0.1.3
 
 ### Patch Changes
