@@ -6,23 +6,23 @@ vi.mock('@paraspell/sdk', () => ({
   getAssetsObject: vi.fn((chain: Chain) => {
     if (chain === 'Hydration') {
       return {
-        nativeAssets: [{ symbol: 'HDX', existentialDeposit: 123n }],
+        nativeAssets: [{ symbol: 'HDX', existentialDeposit: 123n, decimals: 12 }],
         otherAssets: [
-          { symbol: 'DOT', assetId: 1 },
-          { symbol: 'USDT', location: { parents: 1, interior: 'Here' } },
+          { symbol: 'DOT', assetId: 1, decimals: 10 },
+          { symbol: 'USDT', location: { parents: 1, interior: 'Here' }, decimals: 6 },
         ],
       }
     }
     if (chain === 'AssetHubKusama') {
       return {
-        nativeAssets: [{ symbol: 'KSM' }],
-        otherAssets: [{ symbol: 'DOT', alias: 'DOT2' }],
+        nativeAssets: [{ symbol: 'KSM', decimals: 12 }],
+        otherAssets: [{ symbol: 'DOT', alias: 'DOT2', decimals: 10 }],
       }
     }
     if (chain === 'AssetHubPolkadot') {
       return {
-        nativeAssets: [{ symbol: 'DOT', existentialDeposit: 10n }],
-        otherAssets: [{ symbol: 'USDT', assetId: 1984 }],
+        nativeAssets: [{ symbol: 'DOT', existentialDeposit: 10n, decimals: 10 }],
+        otherAssets: [{ symbol: 'USDT', assetId: 1984, decimals: 6 }],
       }
     }
     // Default
@@ -32,7 +32,7 @@ vi.mock('@paraspell/sdk', () => ({
   ForeignAbstract: vi.fn((alias: string) => `FA(${alias})`),
 }))
 
-import { getParaspellCurrencyInput, getAssetInfoOrThrow, getAssetExistentialDeposit, isAssetSupported } from '@/utils/assets'
+import { getParaspellCurrencyInput, getAssetInfoOrThrow, getAssetExistentialDeposit, isAssetSupported, getAssetDecimals } from '@/utils/assets'
 
 describe('utils/assets.getParaspellCurrencyInput', () => {
   beforeEach(() => vi.clearAllMocks())
@@ -107,5 +107,27 @@ describe('utils/assets.getAssetExistentialDeposit and isAssetSupported', () => {
     // Supported list includes DOT with alias matching origin (DOT2)
     mod.getSupportedAssets.mockReturnValueOnce([{ symbol: 'DOT', alias: 'DOT2' }])
     expect(isAssetSupported('AssetHubKusama' as Chain, 'AssetHubPolkadot' as Chain, 'DOT' as any)).toBe(true)
+  })
+})
+
+describe('utils/assets.getAssetDecimals', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('returns decimals for native assets when present', () => {
+    expect(getAssetDecimals('Hydration' as Chain, 'HDX' as any)).toBe(12)
+    expect(getAssetDecimals('AssetHubPolkadot' as Chain, 'DOT' as any)).toBe(10)
+  })
+
+  it('returns decimals for foreign assets by location/assetId when present', () => {
+    expect(getAssetDecimals('Hydration' as Chain, 'USDT' as any)).toBe(6)
+    expect(getAssetDecimals('Hydration' as Chain, 'DOT' as any)).toBe(10)
+  })
+
+  it('respects alias matching for chains with symbol aliases (e.g., DOT→DOT2)', () => {
+    expect(getAssetDecimals('AssetHubKusama' as Chain, 'DOT' as any)).toBe(10)
+  })
+
+  it('returns undefined when the asset is not present on chain', () => {
+    expect(getAssetDecimals('Hydration' as Chain, 'XYZ' as any)).toBeUndefined()
   })
 })

@@ -44,6 +44,10 @@ Requirements
 - Node.js (LTS)
 - pnpm 9.1.3+
 
+## Testing
+
+See TESTING.md for a consolidated, step-by-step guide covering build order, commands to run unit/integration tests across packages, and the required environment variables for live E2E tests.
+
 ## License
 
 MIT

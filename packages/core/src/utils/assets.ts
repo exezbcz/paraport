@@ -152,3 +152,23 @@ export const isAssetSupported = (
 
 	return supported.some((info) => info.symbol === asset)
 }
+
+/**
+ * Returns the number of decimal places for `symbol` on `chain` when
+ * available in Paraspell's assets catalog.
+ *
+ * Notes
+ * - Looks up the asset via `getAssetInfo`, respecting chain-specific
+ *   aliasing rules (e.g., DOT → DOT2 on AssetHubKusama).
+ * - Not all catalog entries include a `decimals` field; in those cases
+ *   `undefined` is returned so callers can provide a fallback if needed.
+ *
+ * @param chain - Chain identifier
+ * @param symbol - Asset symbol
+ * @returns The asset's decimals count if present; otherwise `undefined`.
+ */
+export const getAssetDecimals = (chain: Chain, symbol: Asset) => {
+	const asset = getAssetInfo(chain, symbol)
+
+	return asset?.decimals
+}

@@ -70,8 +70,8 @@ importers:
         specifier: workspace:*
         version: link:../static
       '@paraspell/sdk':
-        specifier: ^11.12.2
-        version: 11.12.2(bufferutil@4.0.9)(polkadot-api@1.20.0(@microsoft/api-extractor@7.52.5(@types/node@20.19.21))(@swc/core@1.11.22)(bufferutil@4.0.9)(jiti@1.21.7)(postcss@8.5.6)(rxjs@7.8.2)(utf-8-validate@5.0.10)(yaml@2.8.1))(rxjs@7.8.2)(typescript@5.7.3)(utf-8-validate@5.0.10)
+        specifier: ^11.12.3
+        version: 11.12.3(bufferutil@4.0.9)(polkadot-api@1.20.0(@microsoft/api-extractor@7.52.5(@types/node@20.19.21))(@swc/core@1.11.22)(bufferutil@4.0.9)(jiti@1.21.7)(postcss@8.5.6)(rxjs@7.8.2)(utf-8-validate@5.0.10)(yaml@2.8.1))(rxjs@7.8.2)(typescript@5.7.3)(utf-8-validate@5.0.10)
       dedot:
         specifier: ^0.16.0
         version: 0.16.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -1112,20 +1112,20 @@ packages:
   '@parallel-finance/type-definitions@2.0.1':
     resolution: {integrity: sha512-fC1QfhFFd8oSZqdIh6kmoMNvTxZdQGw1sTAbdYSINyVxyCxKiDg47ZP9bAZFDexL7POqnXnn4pYM7kUAnsT+8Q==}
 
-  '@paraspell/assets@11.12.2':
-    resolution: {integrity: sha512-pQsjx5fMM08xoJhPAX97IdwLBk47oedItwsIojtS1WbMMo23+sDqtLgkmqFURFZ6/1HBK16srJSzZHEJrEFXvg==}
+  '@paraspell/assets@11.12.3':
+    resolution: {integrity: sha512-aRGOzjcotC6yB1Vp4UBxfHw78UFHt1J2ezWUJOaw8geRs/XNSSsHAULjzpo0M//s8AfRTx0pScF8aG49hJxo4Q==}
 
-  '@paraspell/pallets@11.12.2':
-    resolution: {integrity: sha512-gVpR8M1r91n02ywY04qvbNkz9XlFRz9hGe/GfmbReUPgUwyrSjUXYs8GI6UPioPpuJgpbqTDO/1pbyMmlLOixQ==}
+  '@paraspell/pallets@11.12.3':
+    resolution: {integrity: sha512-k1zJHz+GS8xv6jkXKQ37uY6eZDLFY+yuCj3Tm1IoiRoTpoRO5+nr55R8ibn4Hiqg2cz8VjmW0He2B5AY1TlLYw==}
 
-  '@paraspell/sdk-common@11.12.2':
-    resolution: {integrity: sha512-eQE1W/XIihCM8AXKcL1umTyXJGvAA0dg5h7AXJws+lvgcuVD2jIdCk81aOdoUqnbxE8hDOcWw+v/7r7fE3TC0A==}
+  '@paraspell/sdk-common@11.12.3':
+    resolution: {integrity: sha512-D8OytJ+VJm8pz+KooUR3VmfORV8aWcOIRFWNKDSENKg2uMTtBStaqXUaEKUGiKGf/TPp6kyfV6HcGIk4HnPTnA==}
 
-  '@paraspell/sdk-core@11.12.2':
-    resolution: {integrity: sha512-AbKER4l6zGhBTgGMnHeoPaC6eZNL46B37pl2/UlO/+OpImCY3IDp4EqMIaoPOwFtggG9V3LNqvcLvENvoetfqg==}
+  '@paraspell/sdk-core@11.12.3':
+    resolution: {integrity: sha512-Zaa2+toG2dhpbXM81x3jMAXJZ9SLtPViFJiF9qKMenOxQHZige85avjZR8/iE+cdd5zW3AZTxKPjucdOu4/2+g==}
 
-  '@paraspell/sdk@11.12.2':
-    resolution: {integrity: sha512-G20AXOf6jNGucnnGqDYbciXkbWYn+Bowl251FuFpauJWtnUh+ForX4MV1uKhS4WyzrOHefBH+SQkAOB2poXOAg==}
+  '@paraspell/sdk@11.12.3':
+    resolution: {integrity: sha512-Y0B9++M7FuaLVC2R7ss1W5jRyWqT2d/C6EoHIwmuabZiJXgXOVlRjIkVbKI3PnA2ejq1xXIxGULT4Z76r0onMQ==}
     peerDependencies:
       polkadot-api: '>= 1.20.0 < 2'
 
@@ -6812,22 +6812,22 @@ snapshots:
     dependencies:
       '@open-web3/orml-type-definitions': 2.0.1
 
-  '@paraspell/assets@11.12.2':
+  '@paraspell/assets@11.12.3':
     dependencies:
-      '@paraspell/sdk-common': 11.12.2
+      '@paraspell/sdk-common': 11.12.3
 
-  '@paraspell/pallets@11.12.2':
+  '@paraspell/pallets@11.12.3':
     dependencies:
-      '@paraspell/sdk-common': 11.12.2
+      '@paraspell/sdk-common': 11.12.3
 
-  '@paraspell/sdk-common@11.12.2': {}
+  '@paraspell/sdk-common@11.12.3': {}
 
-  '@paraspell/sdk-core@11.12.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)':
+  '@paraspell/sdk-core@11.12.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@noble/hashes': 1.8.0
-      '@paraspell/assets': 11.12.2
-      '@paraspell/pallets': 11.12.2
-      '@paraspell/sdk-common': 11.12.2
+      '@paraspell/assets': 11.12.3
+      '@paraspell/pallets': 11.12.3
+      '@paraspell/sdk-common': 11.12.3
       '@scure/base': 2.0.0
       viem: 2.38.0(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
@@ -6836,10 +6836,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@paraspell/sdk@11.12.2(bufferutil@4.0.9)(polkadot-api@1.20.0(@microsoft/api-extractor@7.52.5(@types/node@20.19.21))(@swc/core@1.11.22)(bufferutil@4.0.9)(jiti@1.21.7)(postcss@8.5.6)(rxjs@7.8.2)(utf-8-validate@5.0.10)(yaml@2.8.1))(rxjs@7.8.2)(typescript@5.7.3)(utf-8-validate@5.0.10)':
+  '@paraspell/sdk@11.12.3(bufferutil@4.0.9)(polkadot-api@1.20.0(@microsoft/api-extractor@7.52.5(@types/node@20.19.21))(@swc/core@1.11.22)(bufferutil@4.0.9)(jiti@1.21.7)(postcss@8.5.6)(rxjs@7.8.2)(utf-8-validate@5.0.10)(yaml@2.8.1))(rxjs@7.8.2)(typescript@5.7.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@noble/hashes': 1.8.0
-      '@paraspell/sdk-core': 11.12.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      '@paraspell/sdk-core': 11.12.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
       '@polkadot-api/legacy-provider': 0.3.3(rxjs@7.8.2)
       polkadot-api: 1.20.0(@microsoft/api-extractor@7.52.5(@types/node@20.19.21))(@swc/core@1.11.22)(bufferutil@4.0.9)(jiti@1.21.7)(postcss@8.5.6)(rxjs@7.8.2)(utf-8-validate@5.0.10)(yaml@2.8.1)
       viem: 2.38.0(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
