@@ -1,5 +1,14 @@
 # @paraport/vue
 
+## 0.1.6
+
+### Patch Changes
+
+- 6359c78: upgrade to paraspell/sdk 11.12.3, remove ahp <> ahk xcm trasnfer disable, and fix ahp wrong decimal number
+- Updated dependencies [6359c78]
+- Updated dependencies [8ac4359]
+  - @paraport/core@0.1.5
+
 ## 0.1.5
 
 ### Patch Changes
