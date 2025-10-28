@@ -74,15 +74,6 @@ export const PROVIDERS = {
 		'wss://hydration.dotters.network',
 	] as const,
 
-	// Paseo (PAS)
-	Paseo: [
-		'wss://paseo.rpc.amforc.com',
-		'wss://paseo-rpc.n.dwellir.com',
-		'wss://rpc.ibp.network/paseo',
-		'wss://paseo.dotters.network',
-		'wss://pas-rpc.stakeworld.io',
-	] as const,
-
 	// Paseo Asset Hub (AHPAS)
 	AssetHubPaseo: [
 		'wss://asset-hub-paseo-rpc.n.dwellir.com',

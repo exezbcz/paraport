@@ -32,12 +32,6 @@
       "genesis": "0xafdc188f45c71dacbaa0b62e16a91f726c7b8699a9748cdf715459de6b7f366d",
       "codeHash": "0x5b3789c70537a0508cf6065fcd09ba930a24918afc8f00a49c7e6474eb643af6"
     },
-    "pas": {
-      "chain": "paseo",
-      "metadata": ".papi/metadata/pas.scale",
-      "genesis": "0x77afd6190f1554ad45fd0d31aee62aacc33c6db0ea801129acb813f913e0764f",
-      "codeHash": "0xd2572d0cc3c1afad3cf0d65e61e4e8632d1e7a56ba93e8e89f79e1d86232bfa8"
-    },
     "ahpas": {
       "chain": "paseo_asset_hub",
       "metadata": ".papi/metadata/ahpas.scale",

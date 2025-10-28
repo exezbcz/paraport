@@ -4,7 +4,6 @@ export const Chains = {
 	Kusama: 'Kusama',
 	AssetHubPolkadot: 'AssetHubPolkadot',
 	Hydration: 'Hydration',
-	Paseo: 'Paseo',
 	AssetHubPaseo: 'AssetHubPaseo',
 	CoretimePaseo: 'CoretimePaseo',
 } as const

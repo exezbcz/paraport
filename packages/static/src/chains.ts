@@ -46,12 +46,6 @@ export const CHAINS: Config<ChainProperties> = {
 		Assets.HDX,
 		'https://hydradx.subscan.io',
 	),
-	[Chains.Paseo]: toChainProperty(
-		2,
-		10,
-		Assets.PAS,
-		'https://paseo.subscan.io',
-	),
 	[Chains.AssetHubPaseo]: toChainProperty(
 		2,
 		10,

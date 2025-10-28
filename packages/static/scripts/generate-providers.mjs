@@ -28,7 +28,6 @@ const ksmProviders = Object.values(prodRelayKusama?.providers || {})
 const hydProviders = Object.values(hyd?.providers || {})
 
 // testing
-const pasProviders = Object.values(testRelayPaseo?.providers || {})
 const ahPasProviders = Object.values(ahpas?.providers || {})
 const coPasProviders = Object.values(codpas?.providers || {})
 
@@ -76,11 +75,6 @@ ${formatProviders(filterProviders(ksmProviders))}
 ${formatProviders(filterProviders(hydProviders))}
   ] as const,
 
-  // Paseo (PAS)
-  Paseo: [
-${formatProviders(filterProviders(pasProviders))}
-  ] as const,
-
   // Paseo Asset Hub (AHPAS)
   AssetHubPaseo: [
 ${formatProviders(filterProviders(ahPasProviders))}
@@ -122,9 +116,6 @@ try {
 	)
 	console.log(
 		`   - HYD (HydraDX): ${filterProviders(hydProviders).length} providers`,
-	)
-	console.log(
-		`   - PAS (Paseo): ${filterProviders(pasProviders).length} providers`,
 	)
 	console.log(
 		`   - AHPAS (Paseo Asset Hub): ${filterProviders(ahPasProviders).length} providers`,
