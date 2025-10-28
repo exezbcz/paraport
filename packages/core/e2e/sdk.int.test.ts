@@ -11,8 +11,7 @@ describe.sequential(
     vi.mock('@/utils', () => ({
         formatAddress: vi.fn((a: string) => a),
         getChainsOfAsset: vi.fn(() => [Chains.Kusama, Chains.AssetHubKusama]),
-        // default enabled route check for integration test path used here
-        isRouteDisabled: vi.fn(() => false),
+        getRouteChains: vi.fn((_dest: string, _asset: string) => [Chains.Kusama, Chains.AssetHubKusama]),
     }))
 
 		// Use paraspell Builder mock with fixed fees and a serializable tx
