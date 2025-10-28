@@ -1,5 +1,14 @@
 # @paraport/core
 
+## 0.1.5
+
+### Patch Changes
+
+- 6359c78: upgrade to paraspell/sdk 11.12.3, remove ahp <> ahk xcm trasnfer disable, and fix ahp wrong decimal number
+- 8ac4359: remove unused relay paseo chain
+- Updated dependencies [8ac4359]
+  - @paraport/static@0.0.4
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @paraport/static
 
+## 0.0.4
+
+### Patch Changes
+
+- 8ac4359: remove unused relay paseo chain
+
 ## 0.0.3
 
 ### Patch Changes
