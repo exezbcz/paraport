@@ -1,5 +1,11 @@
 # @paraport/core
 
+## 0.1.6
+
+### Patch Changes
+
+- dddb020: add missing paseo chains to default sdk config
+
 ## 0.1.5
 
 ### Patch Changes
