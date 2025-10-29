@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import React from 'react'
+import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { act } from 'react-dom/test-utils'
 import type { PolkadotSigner } from 'polkadot-api'
 
 // Mock the SDK init to avoid mounting Vue and network actions
