@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import XCMBridge from '@/bridges/xcm/XCMBridge'
 import { SUBSTRATE_ADDRESS } from '@/__tests__/utils/constants'
-import type PolkadotApi from '@/services/PolkadotApi'
 import type BalanceService from '@/services/BalanceService'
 import type { SDKConfig } from '@/types/common'
 import { dummySigner, makePolkadotApiMock } from '@/__tests__/utils/test-helpers'
@@ -263,5 +262,6 @@ describe('XCMBridge', () => {
   })
 
   
+
 
 })
