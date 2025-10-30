@@ -1,6 +1,6 @@
 {
 	"name": "@paraport/static",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Static configuration and constants for ParaPort SDK",
 	"keywords": ["paraport", "polkadot", "sdk", "blockchain"],
 	"author": "Paraport",
