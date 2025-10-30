@@ -54,6 +54,7 @@ export const PROVIDERS = {
 	// Kusama Relay Chain (KSM)
 	Kusama: [
 		'wss://kusama-rpc.publicnode.com',
+		'wss://kusama-public-rpc.blockops.network/ws',
 		'wss://kusama-rpc.n.dwellir.com',
 		'wss://kusama-rpc-tn.dwellir.com',
 		'wss://rpc-kusama.helixstreet.io',
