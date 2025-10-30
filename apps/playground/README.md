@@ -11,8 +11,7 @@ Local-only sandbox for developing and testing ParaPort packages and examples. Th
 
 ## What’s Inside
 
-- Example UIs in `react/` and `vue/`
-- Direct SDK usage in `sdk/`
+- Example UIs in `react/`, `vue/` and `sdk/`
 - Vite-based dev server and minimal scaffolding
 
 ## utils.ts
