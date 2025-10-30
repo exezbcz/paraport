@@ -20,6 +20,21 @@ pnpm add react react-dom
 pnpm add polkadot-api
 ```
 
+## Build
+
+- Prerequisites: build `@paraport/static`, `@paraport/core`, `@paraport/vue`, and `@paraport/sdk` first
+- From repo root:
+  - `pnpm --filter @paraport/static build`
+  - `pnpm --filter @paraport/core build`
+  - `pnpm --filter @paraport/vue build`
+  - `pnpm --filter @paraport/sdk build`
+  - `pnpm --filter @paraport/react build`
+
+Topological order across packages:
+- `@paraport/static` → `@paraport/core` → `@paraport/vue` → `@paraport/sdk` → `@paraport/react`
+
+See TESTING.md for end-to-end build and test flow.
+
 ## Component Usage
 
 ### Basic Integration
