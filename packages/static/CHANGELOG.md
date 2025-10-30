@@ -1,5 +1,11 @@
 # @paraport/static
 
+## 0.0.5
+
+### Patch Changes
+
+- 5f57952: upgrage to @polkadot/apps-config 0.167.1
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @paraport/core
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [5f57952]
+  - @paraport/static@0.0.5
+
 ## 0.1.6
 
 ### Patch Changes
