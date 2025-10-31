@@ -31,8 +31,8 @@ vi.mock('@/descriptors', () => ({
   copas: {} as any,
   dot: {} as any,
   hyd: {} as any,
+  hydpas: {} as any,
   ksm: {} as any,
-  pas: {} as any,
 }))
 
 describe('PolkadotApi', () => {
