@@ -27,12 +27,12 @@ jobs:
   e2e-live:
     name: Live E2E (@paraport/core) - ${{ matrix.chain }}
     runs-on: ubuntu-latest
-    if: ${{ !github.event.inputs.chain || github.event.inputs.chain == matrix.chain }}
     timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
-        chain: [CoretimePaseo, HydrationPaseo]
+        # If a manual input chain is provided, run only that one; otherwise run both
+        chain: ${{ github.event.inputs.chain && fromJSON(format('["{0}"]', github.event.inputs.chain)) || fromJSON('["CoretimePaseo","HydrationPaseo"]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
