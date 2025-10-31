@@ -17,6 +17,7 @@ const main = async () => {
           chain={CHAIN}
           chains={CHAINS}
           asset={ASSET}
+          logLevel="DEBUG"
           getSigner={getSigner}
           onReady={(session) => {
             console.log('🚀 ParaPort ready!', session)
