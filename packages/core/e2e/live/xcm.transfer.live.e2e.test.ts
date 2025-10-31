@@ -44,5 +44,5 @@ e2eDescribe('LIVE: XCM Auto Top-up', () => {
     const after = await getTransferableBalance(balancesSvc, ADDRESS, ASSET, CHAIN)
     expect(after >= balance).toBe(true)
     expect(after >= desired).toBe(true)
-  }, 180_000)
+  }, process.env.CI ? 240_000 : 180_000)
 })

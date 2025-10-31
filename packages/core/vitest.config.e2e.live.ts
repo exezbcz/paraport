@@ -4,8 +4,9 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     include: ['e2e/live/**/*.e2e.test.ts'],
-    testTimeout: 180_000,
-    hookTimeout: 180_000,
+    // Allow slower networks on CI; local = 2 min, CI = 4 min
+    testTimeout: process.env.CI ? 240_000 : 120_000,
+    hookTimeout: process.env.CI ? 240_000 : 120_000,
     poolOptions: {
       threads: {
         singleThread: true,
