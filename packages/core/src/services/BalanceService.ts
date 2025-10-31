@@ -81,9 +81,9 @@ export default class BalanceService {
 			const assetId = Number((assetInfo as TForeignAssetInfo)?.assetId)
 			const location = (assetInfo as TForeignAssetInfo).location
 
-			if (chain === 'Hydration') {
+			if (chain === 'Hydration' || chain === 'HydrationPaseo') {
 				amount = await (
-					api as ApiMap['Hydration']
+					api as ApiMap['Hydration'] | ApiMap['HydrationPaseo']
 				).apis.CurrenciesApi.free_balance(assetId, formattedAddress)
 			} else if (
 				chain === 'AssetHubPolkadot' ||
@@ -164,8 +164,8 @@ export default class BalanceService {
 			const assetInfo = getAssetInfoOrThrow(chain, asset)
 
 			// Hydration uses multi-currency balances via runtime API (CurrenciesApi)
-			if (chain === 'Hydration') {
-				const hydApi = api as ApiMap['Hydration']
+			if (chain === 'Hydration' || chain === 'HydrationPaseo') {
+				const hydApi = api as ApiMap['Hydration'] | ApiMap['HydrationPaseo']
 				const assetId = Number(getAssetId(chain, asset))
 
 				let previousFree = await hydApi.apis.CurrenciesApi.free_balance(

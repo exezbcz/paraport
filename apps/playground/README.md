@@ -5,6 +5,7 @@ Local-only sandbox for developing and testing ParaPort packages and examples. Th
 ## Quick Start
 
 - Install dependencies at the repo root: `pnpm install`
+- Build workspace packages once (generates dist/ for local links): `pnpm build`
 - Run the playground:
   - From repo root: `pnpm --filter @paraport/playground dev`
   - Or inside `apps/playground`: `pnpm dev`
@@ -30,3 +31,4 @@ Centralized demo configuration and helpers used across the playground examples.
 
 - Uses workspace-linked `@paraport/*` packages for local iteration
 - Assumes local/test network settings; not production-hardened
+- If you see Vite errors like "Failed to resolve entry for package '@paraport/sdk'" or TS errors like "Cannot find module '@paraport/static'", it means the linked packages haven't been built yet. Run `pnpm build` from the repo root.

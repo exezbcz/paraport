@@ -1,4 +1,4 @@
-import { ahk, ahp, ahpas, copas, dot, hyd, ksm } from '@/descriptors'
+import { ahk, ahp, ahpas, copas, dot, hyd, hydpas, ksm } from '@/descriptors'
 import type { SDKConfig } from '@/types/common'
 import type { Chain } from '@paraport/static'
 import { Chains, PROVIDERS } from '@paraport/static'
@@ -35,6 +35,10 @@ const config = {
 	[Chains.CoretimePaseo]: {
 		descriptor: copas,
 		providers: PROVIDERS.CoretimePaseo,
+	},
+	[Chains.HydrationPaseo]: {
+		descriptor: hydpas,
+		providers: PROVIDERS.HydrationPaseo,
 	},
 }
 

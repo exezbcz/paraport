@@ -32,7 +32,7 @@ vi.mock('@paraspell/sdk', () => ({
   ForeignAbstract: vi.fn((alias: string) => `FA(${alias})`),
 }))
 
-import { getParaspellCurrencyInput, getAssetInfoOrThrow, getAssetExistentialDeposit, isAssetSupported, getAssetDecimals } from '@/utils/assets'
+import { getParaspellCurrencyInput, getAssetInfoOrThrow, getAssetExistentialDeposit, isAssetSupported, getAssetDecimals, isFeeAssetSupportedForRoute } from '@/utils/assets'
 
 describe('utils/assets.getParaspellCurrencyInput', () => {
   beforeEach(() => vi.clearAllMocks())
@@ -129,5 +129,80 @@ describe('utils/assets.getAssetDecimals', () => {
 
   it('returns undefined when the asset is not present on chain', () => {
     expect(getAssetDecimals('Hydration' as Chain, 'XYZ' as any)).toBeUndefined()
+  })
+})
+
+describe('utils/assets.isFeeAssetSupportedForRoute', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('returns true when origin asset is marked as fee asset and destination is supported', async () => {
+    const mod = await import('@paraspell/sdk') as any
+    // Only the first call (origin) matters for this check
+    mod.getAssetsObject.mockImplementationOnce((chain: Chain) => {
+      if (chain === 'Hydration') {
+        return {
+          nativeAssets: [{ symbol: 'HDX', isFeeAsset: true }],
+          otherAssets: [],
+        }
+      }
+      return { nativeAssets: [], otherAssets: [] }
+    })
+
+    const ok = isFeeAssetSupportedForRoute({
+      origin: 'Hydration' as Chain,
+      destination: 'AssetHubPolkadot' as Chain,
+      symbol: 'HDX' as any,
+    })
+
+    expect(ok).toBe(true)
+  })
+
+  it('returns false when destination is HydrationPaseo even if asset is fee asset', async () => {
+    const mod = await import('@paraspell/sdk') as any
+    mod.getAssetsObject.mockImplementationOnce((chain: Chain) => {
+      if (chain === 'Hydration') {
+        return { nativeAssets: [{ symbol: 'HDX', isFeeAsset: true }], otherAssets: [] }
+      }
+      return { nativeAssets: [], otherAssets: [] }
+    })
+
+    const ok = isFeeAssetSupportedForRoute({
+      origin: 'Hydration' as Chain,
+      destination: 'HydrationPaseo' as Chain,
+      symbol: 'HDX' as any,
+    })
+
+    expect(ok).toBe(false)
+  })
+
+  it('returns false when asset is not a fee asset on origin', async () => {
+    const mod = await import('@paraspell/sdk') as any
+    mod.getAssetsObject.mockImplementationOnce((chain: Chain) => {
+      if (chain === 'Hydration') {
+        return { nativeAssets: [{ symbol: 'HDX' }], otherAssets: [] }
+      }
+      return { nativeAssets: [], otherAssets: [] }
+    })
+
+    const ok = isFeeAssetSupportedForRoute({
+      origin: 'Hydration' as Chain,
+      destination: 'AssetHubKusama' as Chain,
+      symbol: 'HDX' as any,
+    })
+
+    expect(ok).toBe(false)
+  })
+
+  it('returns false when asset is not present on origin chain', async () => {
+    const mod = await import('@paraspell/sdk') as any
+    mod.getAssetsObject.mockImplementationOnce((_chain: Chain) => ({ nativeAssets: [], otherAssets: [] }))
+
+    const ok = isFeeAssetSupportedForRoute({
+      origin: 'Hydration' as Chain,
+      destination: 'AssetHubKusama' as Chain,
+      symbol: 'UNKNOWN' as any,
+    })
+
+    expect(ok).toBe(false)
   })
 })

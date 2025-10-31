@@ -5,6 +5,8 @@ import type { SDKConfig } from '@/types/common'
 import { LogLevels, type LogLevel } from '@/types/sdk'
 import BalanceService from '@/services/BalanceService'
 
+export const LIVE_E2E_CHAINS = [Chains.CoretimePaseo, Chains.AssetHubPaseo, Chains.HydrationPaseo]
+
 export const E2E_ENABLED = process.env.E2E_LIVE === '1'
 
 export function e2eDescribe(name: string, fn: () => void): void {
@@ -50,10 +52,10 @@ export async function ensureAddress(address: string | undefined, mnemonic: strin
 
 export async function setupSDK(params: {
   mnemonic: string
-  chains: Chain[]
+  chains?: Chain[]
   logLevel?: LogLevel
 }) {
-  const { mnemonic, chains, logLevel = LogLevels.INFO } = params
+  const { mnemonic, chains = LIVE_E2E_CHAINS, logLevel = LogLevels.INFO } = params
 
   const { default: ParaPortSDK } = await import('@/sdk/ParaPortSDK')
   const { default: BalanceService } = await import('@/services/BalanceService')

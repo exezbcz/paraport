@@ -8,4 +8,5 @@ export const CHAIN_NAMES: Record<Chain, string> = {
 	[Chains.Hydration]: 'Hydration',
 	[Chains.CoretimePaseo]: 'Coretime Paseo',
 	[Chains.AssetHubPaseo]: 'AssetHub Paseo',
+	[Chains.HydrationPaseo]: 'Hydration Paseo',
 }

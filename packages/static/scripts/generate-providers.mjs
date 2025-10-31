@@ -19,6 +19,7 @@ const ahk = prodParasKusamaCommon.find((key) => key.info === 'KusamaAssetHub')
 const hyd = prodParasPolkadot.find((key) => key.info === 'hydradx')
 const ahpas = testRelayPaseo.linked.find((key) => key.info === 'PaseoAssetHub')
 const codpas = testRelayPaseo.linked.find((key) => key.info === 'PaseoCoretime')
+const hydpas = testRelayPaseo.linked.find((key) => key.info === 'rococoHydraDX')
 
 // Extract providers
 const ahpProviders = Object.values(ahp?.providers || {})
@@ -30,6 +31,7 @@ const hydProviders = Object.values(hyd?.providers || {})
 // testing
 const ahPasProviders = Object.values(ahpas?.providers || {})
 const coPasProviders = Object.values(codpas?.providers || {})
+const hydPasProviders = Object.values(hydpas?.providers || {})
 
 // Filter out light client providers as they may not work in all environments
 const filterProviders = (providers) =>
@@ -80,6 +82,11 @@ ${formatProviders(filterProviders(hydProviders))}
 ${formatProviders(filterProviders(ahPasProviders))}
   ] as const,
 
+  // Paseo Hydration (HYDPAS)
+  HydrationPaseo: [
+${formatProviders(filterProviders(hydPasProviders))}
+  ] as const,
+
   // Paseo Coretime (COPAS)
   CoretimePaseo: [
 ${formatProviders(filterProviders(coPasProviders))}
@@ -119,6 +126,9 @@ try {
 	)
 	console.log(
 		`   - AHPAS (Paseo Asset Hub): ${filterProviders(ahPasProviders).length} providers`,
+	)
+	console.log(
+		`   - HYDPAS (Hydration Paseo): ${filterProviders(hydPasProviders).length} providers`,
 	)
 	console.log(
 		`   - COPAS (Coretime Paseo): ${filterProviders(coPasProviders).length} providers`,

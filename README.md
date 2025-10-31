@@ -30,7 +30,7 @@ ParaPort enables “auto-teleport” flows in the Polkadot ecosystem — automat
 # Install workspace deps
 pnpm install
 
-# Build core (and related)
+# Build all packages (in correct order)
 pnpm build
 
 # Run all package dev builds in watch mode

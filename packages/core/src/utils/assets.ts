@@ -172,3 +172,38 @@ export const getAssetDecimals = (chain: Chain, symbol: Asset) => {
 
 	return asset?.decimals
 }
+
+/**
+ * Determines if an asset can be used to pay execution fees for a specific
+ * origin → destination route.
+ *
+ * Rules
+ * - The asset must be marked as `isFeeAsset` for the origin chain in the
+ *   Paraspell assets catalog.
+ * - Some routes disallow fee payment in certain assets (e.g., when the
+ *   destination does not recognize the reserve). This helper encodes such
+ *   route-specific safeguards to avoid builder/runtime errors.
+ *
+ * Notes
+ * - This is a lightweight guard used before building calls that would fail if
+ *   an unsupported fee asset is selected for the given route.
+ *
+ * @param origin - Origin chain identifier.
+ * @param destination - Destination chain identifier.
+ * @param symbol - Asset symbol to check on the origin chain.
+ * @returns `true` if the asset is a fee asset on `origin` and the route is
+ *   permitted; otherwise `false`.
+ */
+export const isFeeAssetSupportedForRoute = ({
+	origin,
+	destination,
+	symbol,
+}: { origin: Chain; destination: Chain; symbol: Asset }): boolean => {
+	const asset = getAssetInfo(origin, symbol)
+
+	return (
+		Boolean(asset?.isFeeAsset) &&
+		// throws InvalidAssetUnknownReserve
+		!(destination === 'HydrationPaseo')
+	)
+}

@@ -1,7 +1,7 @@
 {
   "name": "paraport-sdk-monorepo",
   "scripts": {
-    "build": "pnpm --filter @paraport/core build",
+    "build": "pnpm --filter @paraport/static build && pnpm --filter @paraport/core build && pnpm --filter @paraport/vue build && pnpm --filter @paraport/sdk build && pnpm --filter @paraport/react build",
     "dev": "pnpm run -r --parallel dev",
     "lint": "pnpm -r --if-present run lint:fix && pnpm -r --if-present run lint",
     "changeset:version": "pnpm changeset version && pnpm run lint",
