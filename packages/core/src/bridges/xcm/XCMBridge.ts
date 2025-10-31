@@ -15,7 +15,10 @@ import {
 } from '@/types/teleport'
 import type { TransactionCallback } from '@/types/transactions'
 import { formatAddress, getRouteChains } from '@/utils'
-import { getParaspellCurrencyInput } from '@/utils/assets'
+import {
+	getParaspellCurrencyInput,
+	isFeeAssetSupportedForRoute,
+} from '@/utils/assets'
 import { signAndSend } from '@/utils/tx'
 import type { Asset, Chain } from '@paraport/static'
 import { Builder } from '@paraspell/sdk'
@@ -58,22 +61,31 @@ export default class XCMBridge extends Initializable implements BridgeAdapter {
 	}: XCMTransferParams) {
 		const currencyInput = getParaspellCurrencyInput(originChain, asset)
 
-		return (
-			Builder({
-				// Provide chain-specific clients to avoid paraspell from instantiating its own papi instances
-				apiOverrides: {
-					[originChain]: this.papi.getInstance(originChain).client,
-					[destinationChain]: this.papi.getInstance(destinationChain).client,
-				},
+		let builder = Builder({
+			// Provide chain-specific clients to avoid paraspell from instantiating its own papi instances
+			apiOverrides: {
+				[originChain]: this.papi.getInstance(originChain).client,
+				[destinationChain]: this.papi.getInstance(destinationChain).client,
+			},
+		})
+			.from(originChain)
+			.to(destinationChain)
+			.currency({ ...currencyInput, amount })
+			.address(formatAddress(address, destinationChain))
+			.senderAddress(formatAddress(address, originChain))
+
+		if (
+			isFeeAssetSupportedForRoute({
+				origin: originChain,
+				destination: destinationChain,
+				symbol: asset,
 			})
-				.from(originChain)
-				.to(destinationChain)
-				.currency({ ...currencyInput, amount })
-				.address(formatAddress(address, destinationChain))
-				.senderAddress(formatAddress(address, originChain))
-				// Pay transaction fee with the same asset
-				.feeAsset(currencyInput)
-		)
+		) {
+			// Pay transaction fee with the same asset
+			builder = builder.feeAsset(currencyInput)
+		}
+
+		return builder
 	}
 
 	/**
