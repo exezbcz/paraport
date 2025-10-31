@@ -1,6 +1,6 @@
 {
 	"name": "@paraport/sdk",
-	"version": "0.1.8",
+	"version": "0.1.9",
 	"description": "ParaPort Embedded UI",
 	"keywords": ["paraport", "polkadot", "sdk"],
 	"author": "Paraport",

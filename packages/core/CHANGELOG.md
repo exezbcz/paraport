@@ -1,5 +1,13 @@
 # @paraport/core
 
+## 0.1.8
+
+### Patch Changes
+
+- 6deb019: add hydration paseo and better fee asset checking
+- Updated dependencies [6deb019]
+  - @paraport/static@0.0.6
+
 ## 0.1.7
 
 ### Patch Changes
