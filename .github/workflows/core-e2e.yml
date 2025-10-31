@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       chain:
-        description: "Chain to run live E2E against (e.g. CoretimePaseo)"
+        description: "Chain to run live E2E against (CoretimePaseo or HydrationPaseo)"
         required: false
         default: "CoretimePaseo"
   # Nightly run (02:00 UTC)
@@ -25,9 +25,14 @@ permissions:
 
 jobs:
   e2e-live:
-    name: Live E2E (@paraport/core)
+    name: Live E2E (@paraport/core) - ${{ matrix.chain }}
     runs-on: ubuntu-latest
+    if: ${{ !github.event.inputs.chain || github.event.inputs.chain == matrix.chain }}
     timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        chain: [CoretimePaseo, HydrationPaseo]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,7 +58,7 @@ jobs:
         env:
           CI: true
           E2E_LIVE: '1'
-          # For workflow_dispatch, use provided input; otherwise fallback to default
-          E2E_CHAIN: ${{ github.event.inputs.chain || 'CoretimePaseo' }}
+          # Run once per matrix entry; manual dispatch can filter via input
+          E2E_CHAIN: ${{ matrix.chain }}
           E2E_ADDRESS: ${{ secrets.E2E_ADDRESS }}
           E2E_MNEMONIC: ${{ secrets.E2E_MNEMONIC }}
