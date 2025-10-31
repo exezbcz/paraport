@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { Chains, Assets, type Chain, type Asset } from '@paraport/static'
+import { Assets, type Chain, type Asset } from '@paraport/static'
 import { TeleportEventTypes } from '@/types/teleport'
 import { e2eDescribe, parseChainEnv, ensureAddress, setupSDK, getTransferableBalance } from './utils'
 
@@ -12,7 +12,6 @@ e2eDescribe('LIVE: XCM Auto Top-up', () => {
     const ADDRESS = await ensureAddress(process.env.E2E_ADDRESS, MNEMONIC, CHAIN)
     const { sdk, balancesSvc } = await setupSDK({
       mnemonic: MNEMONIC,
-      chains: [Chains.CoretimePaseo, Chains.AssetHubPaseo],
     })
 
     // 1. Read balance on the destination chain

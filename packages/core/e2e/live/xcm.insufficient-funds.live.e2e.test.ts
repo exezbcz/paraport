@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { Chains, Assets, type Chain, type Asset } from '@paraport/static'
+import { Assets, type Chain, type Asset } from '@paraport/static'
 import { e2eDescribe, parseChainEnv, ensureAddress, setupSDK, getTransferableBalance } from './utils'
 
 const ASSET: Asset = Assets.PAS
@@ -10,8 +10,7 @@ e2eDescribe('LIVE: XCM Insufficient Funds', () => {
     const CHAIN: Chain = parseChainEnv(process.env.E2E_CHAIN)
     const ADDRESS = await ensureAddress(process.env.E2E_ADDRESS, MNEMONIC, CHAIN)
     const { sdk, balancesSvc } = await setupSDK({
-      mnemonic: MNEMONIC,
-      chains: [Chains.CoretimePaseo, Chains.AssetHubPaseo],
+      mnemonic: MNEMONIC
     })
 
     // Read balance on the destination chain to build an unreachable desired amount
