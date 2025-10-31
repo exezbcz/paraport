@@ -53,7 +53,7 @@
 	},
 	"dependencies": {
 		"@paraport/static": "workspace:*",
-		"@paraspell/sdk": "^11.12.3",
+		"@paraspell/sdk": "^11.12.7",
 		"dedot": "^0.16.0",
 		"eventemitter3": "^5.0.1",
 		"lodash": "^4.17.21",

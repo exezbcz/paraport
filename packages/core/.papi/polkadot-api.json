@@ -43,6 +43,12 @@
       "metadata": ".papi/metadata/copas.scale",
       "genesis": "0xc806038cc1d06766f23074ade7c5511326be41646deabc259970ff280c82a464",
       "codeHash": "0x7eb95683d3fdb4555b8c2d7e44df160e58cf9134e07937ef99c60e19d5458266"
+    },
+    "hydpas": {
+      "wsUrl": "wss://paseo-rpc.play.hydration.cloud",
+      "metadata": ".papi/metadata/hydpas.scale",
+      "genesis": "0x5f52a76d9a13fcc0c9094ba62c284f4f2f5e5f031f7e60eecaa7339f7f77c23f",
+      "codeHash": "0x252af19a9ac83c621c4f1307ded240c6054fe5c09b40e81c073ba74a3a06d898"
     }
   },
   "options": {

@@ -84,6 +84,9 @@ export const PROVIDERS = {
 		'wss://sys.turboflakes.io/asset-hub-paseo',
 	] as const,
 
+	// Paseo Hydration (HYDPAS)
+	HydrationPaseo: ['wss://paseo-rpc.play.hydration.cloud'] as const,
+
 	// Paseo Coretime (COPAS)
 	CoretimePaseo: [
 		'wss://sys.ibp.network/coretime-paseo',

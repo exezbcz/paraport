@@ -6,6 +6,7 @@ export const Chains = {
 	Hydration: 'Hydration',
 	AssetHubPaseo: 'AssetHubPaseo',
 	CoretimePaseo: 'CoretimePaseo',
+	HydrationPaseo: 'HydrationPaseo',
 } as const
 
 // TODO: move to util

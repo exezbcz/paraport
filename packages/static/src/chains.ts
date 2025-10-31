@@ -58,4 +58,10 @@ export const CHAINS: Config<ChainProperties> = {
 		Assets.PAS,
 		'https://coretime-paseo.subscan.io/',
 	),
+	[Chains.HydrationPaseo]: toChainProperty(
+		2,
+		12,
+		Assets.HDX,
+		'https://hydradx-paseo.subscan.io/',
+	),
 }
