@@ -1,5 +1,11 @@
 # @paraport/static
 
+## 0.0.6
+
+### Patch Changes
+
+- 6deb019: add hydration paseo and better fee asset checking
+
 ## 0.0.5
 
 ### Patch Changes
